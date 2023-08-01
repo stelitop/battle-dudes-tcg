@@ -1,12 +1,8 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.OptionalCommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
@@ -36,5 +32,26 @@ public class CollectionCommands {
         int coins = userProfileService.getProfile(user.getId().asLong()).getUserCollection().getCoins();
         return event.reply()
                 .withContent(username + " has " + coins + " coins!");
+    }
+
+    @SlashCommand(
+            name = "test choicecommand",
+            description = "Boaty"
+    )
+    public Mono<Void> testOptionsCommand(
+            @CommandEvent ChatInputInteractionEvent event,
+            @OptionalCommandParam(
+                    name = "param",
+                    description = "Test param",
+                    type = Long.class,
+                    choices = {
+                            @CommandParamChoice(name = "Frog", value = "1"),
+                            @CommandParamChoice(name = "Bear", value = "2")
+                    }
+            ) Optional<Long> myParam
+    ) {
+        return event.reply()
+                .withContent(myParam.orElse(-123L).toString())
+                .withEphemeral(true);
     }
 }

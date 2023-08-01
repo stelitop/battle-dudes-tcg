@@ -1,5 +1,6 @@
 package net.stelitop.battledudestcg.discord.slashcommands;
 
+import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
@@ -173,6 +174,17 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 Class<?> paramType = parameter.getType();
                 acodBuilder.required(true);
                 acodBuilder.type(OptionType.getCodeOfClass(paramType));
+
+                if (paramAnnotation.choices().length > 0) {
+                    acodBuilder.addAllChoices(Arrays.stream(paramAnnotation.choices())
+                            .map(x -> ApplicationCommandOptionChoiceData.builder()
+                                    .name(x.name())
+                                    .value(x.value())
+                                    .build())
+                            .map(x -> (ApplicationCommandOptionChoiceData)x)
+                            .toList());
+                }
+
             } else if (parameter.isAnnotationPresent(OptionalCommandParam.class)) {
                 OptionalCommandParam paramAnnotation = parameter.getAnnotation(OptionalCommandParam.class);
                 acodBuilder.name(paramAnnotation.name().toLowerCase());
@@ -184,6 +196,16 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 Class<?> paramType = paramAnnotation.type();
                 acodBuilder.required(false);
                 acodBuilder.type(OptionType.getCodeOfClass(paramType));
+
+                if (paramAnnotation.choices().length > 0) {
+                    acodBuilder.addAllChoices(Arrays.stream(paramAnnotation.choices())
+                            .map(x -> ApplicationCommandOptionChoiceData.builder()
+                                    .name(x.name())
+                                    .value(x.value())
+                                    .build())
+                            .map(x -> (ApplicationCommandOptionChoiceData)x)
+                            .toList());
+                }
             }
             ret.add(acodBuilder.build());
         }
