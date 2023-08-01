@@ -12,4 +12,5 @@ public @interface OptionalCommandParam {
     String name();
     String description();
     Class<?> type();
+    CommandParamChoice[] choices() default {};
 }

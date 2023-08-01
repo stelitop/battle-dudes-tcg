@@ -8,5 +8,6 @@ import java.lang.annotation.*;
 public @interface CommandParam {
     String name();
     String description();
+    CommandParamChoice[] choices() default {};
 }
 
