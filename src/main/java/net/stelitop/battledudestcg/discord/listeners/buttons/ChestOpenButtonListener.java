@@ -5,6 +5,7 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.commons.utils.RandomUtils;
+import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
@@ -13,6 +14,7 @@ import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import net.stelitop.battledudestcg.game.services.CollectionService;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
+import net.stelitop.battledudestcg.game.utils.ChestRewardUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,10 @@ public class ChestOpenButtonListener implements ApplicationRunner {
     private UserProfileService userProfileService;
     @Autowired
     private ChestOwndershipRepository chestOwndershipRepository;
+    @Autowired
+    private ColorUtils colorUtils;
+    @Autowired
+    private ChestRewardUtils chestRewardUtils;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -114,7 +120,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         return event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .title(username + " found a " + chest.getName() + "!")
                 .description("The chest has been added to your collection!")
-                .color(Color.TAHITI_GOLD)
+                .color(colorUtils.getChestEmbedColor())
                 .thumbnail(chest.getIconUrl())
                 .build())
                 .withComponents(new ArrayList<>());
@@ -136,6 +142,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
 
         String username = event.getInteraction().getUser().getUsername();
         List<ChestReward> rewards = chest.rollChest(randomUtils);
+        rewards = chestRewardUtils.transformExtraRewards(rewards, userId);
         collectionService.awardRewards(userId, rewards);
 
         String description = "## Chest Rewards\n\n" + rewards.stream()
@@ -146,7 +153,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
                 .title(username + " found a " + chest.getName() + "!")
                 //.addField("Chest Rewards", description, false)
                 .description(description)
-                .color(Color.TAHITI_GOLD)
+                .color(colorUtils.getChestEmbedColor())
                 .thumbnail(chest.getIconUrl())
                 .build())
                 .withComponents(new ArrayList<>());

@@ -54,7 +54,7 @@ public class CollectionService {
         Map<Long, Integer> cardIdToCount = new HashMap<>();
         Map<Long, Card> cardIdToCard = new HashMap<>();
         cards.forEach(c -> {
-            cardIdToCount.put(c.getCardId(), cardIdToCount.getOrDefault(c.getCardId(), 0));
+            cardIdToCount.put(c.getCardId(), cardIdToCount.getOrDefault(c.getCardId(), 0) + 1);
             cardIdToCard.put(c.getCardId(), c);
         });
 

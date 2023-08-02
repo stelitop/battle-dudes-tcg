@@ -53,7 +53,7 @@ public class TempController implements ApplicationRunner {
         return idToChest.get(id);
     }
 
-    @PostMapping("/addcard")
+    //@PostMapping("/addcard")
     public ResponseEntity<Void> test(@RequestBody ForeignDude dude) {
         System.out.println(dude);
         Card card = DudeCard.builder()

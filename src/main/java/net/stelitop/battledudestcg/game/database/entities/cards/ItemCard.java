@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("Thing")
+@DiscriminatorValue("Item")
 @NoArgsConstructor
 @SuperBuilder
-public class ThingCard extends Card {
+public class ItemCard extends Card {
 
 }

@@ -81,24 +81,10 @@ public class Chest {
                 .toList();
         Card pickedReward = randomUtils.getRandomItem(possibleAwards);
         if (pickedReward == null) {
-            // TODO: Move the location of this constant or generalise for the entity
-//            var pityCoins = Map.of(
-//                    Rarity.Common, 2,
-//                    Rarity.Rare, 5,
-//                    Rarity.Epic, 10,
-//                    Rarity.Legendary, 25,
-//                    Rarity.Mythic, 100
-//            );
-            var pityCoins = Map.of(
-                    Rarity.Common, 1,
-                    Rarity.Rare, 4,
-                    Rarity.Epic, 9,
-                    Rarity.Legendary, 16,
-                    Rarity.Mythic, 25
-            );
-            return ChestReward.coins(pityCoins.getOrDefault(rarity, 1));
+            return ChestReward.coins(rarity.getCoinValue());
         }
-        return ChestReward.extraCard(pickedReward, 69);
+
+        return ChestReward.card(pickedReward);
     }
 
     public @NotNull List<ChestReward> rollChest(@NotNull RandomUtils randomUtils) {
