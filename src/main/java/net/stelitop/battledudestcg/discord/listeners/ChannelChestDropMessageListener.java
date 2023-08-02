@@ -10,6 +10,7 @@ import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.listeners.buttons.ChestOpenButtonListener;
+import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.ChestService;
@@ -58,6 +59,8 @@ public class ChannelChestDropMessageListener implements ApplicationRunner {
     private EnvironmentVariables evs;
     @Autowired
     private ChestOpenButtonListener chestOpenButtonListener;
+    @Autowired
+    private ColorUtils colorUtils;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -133,7 +136,7 @@ public class ChannelChestDropMessageListener implements ApplicationRunner {
                 .title(username + " found a " + chest.getName() + "!")
                 .description("Do you want to open the chest?\n\nNot picking a choice adds it to your collection.")
                 .thumbnail(chest.getIconUrl())
-                .color(Color.TAHITI_GOLD)
+                .color(colorUtils.getChestEmbedColor())
                 .build();
 
         String openButtonId = chestOpenButtonListener.formatOpenChestButtonId(member.getId().asLong(), chest);

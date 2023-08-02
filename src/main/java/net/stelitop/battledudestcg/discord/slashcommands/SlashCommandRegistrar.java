@@ -6,6 +6,7 @@ import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
+import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,15 @@ public class SlashCommandRegistrar implements ApplicationRunner {
 
     @Autowired
     private RestClient restClient;
+    @Autowired
+    private EnvironmentVariables evs;
 
     @Override
     public void run(ApplicationArguments args) {
+        if (!evs.updateCommandsOnStart()) {
+            LOGGER.warn("No slash command signatures were updated due to the environment settings!");
+            return;
+        }
         var reflections = new Reflections(PACKAGE_NAME);
         var slashCommandClasses = reflections.getTypesAnnotatedWith(CommandComponent.class);
         var slashCommandMethods = slashCommandClasses.stream()

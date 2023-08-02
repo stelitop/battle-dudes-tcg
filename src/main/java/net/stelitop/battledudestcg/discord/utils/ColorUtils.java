@@ -61,7 +61,17 @@ public class ColorUtils {
             case Epic -> Color.of(252, 205, 4); // #fbbc04
             case Legendary -> Color.of(255, 109, 1); // #ff6d01
             case Mythic -> Color.of(234, 67, 53); // #ea4335
+            case Basic -> Color.WHITE;
             default -> Color.BLACK;
         };
+    }
+
+    /**
+     * Gets the color that should be used for the chests on the side.
+     *
+     * @return The chest color.
+     */
+    public Color getChestEmbedColor() {
+        return Color.of(253, 203, 88); // #FDCB58
     }
 }

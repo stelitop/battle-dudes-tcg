@@ -2,8 +2,11 @@ package net.stelitop.battledudestcg.game.pojo;
 
 import lombok.Getter;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
+import net.stelitop.battledudestcg.game.enums.Rarity;
 import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 @Getter
 public class ChestReward {
@@ -84,11 +87,11 @@ public class ChestReward {
 
     private String toStringExtraCardv2() {
         return switch (card.getRarity()) {
-            case Common -> ":green_square: \u200B ~~  \u200B " + card.getName() + " \u200B \u200B ~~";
-            case Rare -> ":blue_square: \u200B *~~ \u200B \u200B " + card.getName() + " \u200B \u200B ~~*";
-            case Epic -> ":purple_square: \u200B ***~~ \u200B \u200B " + card.getName() + " \u200B \u200B ~~***";
-            case Legendary -> ":orange_square: \u200B ***~~ \u200B \u200B __" + card.getName() + "__ \u200B \u200B ~~***";
-            case Mythic -> ":red_square: \u200B ***~~ \u200B \u200B __" + card.getName().toUpperCase() + "__ \u200B \u200B ~~***";
+            case Common -> ":green_square: \u200B ~~ \u200B " + card.getName() + " \u200B ~~";
+            case Rare -> ":blue_square: \u200B *~~ \u200B " + card.getName() + " \u200B ~~*";
+            case Epic -> ":purple_square: \u200B ***~~ \u200B " + card.getName() + " \u200B ~~***";
+            case Legendary -> ":orange_square: \u200B ***~~ \u200B __" + card.getName() + "__ \u200B ~~***";
+            case Mythic -> ":red_square: \u200B ***~~ \u200B __" + card.getName().toUpperCase() + "__ \u200B ~~***";
             default -> card.getName();
         } + "\u200B \u200B -> \u200B " + toStringCoinsv2();
     }

@@ -10,5 +10,7 @@ public enum ElementalType {
     Decay,
     Magic,
     Tech,
-    All
+    None,
+    All,
+    Ultimate
 }
