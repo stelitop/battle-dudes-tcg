@@ -110,7 +110,7 @@ public class CollectionCommands {
                 .CollectionUiModel.builder()
                 .page(1)
                 .userId(event.getInteraction().getUser().getId().asLong())
-                .cardType("all")
+                .cardType(cardType.orElse("all"))
                 .build(), event.getInteraction().getUser());
 
         return event.reply()
