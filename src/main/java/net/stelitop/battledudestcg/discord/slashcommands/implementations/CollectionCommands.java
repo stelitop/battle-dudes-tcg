@@ -102,7 +102,7 @@ public class CollectionCommands {
                     choices = {
                             @CommandParamChoice(name = "Dudes", value = "dude"),
                             @CommandParamChoice(name = "Items", value = "item"),
-                            @CommandParamChoice(name = "Portals", value = "portal")
+                            @CommandParamChoice(name = "Warps", value = "warp")
                     }
             ) Optional<String> cardType
     ) {

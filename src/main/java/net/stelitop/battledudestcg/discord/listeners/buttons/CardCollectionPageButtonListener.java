@@ -4,7 +4,6 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
-import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
@@ -14,7 +13,7 @@ import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.ItemCard;
-import net.stelitop.battledudestcg.game.database.entities.cards.PortalCard;
+import net.stelitop.battledudestcg.game.database.entities.cards.WarpCard;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwndershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
@@ -29,7 +28,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +68,7 @@ public class CardCollectionPageButtonListener implements ApplicationRunner {
         private static final String componentId = "changecollectionpage";
         private int page;
         /**
-         * Type of the cards to show. Must be one of "all", "dude", "portal", "item"
+         * Type of the cards to show. Must be one of "all", "dude", "warp", "item"
          */
         private String cardType;
         private long userId;
@@ -148,7 +146,7 @@ public class CardCollectionPageButtonListener implements ApplicationRunner {
                 .filter(co -> switch (model.cardType) {
                     case "dude" -> co.getCard() instanceof DudeCard;
                     case "item" -> co.getCard() instanceof ItemCard;
-                    case "portal" -> co.getCard() instanceof PortalCard;
+                    case "warp" -> co.getCard() instanceof WarpCard;
                     default -> true;
                 }).toList();
 

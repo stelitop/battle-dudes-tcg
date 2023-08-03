@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("Portal")
+@DiscriminatorValue("Warp")
 @NoArgsConstructor
 @SuperBuilder
-public class PortalCard extends Card {
+public class WarpCard extends Card {
 
 }
