@@ -15,7 +15,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.ItemCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.WarpCard;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.CardOwnership;
-import net.stelitop.battledudestcg.game.database.repositories.ChestOwndershipRepository;
+import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.services.CollectionService;
@@ -49,7 +49,7 @@ public class CardCollectionPageButtonListener implements ApplicationRunner {
     @Autowired
     private UserProfileService userProfileService;
     @Autowired
-    private ChestOwndershipRepository chestOwndershipRepository;
+    private ChestOwnershipRepository chestOwnershipRepository;
     @Autowired
     private EmojiUtils emojiUtils;
     @Autowired

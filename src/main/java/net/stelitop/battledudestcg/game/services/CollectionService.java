@@ -7,13 +7,10 @@ import net.stelitop.battledudestcg.game.database.entities.profile.collection.Che
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionCardKey;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
 import net.stelitop.battledudestcg.game.database.repositories.CardOwnershipRepository;
-import net.stelitop.battledudestcg.game.database.repositories.ChestOwndershipRepository;
+import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
-import net.stelitop.battledudestcg.game.database.repositories.UserProfileRepository;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +27,7 @@ public class CollectionService {
     @Autowired
     private CardOwnershipRepository cardOwnershipRepository;
     @Autowired
-    private ChestOwndershipRepository chestOwndershipRepository;
+    private ChestOwnershipRepository chestOwnershipRepository;
     @Autowired
     private UserProfileService userProfileService;
     @Autowired
@@ -87,13 +84,13 @@ public class CollectionService {
         var collection = profile.getUserCollection();
         var key = new UserCollectionChestKey(collection.getCollectionId(), chest.getChestId());
 
-        Optional<ChestOwnership> chestOwnershipOpt = chestOwndershipRepository.findById(key);
+        Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipRepository.findById(key);
         if (chestOwnershipOpt.isEmpty()) {
-            return chestOwndershipRepository.save(new ChestOwnership(key, chest, collection, 1));
+            return chestOwnershipRepository.save(new ChestOwnership(key, chest, collection, 1));
         }
         var chestOwnership = chestOwnershipOpt.get();
         chestOwnership.setCount(chestOwnership.getCount() + 1);
-        return chestOwndershipRepository.save(chestOwnership);
+        return chestOwnershipRepository.save(chestOwnership);
     }
 
     public void awardReward(long userId, ChestReward chestReward) {

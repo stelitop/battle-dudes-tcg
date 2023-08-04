@@ -13,6 +13,6 @@ public interface ChestRepository extends CrudRepository<Chest, Long> {
 
     @Query("SELECT x.name FROM Chest x")
     List<String> getAllChestNames();
-
     Optional<Chest> findByName(String name);
+    boolean existsByName(String name);
 }

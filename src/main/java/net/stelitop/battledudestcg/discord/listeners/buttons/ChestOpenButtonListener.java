@@ -2,14 +2,14 @@ package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
-import net.stelitop.battledudestcg.game.database.repositories.ChestOwndershipRepository;
+import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import net.stelitop.battledudestcg.game.services.CollectionService;
@@ -48,7 +48,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
     @Autowired
     private UserProfileService userProfileService;
     @Autowired
-    private ChestOwndershipRepository chestOwndershipRepository;
+    private ChestOwnershipRepository chestOwnershipRepository;
     @Autowired
     private ColorUtils colorUtils;
     @Autowired
@@ -59,31 +59,11 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         client.on(ButtonInteractionEvent.class, this::handle).subscribe();
     }
 
-    /**
-     * Formats how the id of the button for opening a chest that just dropped
-     * should look like.
-     *
-     * @param userId The id of the user that owns the chest.
-     * @param chest The chest that should be opened.
-     * @return The formatted component id.
-     */
-    public String formatOpenChestButtonId(long userId, Chest chest) {
-        return "openchest|" + userId + "|" + chest.getChestId();
-    }
-
-    /**
-     * Formats how the id of the button for keeping a chest instead of opening it
-     * that just dropped should look like.
-     *
-     * @param userId The id of the user that owns the chest.
-     * @param chest The chest that should be opened.
-     * @return The formatted component id.
-     */
-    public String formatKeepChestButtonId(long userId, Chest chest) {
-        return "keepchest|" + userId + "|" + chest.getChestId();
-    }
-
     private Mono<Void> handle(ButtonInteractionEvent event) {
+
+        Message message = event.getInteraction().getMessage().get();
+        System.out.println(message);
+
         String buttonId = event.getCustomId();
         String[] parts = buttonId.split("\\|");
         // check for correct button
@@ -129,7 +109,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
     private Mono<Void> openChest(ButtonInteractionEvent event, long userId, Chest chest) {
         var collection = userProfileService.getProfile(userId).getUserCollection();
         var chestOwnershipKey = new UserCollectionChestKey(collection.getCollectionId(), chest.getChestId());
-        Optional<ChestOwnership> chestOwnershipOpt = chestOwndershipRepository.findById(chestOwnershipKey);
+        Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipRepository.findById(chestOwnershipKey);
 
         if (chestOwnershipOpt.isEmpty() || chestOwnershipOpt.get().getCount() == 0) {
             return event.reply()
@@ -138,7 +118,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         }
         var chestOwnership = chestOwnershipOpt.get();
         chestOwnership.setCount(chestOwnership.getCount() - 1);
-        chestOwndershipRepository.save(chestOwnership);
+        chestOwnershipRepository.save(chestOwnership);
 
         String username = event.getInteraction().getUser().getUsername();
         List<ChestReward> rewards = chest.rollChest(randomUtils);

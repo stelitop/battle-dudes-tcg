@@ -1,5 +1,6 @@
 package net.stelitop.battledudestcg.game.services;
 
+import discord4j.core.object.entity.User;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
@@ -41,6 +42,10 @@ public class UserProfileService {
         newProfile.setUserCollection(userCollection);
         newProfile.setLastMessage(Date.from(Instant.EPOCH));
         return userProfileRepository.save(newProfile);
+    }
+
+    public @NotNull UserProfile getProfile (User user) {
+        return getProfile(user.getId().asLong());
     }
 
     /**

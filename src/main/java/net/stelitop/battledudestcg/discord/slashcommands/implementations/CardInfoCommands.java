@@ -51,7 +51,7 @@ public class CardInfoCommands {
 //    }
 
     @SlashCommand(
-            name = "card",
+            name = "info card",
             description = "Displays information about a card."
     )
     public Mono<Void> cardInfo(

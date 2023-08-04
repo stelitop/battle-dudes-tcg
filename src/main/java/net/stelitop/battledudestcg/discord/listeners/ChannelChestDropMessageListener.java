@@ -10,6 +10,7 @@ import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.listeners.buttons.ChestOpenButtonListener;
+import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
@@ -58,9 +59,7 @@ public class ChannelChestDropMessageListener implements ApplicationRunner {
     @Autowired
     private EnvironmentVariables evs;
     @Autowired
-    private ChestOpenButtonListener chestOpenButtonListener;
-    @Autowired
-    private ColorUtils colorUtils;
+    private ChestOpeningUI chestOpeningUI;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -130,27 +129,7 @@ public class ChannelChestDropMessageListener implements ApplicationRunner {
      * @return Mandatory Mono Void.
      */
     private Mono<Void> sendChestDropMessage(MessageCreateEvent event, Chest chest, Member member) {
-        String username = member.getMemberData().user().username();
-
-        var embed = EmbedCreateSpec.builder()
-                .title(username + " found a " + chest.getName() + "!")
-                .description("Do you want to open the chest?\n\nNot picking a choice adds it to your collection.")
-                .thumbnail(chest.getIconUrl())
-                .color(colorUtils.getChestEmbedColor())
-                .build();
-
-        String openButtonId = chestOpenButtonListener.formatOpenChestButtonId(member.getId().asLong(), chest);
-        String keepButtonId = chestOpenButtonListener.formatKeepChestButtonId(member.getId().asLong(), chest);
-
-        var message = MessageCreateSpec.builder()
-                .addEmbed(embed)
-                .addComponent(ActionRow.of(
-                        List.of(
-                                Button.success(openButtonId, "Open Now!"),
-                                Button.primary(keepButtonId, "Add To Collection")
-                        )
-                )).build();
-
+        MessageCreateSpec message = chestOpeningUI.getMessage(chest, member);
         return event.getMessage().getChannel().flatMap(channel -> channel.createMessage(message)).then();
     }
 }
