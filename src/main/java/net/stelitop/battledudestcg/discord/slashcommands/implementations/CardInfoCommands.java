@@ -60,8 +60,7 @@ public class CardInfoCommands {
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(name);
         if (cardOpt.isEmpty()) {
-            return event.reply()
-                    .withContent("No matching dudes!")
+            return event.reply("No matching cards!")
                     .withEphemeral(true);
         }
         Card card = cardOpt.get();

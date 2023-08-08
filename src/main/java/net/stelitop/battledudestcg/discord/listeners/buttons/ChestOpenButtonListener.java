@@ -2,6 +2,7 @@ package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.object.Embed;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import net.stelitop.battledudestcg.commons.utils.RandomUtils;
@@ -60,10 +61,6 @@ public class ChestOpenButtonListener implements ApplicationRunner {
     }
 
     private Mono<Void> handle(ButtonInteractionEvent event) {
-
-        Message message = event.getInteraction().getMessage().get();
-        System.out.println(message);
-
         String buttonId = event.getCustomId();
         String[] parts = buttonId.split("\\|");
         // check for correct button
@@ -72,8 +69,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         }
         // check for correct user
         if (!event.getInteraction().getUser().getId().asString().equals(parts[1])) {
-            return event.reply()
-                    .withContent("This is not your chest!")
+            return event.reply("This is not your chest!")
                     .withEphemeral(true);
         }
         long userId = event.getInteraction().getUser().getId().asLong();
@@ -82,8 +78,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         if (chestOpt.isEmpty()) {
             LOGGER.error("Chest " + parts[2] + " was not found in the database when user "
                     + event.getInteraction().getUser().getUsername() + " tried opening one!");
-            return event.reply()
-                    .withContent("There was an error opening this chest. Missing chest.")
+            return event.reply("There was an error opening this chest. Missing chest.")
                     .withEphemeral(true);
         }
         Chest chest = chestOpt.get();
@@ -112,8 +107,7 @@ public class ChestOpenButtonListener implements ApplicationRunner {
         Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipRepository.findById(chestOwnershipKey);
 
         if (chestOwnershipOpt.isEmpty() || chestOwnershipOpt.get().getCount() == 0) {
-            return event.reply()
-                    .withContent("You've already opened this chest!")
+            return event.reply("You've already opened this chest!")
                     .withEphemeral(true);
         }
         var chestOwnership = chestOwnershipOpt.get();

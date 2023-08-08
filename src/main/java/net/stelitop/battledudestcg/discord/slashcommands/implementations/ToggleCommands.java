@@ -59,8 +59,7 @@ public class ToggleCommands {
                 "You are no longer participating in the game! You will no longer collect Dudes when sending messages in the server. If you want to participate, use this command again.";
         LOGGER.debug(user.getUsername() + " has set their participation to: " + newToggledState);
 
-        return event.reply()
-                .withContent(message)
+        return event.reply(message)
                 .withEphemeral(true);
     }
 
@@ -73,8 +72,7 @@ public class ToggleCommands {
             @CommandParam(name = "a", description = "Number A") long a,
             @CommandParam(name = "b", description = "Number B") long b
     ) {
-        return event.reply()
-                .withContent(a + " multiplied by " + b + " equals " + a*b)
+        return event.reply(a + " multiplied by " + b + " equals " + a*b)
                 .withEphemeral(true);
     }
 }

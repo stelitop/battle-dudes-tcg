@@ -20,8 +20,6 @@ public class ChestOpeningUI {
 
     @Autowired
     private ColorUtils colorUtils;
-    @Autowired
-    private ChestOpenButtonListener chestOpenButtonListener;
 
     /**
      * Formats how the id of the button for opening a chest that just dropped

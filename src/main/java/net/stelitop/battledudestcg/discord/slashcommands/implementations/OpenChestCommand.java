@@ -40,14 +40,12 @@ public class OpenChestCommand {
                 name
         );
         if (chestOwnershipOpt.isEmpty()) {
-            return event.reply()
-                    .withContent("There is no chest with this name!")
+            return event.reply("There is no chest with this name!")
                     .withEphemeral(true);
         }
         ChestOwnership chestOwnership = chestOwnershipOpt.get();
         if (chestOwnership.getCount() == 0) {
-            return event.reply()
-                    .withContent("You don't have any more of these chests!")
+            return event.reply("You don't have any more of these chests!")
                     .withEphemeral(true);
         }
 

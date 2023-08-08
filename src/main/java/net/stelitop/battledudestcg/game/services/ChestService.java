@@ -1,6 +1,7 @@
 package net.stelitop.battledudestcg.game.services;
 
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
+import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,17 @@ public class ChestService {
         String chestName = chestNameOpt.get();
         Optional<Chest> chestOpt = chestRepository.findByName(chestName);
         return chestOpt.orElse(null);
+    }
+
+    public Optional<Long> getChannelIdOfChest(ChannelChest chest) {
+        Long id = discordBotSettings.getChannelChestLocations()
+                .getOrDefault(chest.getName(), null);
+        return id == null ? Optional.empty() : Optional.of(id);
+    }
+
+    public @Nullable Chest getChest(String name) {
+        Optional<Chest> chest = chestRepository.findByNameIgnoreCase(name);
+        return chest.orElse(null);
     }
 
     public @Nullable Chest getRandomChest() {
