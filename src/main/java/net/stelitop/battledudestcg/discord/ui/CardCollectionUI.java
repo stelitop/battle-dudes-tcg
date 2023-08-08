@@ -173,7 +173,7 @@ public class CardCollectionUI {
                         .map(x -> x.getCard().getName())
                         .map(x -> SelectMenu.Option.of(x, x))
                         .toList())
-                .withPlaceholder("Info About Dude");
+                .withPlaceholder("Card Info");
 
 
         return MessageCreateSpec.builder()

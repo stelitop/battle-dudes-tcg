@@ -88,11 +88,11 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionCards(
             @CommandEvent ChatInputInteractionEvent event,
-            @OptionalCommandParam(
-                    name = "user",
-                    description = "The user you want to inspect, by default yourself.",
-                    type = User.class
-            ) Optional<User> userOpt,
+//            @OptionalCommandParam(
+//                    name = "user",
+//                    description = "The user you want to inspect, by default yourself.",
+//                    type = User.class
+//            ) Optional<User> userOpt,
             @OptionalCommandParam(
                     name = "cardtype",
                     description = "Limit cards shown only to a single type.",
