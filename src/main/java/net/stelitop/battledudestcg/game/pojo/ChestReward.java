@@ -87,11 +87,11 @@ public class ChestReward {
 
     private String toStringExtraCardv2() {
         return switch (card.getRarity()) {
-            case Common -> ":green_square: \u200B ~~ \u200B " + card.getName() + " \u200B ~~";
-            case Rare -> ":blue_square: \u200B *~~ \u200B " + card.getName() + " \u200B ~~*";
-            case Epic -> ":purple_square: \u200B ***~~ \u200B " + card.getName() + " \u200B ~~***";
-            case Legendary -> ":orange_square: \u200B ***~~ \u200B __" + card.getName() + "__ \u200B ~~***";
-            case Mythic -> ":red_square: \u200B ***~~ \u200B __" + card.getName().toUpperCase() + "__ \u200B ~~***";
+            case Common -> ":green_square: \u200B ~~ \u200B " + card.getName() + " ~~";
+            case Rare -> ":blue_square: \u200B *~~ \u200B " + card.getName() + " ~~*";
+            case Epic -> ":purple_square: \u200B ***~~ \u200B " + card.getName() + " ~~***";
+            case Legendary -> ":orange_square: \u200B ***~~ \u200B __" + card.getName() + "__ ~~***";
+            case Mythic -> ":red_square: \u200B ***~~ \u200B __" + card.getName().toUpperCase() + "__ ~~***";
             default -> card.getName();
         } + "\u200B \u200B -> \u200B " + toStringCoinsv2();
     }

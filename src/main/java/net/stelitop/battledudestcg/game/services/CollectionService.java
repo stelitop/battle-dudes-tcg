@@ -2,10 +2,8 @@ package net.stelitop.battledudestcg.game.services;
 
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.CardOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionCardKey;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
+import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.*;
 import net.stelitop.battledudestcg.game.database.repositories.CardOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
@@ -32,6 +30,11 @@ public class CollectionService {
     private UserProfileService userProfileService;
     @Autowired
     private UserCollectionRepository userCollectionRepository;
+
+    public UserCollection getUserCollection(long userId) {
+        UserProfile profile = userProfileService.getProfile(userId);
+        return profile.getUserCollection();
+    }
 
     /**
      * Grants a user one copy of a specific card.
@@ -80,6 +83,18 @@ public class CollectionService {
      * @return A reference to the chest ownership object of the chest and the user's collection.
      */
     public @NotNull ChestOwnership giveUserChest(long userId, @NotNull Chest chest) {
+        return giveUserChests(userId, chest, 1);
+    }
+
+    /**
+     * Grants a user multiple copies of a specific chest.
+     *
+     * @param userId The id of the user.
+     * @param chest The chest to add.
+     * @param amount The amount of chests to give.
+     * @return A reference to the chest ownership object of the chest and the user's collection.
+     */
+    public @NotNull ChestOwnership giveUserChests(long userId, @NotNull Chest chest, int amount) {
         var profile = userProfileService.getProfile(userId);
         var collection = profile.getUserCollection();
         var key = new UserCollectionChestKey(collection.getCollectionId(), chest.getChestId());
@@ -89,7 +104,7 @@ public class CollectionService {
             return chestOwnershipRepository.save(new ChestOwnership(key, chest, collection, 1));
         }
         var chestOwnership = chestOwnershipOpt.get();
-        chestOwnership.setCount(chestOwnership.getCount() + 1);
+        chestOwnership.setCount(chestOwnership.getCount() + amount);
         return chestOwnershipRepository.save(chestOwnership);
     }
 

@@ -7,6 +7,7 @@ import discord4j.core.spec.MessageCreateSpec;
 import discord4j.discordjson.possible.Possible;
 import net.stelitop.battledudestcg.discord.listeners.buttons.CardCollectionPageButtonListener;
 import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
+import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
@@ -30,9 +31,7 @@ public class CollectionCommands {
     @Autowired
     private ColorUtils colorUtils;
     @Autowired
-    private EmojiUtils emojiUtils;
-    @Autowired
-    private CardCollectionPageButtonListener ccpgl;
+    private CardCollectionUI cardCollectionUI;
 
     @SlashCommand(
             name = "coins",
@@ -49,8 +48,7 @@ public class CollectionCommands {
         User user = userOpt.orElse(event.getInteraction().getUser());
         String username = user.getUsername();
         int coins = userProfileService.getProfile(user.getId().asLong()).getUserCollection().getCoins();
-        return event.reply()
-                .withContent(username + " has " + coins + " coins!");
+        return event.reply(username + " has " + coins + " coins!");
     }
 
     @SlashCommand(
@@ -90,11 +88,11 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionCards(
             @CommandEvent ChatInputInteractionEvent event,
-            @OptionalCommandParam(
-                    name = "user",
-                    description = "The user you want to inspect, by default yourself.",
-                    type = User.class
-            ) Optional<User> userOpt,
+//            @OptionalCommandParam(
+//                    name = "user",
+//                    description = "The user you want to inspect, by default yourself.",
+//                    type = User.class
+//            ) Optional<User> userOpt,
             @OptionalCommandParam(
                     name = "cardtype",
                     description = "Limit cards shown only to a single type.",
@@ -104,13 +102,24 @@ public class CollectionCommands {
                             @CommandParamChoice(name = "Items", value = "item"),
                             @CommandParamChoice(name = "Warps", value = "warp")
                     }
-            ) Optional<String> cardType
+            ) Optional<String> cardType,
+            @OptionalCommandParam(
+                    name = "order",
+                    description = "How to order the cards in the collection.",
+                    type = String.class,
+                    choices = {
+                            @CommandParamChoice(name = "Name", value = "name"),
+                            @CommandParamChoice(name = "Elemental Types", value = "eltypes"),
+                            @CommandParamChoice(name = "Rarity", value = "rarity")
+                    }
+            ) Optional<String> ordering
     ) {
-        MessageCreateSpec message = ccpgl.getCardCollectionMessage(CardCollectionPageButtonListener
-                .CollectionUiModel.builder()
+        MessageCreateSpec message = cardCollectionUI.getCardCollectionMessage(CardCollectionUI
+                .Model.builder()
                 .page(1)
                 .userId(event.getInteraction().getUser().getId().asLong())
                 .cardType(cardType.orElse("all"))
+                .ordering(ordering.orElse("default"))
                 .build(), event.getInteraction().getUser());
 
         return event.reply()
