@@ -3,6 +3,7 @@ package net.stelitop.battledudestcg.discord.slashcommands;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
+import discord4j.discordjson.json.ImmutableApplicationCommandOptionData;
 import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
@@ -18,13 +19,14 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class SlashCommandRegistrar implements ApplicationRunner {
 
-    private final String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
+    private final static String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -32,6 +34,20 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     @Autowired
     private EnvironmentVariables evs;
 
+    /**
+     * <p>Registers all properly annotated slash commands into the discord bot.</p>
+     *
+     * <p>First all annotated methods are collected. Then, the names of the commands are
+     * used to structure them into a tree hierarchy. The first name of the commands is used
+     * as the base command. Finally, each command tree is individually parsed into a single
+     * command request, which are then overwritten in bulk.</p>
+     *
+     * <p>In the environmental variables it can specifically specified to not register
+     * the commands and instead use the old ones. This can be used when there aren't any
+     * changes and to prevent potential "outdating" of the command signatures.</p>
+     *
+     * @param args incoming application arguments
+     */
     @Override
     public void run(ApplicationArguments args) {
         if (!evs.updateCommandsOnStart()) {
@@ -160,7 +176,8 @@ public class SlashCommandRegistrar implements ApplicationRunner {
 
     /**
      * Parses the annotations present on a method's signature and transforms them into
-     * {@link ApplicationCommandOptionData} objects for the slash command request.
+     * {@link ApplicationCommandOptionData} objects for the slash command request. These
+     * are the parameters of the slash command.
      *
      * @param method Method to parse.
      * @return A list of {@link ApplicationCommandOptionData} for the annotated methods.
@@ -172,51 +189,80 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .toList();
 
         for (var parameter : parameters) {
-            var acodBuilder = ApplicationCommandOptionData.builder();
-
             if (parameter.isAnnotationPresent(CommandParam.class)) {
                 CommandParam paramAnnotation = parameter.getAnnotation(CommandParam.class);
-                acodBuilder.name(paramAnnotation.name().toLowerCase());
-                acodBuilder.description(paramAnnotation.description());
-                Class<?> paramType = parameter.getType();
-                acodBuilder.required(true);
-                acodBuilder.type(OptionType.getCodeOfClass(paramType));
-
-                if (paramAnnotation.choices().length > 0) {
-                    acodBuilder.addAllChoices(Arrays.stream(paramAnnotation.choices())
-                            .map(x -> ApplicationCommandOptionChoiceData.builder()
-                                    .name(x.name())
-                                    .value(x.value())
-                                    .build())
-                            .map(x -> (ApplicationCommandOptionChoiceData)x)
-                            .toList());
-                }
-
+                ret.add(parseRegularCommandParam(paramAnnotation, parameter));
             } else if (parameter.isAnnotationPresent(OptionalCommandParam.class)) {
                 OptionalCommandParam paramAnnotation = parameter.getAnnotation(OptionalCommandParam.class);
-                acodBuilder.name(paramAnnotation.name().toLowerCase());
-                acodBuilder.description(paramAnnotation.description());
-
-                if (!parameter.getType().equals(Optional.class)) {
-                    throw new RuntimeException("Not an optional!");
-                }
-                Class<?> paramType = paramAnnotation.type();
-                acodBuilder.required(false);
-                acodBuilder.type(OptionType.getCodeOfClass(paramType));
-
-                if (paramAnnotation.choices().length > 0) {
-                    acodBuilder.addAllChoices(Arrays.stream(paramAnnotation.choices())
-                            .map(x -> ApplicationCommandOptionChoiceData.builder()
-                                    .name(x.name())
-                                    .value(x.value())
-                                    .build())
-                            .map(x -> (ApplicationCommandOptionChoiceData)x)
-                            .toList());
-                }
+                ret.add(parseOptionalCommandParam(paramAnnotation, parameter));
             }
-            ret.add(acodBuilder.build());
         }
         return ret;
+    }
+
+    /**
+     * Transforms a parameter annotated with {@link CommandParam} into an
+     * {@link ApplicationCommandOptionData} to be used in a slash command signature.
+     *
+     * @param annotation The {@link CommandParam} annotation.
+     * @param parameter The param of the method signature.
+     * @return The {@link ApplicationCommandOptionData}.
+     */
+    private ApplicationCommandOptionData parseRegularCommandParam(CommandParam annotation, Parameter parameter) {
+
+        var acodBuilder = ApplicationCommandOptionData.builder()
+                .name(annotation.name().toLowerCase())
+                .description(annotation.description())
+                .required(true)
+                .type(OptionType.getCodeOfClass(parameter.getType()));
+
+        addChoicesToCommandParam(acodBuilder, annotation.choices());
+        return acodBuilder.build();
+    }
+
+    /**
+     * Transforms a parameter annotated with {@link OptionalCommandParam} into an
+     * {@link ApplicationCommandOptionData} to be used in a slash command signature.
+     *
+     * @param annotation The {@link OptionalCommandParam} annotation.
+     * @param parameter The param of the method signature.
+     * @return The {@link ApplicationCommandOptionData}.
+     */
+    private ApplicationCommandOptionData parseOptionalCommandParam(OptionalCommandParam annotation, Parameter parameter) {
+        if (!parameter.getType().equals(Optional.class)) {
+            throw new RuntimeException("Not an optional class!");
+        }
+
+        var acodBuilder = ApplicationCommandOptionData.builder()
+                .name(annotation.name().toLowerCase())
+                .description(annotation.description())
+                .required(false)
+                .type(OptionType.getCodeOfClass(annotation.type()));
+
+        addChoicesToCommandParam(acodBuilder, annotation.choices());
+        return acodBuilder.build();
+    }
+
+    /**
+     * Adds the specified choices for the value of a command param to the
+     * {@link ApplicationCommandOptionData} builder. If there are no such
+     * options, nothing happens.
+     *
+     * @param acodBuilder The builder.
+     * @param choices The available choices. Can be empty.
+     */
+    private void addChoicesToCommandParam(
+            ImmutableApplicationCommandOptionData.Builder acodBuilder,
+            CommandParamChoice[] choices
+    ) {
+        if (choices.length == 0) return;
+        acodBuilder.addAllChoices(Arrays.stream(choices)
+                .map(x -> ApplicationCommandOptionChoiceData.builder()
+                        .name(x.name())
+                        .value(x.value())
+                        .build())
+                .map(x -> (ApplicationCommandOptionChoiceData)x)
+                .toList());
     }
 
     private ApplicationCommandOptionData createOptionFromTreeNode(CommandTreeNode node) {
