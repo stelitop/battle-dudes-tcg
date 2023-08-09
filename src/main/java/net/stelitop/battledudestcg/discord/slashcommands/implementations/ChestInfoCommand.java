@@ -2,10 +2,10 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;

@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.annotations;
+package net.stelitop.battledudestcg.discord.slashcommands.base.definition;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

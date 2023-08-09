@@ -1,24 +1,18 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.ui.CardInfoUI;
-import net.stelitop.battledudestcg.discord.utils.ColorUtils;
-import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
-import net.stelitop.battledudestcg.discord.DiscordBotSettings;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
-import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
-import net.stelitop.battledudestcg.game.enums.DudeStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CommandComponent
 public class CardInfoCommands {

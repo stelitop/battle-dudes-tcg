@@ -1,19 +1,14 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
-import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
-import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
-import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.services.ChestOwnershipService;
-import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 

@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands;
+package net.stelitop.battledudestcg.discord.slashcommands.base;
 
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
@@ -8,7 +8,13 @@ import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
+import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandParamChoice;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,14 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
+import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirement;
+import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirementExecutor;
+import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.ConditionResult;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +35,28 @@ public class SlashCommandListener implements ApplicationRunner {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private GatewayDiscordClient client;
+    // dependencies
+    private final ApplicationContext applicationContext;
+    private final GatewayDiscordClient client;
+    private final Map<Class<? extends CommandRequirementExecutor>, CommandRequirementExecutor> possibleRequirements;
 
     private List<SlashCommandEntry> slashCommands;
 
+    @Autowired
+    public SlashCommandListener(
+            ApplicationContext applicationContext,
+            GatewayDiscordClient client,
+            List<CommandRequirementExecutor> possibleRequirements
+    ) {
+        this.applicationContext = applicationContext;
+        this.client = client;
+        this.possibleRequirements = possibleRequirements.stream()
+                .collect(Collectors.toMap(CommandRequirementExecutor::getClass, x -> x));
+    }
+
     @Override
     public void run(ApplicationArguments args) {
+
         Collection<Object> commandBeans = applicationContext.getBeansWithAnnotation(CommandComponent.class).values();
 
         slashCommands = new ArrayList<>();
@@ -97,6 +117,13 @@ public class SlashCommandListener implements ApplicationRunner {
             Map<String, ApplicationCommandInteractionOption> options,
             SlashCommandEntry command
     ) {
+
+        ConditionResult conditionsResult = verifyCommandConditions(event, command);
+        if (conditionsResult.hasFailed()) {
+            return event.reply(conditionsResult.errorMessage())
+                    .withEphemeral(true);
+        }
+
         Parameter[] parameters = command.method.getParameters();
         List<Object> invocationParams = Arrays.stream(parameters)
                 .map(p -> mapCommandParamToMethodParam(event, options, p))
@@ -166,6 +193,21 @@ public class SlashCommandListener implements ApplicationRunner {
             case ROLE -> value.asRole().block();
             default -> null;
         };
+    }
+
+    private ConditionResult verifyCommandConditions(ChatInputInteractionEvent event, SlashCommandEntry command) {
+        List<CommandRequirement> conditionAnnotations = Arrays.stream(command.method.getAnnotations())
+                .map(a -> a.annotationType().getAnnotation(CommandRequirement.class))
+                .filter(Objects::nonNull)
+                .toList();
+
+        for (var annotation : conditionAnnotations) {
+            CommandRequirementExecutor conditionBean = possibleRequirements.get(annotation.implementation());
+            if (conditionBean == null) continue;
+            ConditionResult result = conditionBean.verify(event);
+            if (result.hasFailed()) return result;
+        }
+        return ConditionResult.success();
     }
 
 }

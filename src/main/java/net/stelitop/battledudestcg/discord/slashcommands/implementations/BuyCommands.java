@@ -1,17 +1,18 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
-import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.annotations.*;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.services.ChestService;
 import net.stelitop.battledudestcg.game.services.CollectionService;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
-import org.hibernate.cache.spi.support.CollectionReadOnlyAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
