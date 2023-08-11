@@ -1,6 +1,5 @@
 package net.stelitop.battledudestcg.discord.ui;
 
-import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
@@ -11,7 +10,6 @@ import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -27,12 +25,12 @@ public class CardInfoUI {
     @Autowired
     private EmojiUtils emojiUtils;
 
-    public MessageCreateSpec getCardInfoEmbed(Card card) {
+    public MessageCreateSpec getCardInfoMessage(Card card) {
 
         if (card instanceof DudeCard dude) {
-            return getDudeInfoEmbed(dude);
+            return getDudeInfoMessage(dude);
         } else {
-            return getGenericCardEmbed(card);
+            return getGenericCardMessage(card);
         }
     }
 
@@ -42,7 +40,7 @@ public class CardInfoUI {
      * @param dude The dude card.
      * @return The embed.
      */
-    private MessageCreateSpec getDudeInfoEmbed(DudeCard dude) {
+    private MessageCreateSpec getDudeInfoMessage(DudeCard dude) {
         var locationsMsg = dude.getChestSources().isEmpty() ? "None" : dude.getChestSources()
                 .stream()
                 .distinct()
@@ -100,7 +98,7 @@ public class CardInfoUI {
      * @param card The card to make an embed for.
      * @return The embed.
      */
-    private MessageCreateSpec getGenericCardEmbed(Card card) {
+    private MessageCreateSpec getGenericCardMessage(Card card) {
         var locationsMsg = card.getChestSources().isEmpty() ? "None" : card.getChestSources()
                 .stream()
                 .distinct()

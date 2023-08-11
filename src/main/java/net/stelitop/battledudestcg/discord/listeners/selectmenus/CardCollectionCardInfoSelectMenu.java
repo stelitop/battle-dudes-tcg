@@ -56,7 +56,7 @@ public class CardCollectionCardInfoSelectMenu implements ApplicationRunner {
                     .withEphemeral(true);
         }
         ActionRow newComponents = ActionRow.of(Button.primary(originalMessageInfoId, "Back to Collection"));
-        MessageCreateSpec messageCreateSpec = cardInfoUI.getCardInfoEmbed(cardOpt.get());
+        MessageCreateSpec messageCreateSpec = cardInfoUI.getCardInfoMessage(cardOpt.get());
         if (!messageCreateSpec.isComponentsPresent()) {
             messageCreateSpec = messageCreateSpec.withComponents(newComponents);
         } else {

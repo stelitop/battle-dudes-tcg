@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
 import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirement;
 import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirementExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.ConditionResult;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
@@ -118,7 +118,7 @@ public class SlashCommandListener implements ApplicationRunner {
             SlashCommandEntry command
     ) {
 
-        ConditionResult conditionsResult = verifyCommandConditions(event, command);
+        ActionResult conditionsResult = verifyCommandConditions(event, command);
         if (conditionsResult.hasFailed()) {
             return event.reply(conditionsResult.errorMessage())
                     .withEphemeral(true);
@@ -195,7 +195,7 @@ public class SlashCommandListener implements ApplicationRunner {
         };
     }
 
-    private ConditionResult verifyCommandConditions(ChatInputInteractionEvent event, SlashCommandEntry command) {
+    private ActionResult verifyCommandConditions(ChatInputInteractionEvent event, SlashCommandEntry command) {
         List<CommandRequirement> conditionAnnotations = Arrays.stream(command.method.getAnnotations())
                 .map(a -> a.annotationType().getAnnotation(CommandRequirement.class))
                 .filter(Objects::nonNull)
@@ -204,10 +204,10 @@ public class SlashCommandListener implements ApplicationRunner {
         for (var annotation : conditionAnnotations) {
             CommandRequirementExecutor conditionBean = possibleRequirements.get(annotation.implementation());
             if (conditionBean == null) continue;
-            ConditionResult result = conditionBean.verify(event);
+            ActionResult result = conditionBean.verify(event);
             if (result.hasFailed()) return result;
         }
-        return ConditionResult.success();
+        return ActionResult.success();
     }
 
 }

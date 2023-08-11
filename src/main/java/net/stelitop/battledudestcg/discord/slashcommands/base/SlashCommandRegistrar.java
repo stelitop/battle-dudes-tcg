@@ -13,6 +13,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.base.definition.Command
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandParamChoice;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import org.reflections.Reflections;
@@ -195,13 +196,20 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .toList();
 
         for (var parameter : parameters) {
+            ImmutableApplicationCommandOptionData.Builder acodBuilder = null;
             if (parameter.isAnnotationPresent(CommandParam.class)) {
                 CommandParam paramAnnotation = parameter.getAnnotation(CommandParam.class);
-                ret.add(parseRegularCommandParam(paramAnnotation, parameter));
+                acodBuilder = parseRegularCommandParam(paramAnnotation, parameter);
+
             } else if (parameter.isAnnotationPresent(OptionalCommandParam.class)) {
                 OptionalCommandParam paramAnnotation = parameter.getAnnotation(OptionalCommandParam.class);
-                ret.add(parseOptionalCommandParam(paramAnnotation, parameter));
+                acodBuilder = parseOptionalCommandParam(paramAnnotation, parameter);
             }
+            if (acodBuilder == null) continue;
+            // TODO: Check that there are no options available for the command
+            // TODO: Check that the type of the input is one of String, Number or Integer
+            acodBuilder.autocomplete(parameter.isAnnotationPresent(Autocompleted.class));
+            ret.add(acodBuilder.build());
         }
         return ret;
     }
@@ -214,8 +222,10 @@ public class SlashCommandRegistrar implements ApplicationRunner {
      * @param parameter The param of the method signature.
      * @return The {@link ApplicationCommandOptionData}.
      */
-    private ApplicationCommandOptionData parseRegularCommandParam(CommandParam annotation, Parameter parameter) {
-
+    private ImmutableApplicationCommandOptionData.Builder parseRegularCommandParam(
+            CommandParam annotation,
+            Parameter parameter)
+    {
         var acodBuilder = ApplicationCommandOptionData.builder()
                 .name(annotation.name().toLowerCase())
                 .description(annotation.description())
@@ -223,7 +233,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .type(OptionType.getCodeOfClass(parameter.getType()));
 
         addChoicesToCommandParam(acodBuilder, annotation.choices());
-        return acodBuilder.build();
+        return acodBuilder;
     }
 
     /**
@@ -234,7 +244,10 @@ public class SlashCommandRegistrar implements ApplicationRunner {
      * @param parameter The param of the method signature.
      * @return The {@link ApplicationCommandOptionData}.
      */
-    private ApplicationCommandOptionData parseOptionalCommandParam(OptionalCommandParam annotation, Parameter parameter) {
+    private ImmutableApplicationCommandOptionData.Builder parseOptionalCommandParam(
+            OptionalCommandParam annotation,
+            Parameter parameter)
+    {
         if (!parameter.getType().equals(Optional.class)) {
             throw new RuntimeException("Not an optional class!");
         }
@@ -246,7 +259,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .type(OptionType.getCodeOfClass(annotation.type()));
 
         addChoicesToCommandParam(acodBuilder, annotation.choices());
-        return acodBuilder.build();
+        return acodBuilder;
     }
 
     /**

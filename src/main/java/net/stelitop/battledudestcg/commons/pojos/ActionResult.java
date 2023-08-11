@@ -1,23 +1,26 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.requirements;
+package net.stelitop.battledudestcg.commons.pojos;
 
-public class ConditionResult {
+/**
+ * Represents the result from a generic action.
+ */
+public class ActionResult {
 
     private boolean isSuccessful;
     private String errorMessage;
 
-    private ConditionResult() {
+    private ActionResult() {
 
     }
 
-    public static ConditionResult success() {
-        ConditionResult ret = new ConditionResult();
+    public static ActionResult success() {
+        ActionResult ret = new ActionResult();
         ret.isSuccessful = true;
         ret.errorMessage = null;
         return ret;
     }
 
-    public static ConditionResult fail(String errorMessage) {
-        ConditionResult ret = new ConditionResult();
+    public static ActionResult fail(String errorMessage) {
+        ActionResult ret = new ActionResult();
         ret.isSuccessful = false;
         ret.errorMessage = errorMessage;
         return ret;

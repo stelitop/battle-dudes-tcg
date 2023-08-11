@@ -56,7 +56,7 @@ public class CardInfoCommands {
                     .withEphemeral(true);
         }
         Card card = cardOpt.get();
-        MessageCreateSpec message = cardInfoUI.getCardInfoEmbed(card);
+        MessageCreateSpec message = cardInfoUI.getCardInfoMessage(card);
         return event.reply()
                 .withContent(message.content())
                 .withEmbeds(message.embeds())
