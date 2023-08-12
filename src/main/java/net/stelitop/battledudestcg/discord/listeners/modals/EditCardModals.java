@@ -42,7 +42,7 @@ public class EditCardModals implements ApplicationRunner {
                     .withEphemeral(true);
         }
         Card card = cardOpt.get();
-        ActionResult result = switch (parts[2]) { // find which modal this is
+        ActionResult<Void> result = switch (parts[2]) { // find which modal this is
             case EditCardUI.ID_NAME -> parseNameModal(event, card);
             case EditCardUI.ID_EFFECT -> parseEffectModal(event, card);
             case EditCardUI.ID_ELEMENTAL_TYPES -> parseElementalTypesModal(event, card);
@@ -61,19 +61,19 @@ public class EditCardModals implements ApplicationRunner {
                 .withComponents(message.components());
     }
 
-    private ActionResult parseNameModal(ModalSubmitInteractionEvent event, Card card) {
+    private ActionResult<Void> parseNameModal(ModalSubmitInteractionEvent event, Card card) {
         String newName = event.getComponents().get(0).getData().components().get().get(0).value().get();
         card.setName(newName);
         return ActionResult.success();
     }
 
-    private ActionResult parseEffectModal(ModalSubmitInteractionEvent event, Card card) {
+    private ActionResult<Void> parseEffectModal(ModalSubmitInteractionEvent event, Card card) {
         String newEffect = event.getComponents().get(0).getData().components().get().get(0).value().get();
         card.setEffectText(newEffect);
         return ActionResult.success();
     }
 
-    private ActionResult parseElementalTypesModal(ModalSubmitInteractionEvent event, Card card) {
+    private ActionResult<Void> parseElementalTypesModal(ModalSubmitInteractionEvent event, Card card) {
         String newEffects = event.getComponents().get(0).getData().components().get().get(0).value().get();
         var newTypes = ElementalType.parseString(newEffects);
         if (newTypes == null) {

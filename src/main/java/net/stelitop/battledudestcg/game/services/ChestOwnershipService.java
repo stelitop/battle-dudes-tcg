@@ -1,12 +1,11 @@
 package net.stelitop.battledudestcg.game.services;
 
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

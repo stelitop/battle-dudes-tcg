@@ -66,17 +66,4 @@ public class ToggleCommands {
         return event.reply(message)
                 .withEphemeral(true);
     }
-
-    @SlashCommand(
-            name = "multiply",
-            description = "Multiplies two numbers together"
-    )
-    public Mono<Void> multiplyTwoNumbers(
-            @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "a", description = "Number A") long a,
-            @CommandParam(name = "b", description = "Number B") long b
-    ) {
-        return event.reply(a + " multiplied by " + b + " equals " + a*b)
-                .withEphemeral(true);
-    }
 }

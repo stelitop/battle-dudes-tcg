@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.game.database.entities.profile.collection;
+package net.stelitop.battledudestcg.game.database.entities.profile.collection.cards;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

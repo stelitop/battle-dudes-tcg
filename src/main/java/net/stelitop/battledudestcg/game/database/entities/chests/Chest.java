@@ -52,7 +52,7 @@ public class Chest {
     /**
      * The cards that can be obtained from this chest.
      */
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "chestSources")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "chestSources")
     @ToString.Exclude
     private List<Card> possibleDrops;
 

@@ -195,7 +195,7 @@ public class SlashCommandListener implements ApplicationRunner {
         };
     }
 
-    private ActionResult verifyCommandConditions(ChatInputInteractionEvent event, SlashCommandEntry command) {
+    private ActionResult<Void> verifyCommandConditions(ChatInputInteractionEvent event, SlashCommandEntry command) {
         List<CommandRequirement> conditionAnnotations = Arrays.stream(command.method.getAnnotations())
                 .map(a -> a.annotationType().getAnnotation(CommandRequirement.class))
                 .filter(Objects::nonNull)
@@ -204,7 +204,7 @@ public class SlashCommandListener implements ApplicationRunner {
         for (var annotation : conditionAnnotations) {
             CommandRequirementExecutor conditionBean = possibleRequirements.get(annotation.implementation());
             if (conditionBean == null) continue;
-            ActionResult result = conditionBean.verify(event);
+            ActionResult<Void> result = conditionBean.verify(event);
             if (result.hasFailed()) return result;
         }
         return ActionResult.success();

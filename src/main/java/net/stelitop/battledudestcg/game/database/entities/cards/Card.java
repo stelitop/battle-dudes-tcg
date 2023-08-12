@@ -89,7 +89,7 @@ public class Card {
     /**
      * The chests where this card can be obtained from.
      */
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Include
     private List<Chest> chestSources;
 }

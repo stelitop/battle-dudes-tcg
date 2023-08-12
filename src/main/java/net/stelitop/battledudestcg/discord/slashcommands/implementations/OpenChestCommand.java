@@ -7,7 +7,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.base.definition.Command
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
 import net.stelitop.battledudestcg.game.services.ChestOwnershipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;

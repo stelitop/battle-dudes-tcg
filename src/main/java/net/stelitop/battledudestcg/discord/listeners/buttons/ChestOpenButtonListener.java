@@ -2,14 +2,12 @@ package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
-import discord4j.core.object.Embed;
-import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollectionChestKey;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;

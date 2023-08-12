@@ -16,7 +16,7 @@ public class AdminRoleRequirement implements CommandRequirementExecutor {
     private DiscordBotSettings discordBotSettings;
 
     @Override
-    public ActionResult verify(ChatInputInteractionEvent event) {
+    public ActionResult<Void> verify(ChatInputInteractionEvent event) {
         long userId = event.getInteraction().getUser().getId().asLong();
         boolean isAdmin = Arrays.stream(discordBotSettings.getAdminUsers()).anyMatch(x -> x == userId);
         if (isAdmin) return ActionResult.success();

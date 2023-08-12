@@ -11,7 +11,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCo
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;

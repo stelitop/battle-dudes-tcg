@@ -5,5 +5,5 @@ import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 
 public interface CommandRequirementExecutor {
 
-    ActionResult verify(ChatInputInteractionEvent event);
+    ActionResult<Void> verify(ChatInputInteractionEvent event);
 }

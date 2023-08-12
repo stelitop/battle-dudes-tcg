@@ -13,7 +13,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.ItemCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.WarpCard;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.CardOwnership;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +27,11 @@ import java.util.stream.Collectors;
 @Service
 public class CardCollectionUI {
 
+    /**
+     * How many different cards to be shown at once on a page in the card
+     * collection ui. If there are more than this amount of cards, the
+     * collection will be split into pages.
+     */
     public static final int CARDS_PER_PAGE = 20;
 
     @Autowired
@@ -168,13 +173,14 @@ public class CardCollectionUI {
         navigatePagesButtons.add(Button.primary(model.nextPage().serialize(), "Next Page")
                 .disabled(model.page == totalPages));
 
-        String selectMenuId = "opencardinfopage|" + model.serialize();
-        SelectMenu selectMenu = SelectMenu.of(selectMenuId, cardOwnerships.stream()
-                        .map(x -> x.getCard().getName())
-                        .map(x -> SelectMenu.Option.of(x, x))
-                        .toList())
-                .withPlaceholder("Card Info");
+//        String selectMenuId = "opencardinfopage|" + model.serialize();
+//        SelectMenu selectMenu = SelectMenu.of(selectMenuId, cardOwnerships.stream()
+//                        .map(x -> x.getCard().getName())
+//                        .map(x -> SelectMenu.Option.of(x, x))
+//                        .toList())
+//                .withPlaceholder("Card Info");
 
+        System.out.println(description.length());
 
         return MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()
@@ -183,7 +189,7 @@ public class CardCollectionUI {
                         .color(colorUtils.getColor(ElementalType.Neutral))
                         .build())
                 .addComponent(ActionRow.of(navigatePagesButtons))
-                .addComponent(ActionRow.of(selectMenu))
+                //.addComponent(ActionRow.of(selectMenu))
                 .build();
     }
 
