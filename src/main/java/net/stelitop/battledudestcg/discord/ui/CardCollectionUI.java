@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -179,8 +181,6 @@ public class CardCollectionUI {
 //                        .map(x -> SelectMenu.Option.of(x, x))
 //                        .toList())
 //                .withPlaceholder("Card Info");
-
-        System.out.println(description.length());
 
         return MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()

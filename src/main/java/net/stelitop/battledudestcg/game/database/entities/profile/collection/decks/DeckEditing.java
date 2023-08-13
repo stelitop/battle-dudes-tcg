@@ -21,4 +21,7 @@ public class DeckEditing {
 
     @Column(name = "edit_msg_id")
     private Long editMsgId = -1L;
+
+    @Column(name = "edit_msg_channel_id")
+    private Long editMsgChannelId = -1L;
 }

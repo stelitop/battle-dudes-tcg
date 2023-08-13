@@ -1,7 +1,5 @@
 package net.stelitop.battledudestcg.game.enums;
 
-import java.util.Map;
-
 public enum Rarity {
     None,
     Basic,
@@ -42,7 +40,7 @@ public enum Rarity {
         };
     }
 
-    public int getCardLimit() {
+    public int allowedCopies() {
         return switch (this) {
             case Basic -> 999;
             case Common -> 5;

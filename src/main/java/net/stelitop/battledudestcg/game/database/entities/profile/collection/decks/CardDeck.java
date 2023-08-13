@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class CardDeck {
     /**
      * Cards part of the deck. Duplicates allowed.
      */
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Card_In_Deck")
     private List<Card> cards = new ArrayList<>();
 
@@ -43,4 +44,16 @@ public class CardDeck {
     @Column(name = "name")
     private String name;
 
+    /**
+     * Gets the amount of copies in the collection of a specific card.
+     *
+     * @param name The name of the card.
+     * @return How many copies are in the card.
+     */
+    public int countCopiesOfCard(String name) {
+        if (cards == null) return 0;
+        return (int)cards.stream()
+                .filter(x -> x.getName().equalsIgnoreCase(name))
+                .count();
+    }
 }

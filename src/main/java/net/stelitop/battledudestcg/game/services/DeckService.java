@@ -1,13 +1,19 @@
 package net.stelitop.battledudestcg.game.services;
 
+import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.object.entity.Message;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.decks.CardDeck;
+import net.stelitop.battledudestcg.game.database.entities.profile.collection.decks.DeckEditing;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +23,16 @@ import java.util.List;
 @Service
 public class DeckService {
 
+    public static final long DECK_EDIT_MESSAGE_TIMEOUT = 1000 * 60 * 15;
+
     @Autowired
     private DeckRepository deckRepository;
-    @Autowired
-    private UserProfileService userProfileService;
     @Autowired
     private UserCollectionRepository userCollectionRepository;
     @Autowired
     private CollectionService collectionService;
+    @Autowired
+    private GatewayDiscordClient client;
 
     /**
      * Gets all decks belonging to a given user, by the user's id.
@@ -63,7 +71,6 @@ public class DeckService {
         //System.out.println(deckRepository.findCardDecksByUserId(userId));
 
         var userCollection = userCollectionRepository.findByUserId(userId).get();
-        //UserCollection userCollection = collectionService.getUserCollection(userId);
         System.out.println(userCollection);
         CardDeck deck = new CardDeck();
         deck.setName(deckName);
@@ -74,5 +81,35 @@ public class DeckService {
         CardDeck savedDeck = deckRepository.save(deck);
 
         return ActionResult.success(savedDeck);
+    }
+
+    public ActionResult<Pair<DeckEditing, Message>> getSelectedDeck(long userId) {
+        var collection = collectionService.getUserCollection(userId);
+        var deck = collection.getDeckEditing().getEditedDeck();
+        if (deck == null) {
+            return ActionResult.fail("There is no deck selected! Use /deck edit");
+        }
+        var deckEditing = collection.getDeckEditing();
+        var lastEditDate = deckEditing.getLastEditTime();
+        if (Instant.now().toEpochMilli() - lastEditDate.toInstant().toEpochMilli() >= DECK_EDIT_MESSAGE_TIMEOUT) {
+            return ActionResult.fail("Your last edit message has timed out! Use /deck edit");
+        }
+        Message msg;
+        try {
+            msg = client.getMessageById(Snowflake.of(deckEditing.getEditMsgChannelId()),
+                    Snowflake.of(deckEditing.getEditMsgId())).onErrorStop().block();
+        } catch (Exception e) {
+            return ActionResult.fail("Could not find the original deck edit message! User /deck edit.");
+        }
+
+        if (msg == null) {
+            return ActionResult.fail("Could not find the original deck edit message! User /deck edit.");
+        }
+
+        return ActionResult.success(Pair.of(deckEditing, msg));
+    }
+
+    public CardDeck saveDeck(CardDeck deck) {
+        return deckRepository.save(deck);
     }
 }

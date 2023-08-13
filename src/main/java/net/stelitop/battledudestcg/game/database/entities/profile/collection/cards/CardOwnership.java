@@ -17,13 +17,13 @@ public class CardOwnership {
     @EmbeddedId
     private UserCollectionCardKey id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("cardId")
     @JoinColumn(name = "card_id", referencedColumnName = "card_id")
     @ToString.Exclude
     private Card card;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("collectionId")
     @JoinColumn(name = "collection_id", referencedColumnName = "collection_id")
     @ToString.Exclude

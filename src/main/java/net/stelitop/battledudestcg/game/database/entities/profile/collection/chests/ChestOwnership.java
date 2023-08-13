@@ -18,13 +18,13 @@ public class ChestOwnership {
     @EmbeddedId
     private UserCollectionChestKey id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("chestId")
     @JoinColumn(name = "chest_id", referencedColumnName = "chest_id")
     @ToString.Exclude
     private Chest chest;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("collectionId")
     @JoinColumn(name = "collection_id", referencedColumnName = "collection_id")
     @ToString.Exclude

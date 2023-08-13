@@ -28,7 +28,7 @@ public class UserProfile {
     /**
      * The card collection of the user.
      */
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     private UserCollection userCollection;
 
     /**

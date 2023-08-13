@@ -31,7 +31,7 @@ public class ChestRewardUtils {
                 continue;
             }
             Card card = reward.getCard();
-            if (cardCounts.getOrDefault(card.getCardId(), 0) >= card.getRarity().getCardLimit()) {
+            if (cardCounts.getOrDefault(card.getCardId(), 0) >= card.getRarity().allowedCopies()) {
                 newRewards.add(ChestReward.extraCard(card, card.getRarity().getCoinValue()));
             } else {
                 cardCounts.put(card.getCardId(), cardCounts.getOrDefault(card.getCardId(), 0) + 1);

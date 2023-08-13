@@ -10,6 +10,7 @@ import net.stelitop.battledudestcg.game.database.entities.profile.collection.che
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
 import net.stelitop.battledudestcg.game.database.repositories.CardOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
+import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,8 @@ public class CollectionService {
     private UserProfileService userProfileService;
     @Autowired
     private UserCollectionRepository userCollectionRepository;
+    @Autowired
+    private ChestRepository chestRepository;
 
     public UserCollection getUserCollection(long userId) {
         UserProfile profile = userProfileService.getProfile(userId);
