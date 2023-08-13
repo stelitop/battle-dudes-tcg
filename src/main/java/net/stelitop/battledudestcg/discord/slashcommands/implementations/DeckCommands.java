@@ -7,6 +7,7 @@ import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import net.stelitop.battledudestcg.discord.ui.DeckViewingUI;
@@ -54,7 +55,7 @@ public class DeckCommands {
     )
     public Mono<Void> viewDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.") String deckName
+            @CommandParam(name = "name", description = "The name of the deck.") @Autocompleted String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());
@@ -76,7 +77,7 @@ public class DeckCommands {
     )
     public Mono<Void> editDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.") String deckName
+            @CommandParam(name = "name", description = "The name of the deck.") @Autocompleted String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());
