@@ -4,7 +4,6 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
@@ -32,8 +31,11 @@ public class ChestInfoCommand {
     )
     public Mono<Void> chestInfoCommand(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the chest.")
-            @Autocompleted(implementation = ChestNameAutocomplete.class) String name
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the chest.",
+                    autocomplete = ChestNameAutocomplete.class
+            ) String name
     ) {
         Chest chest = chestService.getChest(name);
         if (chest == null) {

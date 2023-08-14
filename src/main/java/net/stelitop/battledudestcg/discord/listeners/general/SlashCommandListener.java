@@ -26,6 +26,19 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * <p>Listener for all slash command events, specifically all {@link ChatInputInteractionEvent}
+ * events.</p>
+ *
+ * <p>When the application loads, all methods annotated with {@link SlashCommand} are loaded
+ * into the component. Then, when an event occurs, they are mapped to the corresponding slash
+ * command method, the values are mapped to the parameters and the method is invoked from
+ * its bean, which must be annotated with {@link CommandComponent}.</p>
+ *
+ * <p>The method might be additionally annotated with any {@link CommandRequirement} annotations.
+ * These requirements are first checked against and if any of them are unfulfilled, the execution
+ * is cancelled and an error message is returned instead.</p>
+ */
 @Component
 public class SlashCommandListener implements ApplicationRunner {
 
@@ -34,8 +47,8 @@ public class SlashCommandListener implements ApplicationRunner {
     // dependencies
     private final ApplicationContext applicationContext;
     private final GatewayDiscordClient client;
-    private final Map<Class<? extends CommandRequirementExecutor>, CommandRequirementExecutor> possibleRequirements;
 
+    private final Map<Class<? extends CommandRequirementExecutor>, CommandRequirementExecutor> possibleRequirements;
     private List<SlashCommandEntry> slashCommands;
 
     @Autowired
@@ -50,6 +63,13 @@ public class SlashCommandListener implements ApplicationRunner {
                 .collect(Collectors.toMap(CommandRequirementExecutor::getClass, x -> x));
     }
 
+    /**
+     * <p>Method executed when the application starts.</p>
+     *
+     * <p>Here </p>
+     *
+     * @param args incoming application arguments
+     */
     @Override
     public void run(ApplicationArguments args) {
 
@@ -82,6 +102,17 @@ public class SlashCommandListener implements ApplicationRunner {
         private String name;
     }
 
+    /**
+     * <p>Handles the {@link ChatInputInteractionEvent} event.</p>
+     *
+     * <p>First the full name of the command is extracted from the options. Then we
+     * search for a registered bean that contains a method corresponding to the
+     * command name. If we find one, we try to map the other command options to
+     * its parameters and finally execute it.</p>
+     *
+     * @param event The event that occurs.
+     * @return The mono emitted from the event.
+     */
     private Mono<Void> handle(ChatInputInteractionEvent event) {
         StringBuilder commandNameBuilder = new StringBuilder(event.getCommandName().toLowerCase());
         List<ApplicationCommandInteractionOption> options = event.getOptions();
@@ -148,27 +179,6 @@ public class SlashCommandListener implements ApplicationRunner {
         if (param.isAnnotationPresent(CommandEvent.class)) {
             return event;
         }
-//        if (param.isAnnotationPresent(CommandParam.class)) {
-//            CommandParam annotation = param.getAnnotation(CommandParam.class);
-//            if (!options.containsKey(annotation.name().toLowerCase())) {
-//                return null;
-//            }
-//            ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
-//            return getValueFromOption(option);
-//        }
-//        if (param.isAnnotationPresent(OptionalCommandParam.class)) {
-//            OptionalCommandParam annotation = param.getAnnotation(OptionalCommandParam.class);
-//            if (!options.containsKey(annotation.name().toLowerCase())) {
-//                return Optional.empty();
-//            }
-//            ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
-//            Object value = getValueFromOption(option);
-//            if (value == null) {
-//                return Optional.empty();
-//            } else {
-//                return Optional.of(value);
-//            }
-//        }
 
         if (param.isAnnotationPresent(CommandParam.class)) {
             CommandParam annotation = param.getAnnotation(CommandParam.class);
@@ -214,5 +224,4 @@ public class SlashCommandListener implements ApplicationRunner {
         }
         return ActionResult.success();
     }
-
 }

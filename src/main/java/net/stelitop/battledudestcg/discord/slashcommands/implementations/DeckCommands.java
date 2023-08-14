@@ -4,15 +4,13 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
-import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.DeckViewingUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import net.stelitop.battledudestcg.game.database.entities.collection.DeckEditing;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.services.CollectionService;
@@ -59,8 +57,11 @@ public class DeckCommands {
     )
     public Mono<Void> viewDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.")
-            @Autocompleted(implementation = DeckNameAutocomplete.class) String deckName
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the deck.",
+                    autocomplete = DeckNameAutocomplete.class
+            ) String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());
@@ -82,8 +83,11 @@ public class DeckCommands {
     )
     public Mono<Void> editDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.")
-            @Autocompleted(implementation = DeckNameAutocomplete.class) String deckName
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the deck.",
+                    autocomplete = DeckNameAutocomplete.class
+            ) String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());
@@ -118,8 +122,11 @@ public class DeckCommands {
     )
     public Mono<Void> addCardToDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the card.")
-            @Autocompleted(implementation = OwnedCardAutocomplete.class) String cardName,
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the card.",
+                    autocomplete = CardInSelectedDeckAutocomplete.class
+            ) String cardName,
             @CommandParam(
                     name = "copies",
                     description = "The amount of copies to remove from the deck. Default = 1.",
@@ -182,8 +189,11 @@ public class DeckCommands {
     )
     public Mono<Void> removeCardToDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the card.")
-            @Autocompleted(implementation = CardInSelectedDeckAutocomplete.class) String cardName,
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the card.",
+                    autocomplete = CardInSelectedDeckAutocomplete.class
+            ) String cardName,
             @CommandParam(
                     name = "copies",
                     description = "The amount of copies to remove from the deck. Default = 1.",

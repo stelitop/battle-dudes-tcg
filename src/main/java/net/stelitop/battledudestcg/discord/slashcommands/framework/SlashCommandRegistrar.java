@@ -10,7 +10,7 @@ import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.listeners.general.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.NullAutocompleteExecutor;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * {@link CommandComponent} classes. Their signatures are parsed and transformed into
  * {@link ApplicationCommandRequest} objects to be sent to discord.</p>
  *
- * <p>During parsing, all methods annotated with {@link Autocompleted} are registered in the
+ * <p>During parsing, all commands with Autocomplete specified are registered in the
  * {@link CommandOptionAutocompleteListener} component. This behaviour might be moved to that
  * component instead directly.</p>
  *
@@ -253,18 +253,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
         for (var parameter : parameters) {
             if (!parameter.isAnnotationPresent(CommandParam.class)) continue;
             CommandParam paramAnnotation = parameter.getAnnotation(CommandParam.class);
-            var acodBuilder = parseRegularCommandParam(paramAnnotation, parameter);
-
-            // For Autocomplete:
-            // TODO: Check that there are no options available for the command
-            // TODO: Check that the type of the input is one of String, Number or Integer
-            if (parameter.isAnnotationPresent(Autocompleted.class)) {
-                Autocompleted autocompleted = parameter.getAnnotation(Autocompleted.class);
-                acodBuilder.autocomplete(true);
-                String paramName = acodBuilder.build().name();
-                commandOptionAutocompleteListener.addMapping(commandName, paramName, autocompleted.implementation());
-            }
-            ret.add(acodBuilder.build());
+            ret.add(parseRegularCommandParam(paramAnnotation, parameter, commandName));
         }
         return ret;
     }
@@ -275,11 +264,13 @@ public class SlashCommandRegistrar implements ApplicationRunner {
      *
      * @param annotation The {@link CommandParam} annotation.
      * @param parameter The param of the method signature.
+     * @param commandName The full name of the command this parameter originates from.
      * @return The {@link ApplicationCommandOptionData}.
      */
-    private ImmutableApplicationCommandOptionData.Builder parseRegularCommandParam(
+    private ApplicationCommandOptionData parseRegularCommandParam(
             CommandParam annotation,
-            Parameter parameter)
+            Parameter parameter,
+            String commandName)
     {
         var acodBuilder = ApplicationCommandOptionData.builder()
                 .name(annotation.name().toLowerCase())
@@ -287,8 +278,17 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .required(annotation.required())
                 .type(OptionType.getCodeOfClass(parameter.getType()));
 
+        // For Autocomplete:
+        // TODO: Check that there are no options available for the command
+        // TODO: Check that the type of the input is one of String, Number or Integer
+        if (annotation.autocomplete()!= NullAutocompleteExecutor.class) {
+            acodBuilder.autocomplete(true);
+            String paramName = annotation.name().toLowerCase();
+            commandOptionAutocompleteListener.addMapping(commandName, paramName, annotation.autocomplete());
+        }
+
         addChoicesToCommandParam(acodBuilder, annotation.choices());
-        return acodBuilder;
+        return acodBuilder.build();
     }
 
     /**
