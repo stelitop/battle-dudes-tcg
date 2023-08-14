@@ -10,25 +10,22 @@ import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.listeners.general.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParamChoice;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -248,22 +245,15 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     private List<ApplicationCommandOptionData> getOptionsFromMethod(Method method) {
         List<ApplicationCommandOptionData> ret = new ArrayList<>();
         var parameters = Arrays.stream(method.getParameters())
-                .filter(x -> x.isAnnotationPresent(CommandParam.class) || x.isAnnotationPresent(OptionalCommandParam.class))
+                .filter(x -> x.isAnnotationPresent(CommandParam.class))
                 .toList();
 
         String commandName = method.getAnnotation(SlashCommand.class).name().toLowerCase();
 
         for (var parameter : parameters) {
-            ImmutableApplicationCommandOptionData.Builder acodBuilder = null;
-            if (parameter.isAnnotationPresent(CommandParam.class)) {
-                CommandParam paramAnnotation = parameter.getAnnotation(CommandParam.class);
-                acodBuilder = parseRegularCommandParam(paramAnnotation, parameter);
-
-            } else if (parameter.isAnnotationPresent(OptionalCommandParam.class)) {
-                OptionalCommandParam paramAnnotation = parameter.getAnnotation(OptionalCommandParam.class);
-                acodBuilder = parseOptionalCommandParam(paramAnnotation, parameter);
-            }
-            if (acodBuilder == null) continue;
+            if (!parameter.isAnnotationPresent(CommandParam.class)) continue;
+            CommandParam paramAnnotation = parameter.getAnnotation(CommandParam.class);
+            var acodBuilder = parseRegularCommandParam(paramAnnotation, parameter);
 
             // For Autocomplete:
             // TODO: Check that there are no options available for the command
@@ -294,34 +284,8 @@ public class SlashCommandRegistrar implements ApplicationRunner {
         var acodBuilder = ApplicationCommandOptionData.builder()
                 .name(annotation.name().toLowerCase())
                 .description(annotation.description())
-                .required(true)
+                .required(annotation.required())
                 .type(OptionType.getCodeOfClass(parameter.getType()));
-
-        addChoicesToCommandParam(acodBuilder, annotation.choices());
-        return acodBuilder;
-    }
-
-    /**
-     * Transforms a parameter annotated with {@link OptionalCommandParam} into an
-     * {@link ApplicationCommandOptionData} to be used in a slash command signature.
-     *
-     * @param annotation The {@link OptionalCommandParam} annotation.
-     * @param parameter The param of the method signature.
-     * @return The {@link ApplicationCommandOptionData}.
-     */
-    private ImmutableApplicationCommandOptionData.Builder parseOptionalCommandParam(
-            OptionalCommandParam annotation,
-            Parameter parameter)
-    {
-        if (!parameter.getType().equals(Optional.class)) {
-            throw new RuntimeException("Not an optional class!");
-        }
-
-        var acodBuilder = ApplicationCommandOptionData.builder()
-                .name(annotation.name().toLowerCase())
-                .description(annotation.description())
-                .required(false)
-                .type(OptionType.getCodeOfClass(annotation.type()));
 
         addChoicesToCommandParam(acodBuilder, annotation.choices());
         return acodBuilder;

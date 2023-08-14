@@ -3,28 +3,22 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.services.ChestService;
 import net.stelitop.battledudestcg.game.services.CollectionService;
-import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 @CommandComponent
 public class BuyCommands {
 
     @Autowired
     private ChestService chestService;
-    @Autowired
-    private UserProfileService userProfileService;
     @Autowired
     private CollectionService collectionService;
     @Autowired
@@ -37,7 +31,11 @@ public class BuyCommands {
     public Mono<Void> buyChestCommand(
             @CommandEvent ChatInputInteractionEvent event,
             @CommandParam(name = "name", description = "The name of the chest") String name,
-            @OptionalCommandParam(name = "amount", description = "Amount of chests to buy. Default is 1. Max is 50.", type = Long.class) Optional<Long> amountOpt
+            @CommandParam(
+                    name = "amount",
+                    description = "Amount of chests to buy. Default is 1. Max is 50.",
+                    required = false
+            ) Long amountOpt
     ) {
         Chest chest = chestService.getChest(name);
         if (chest == null) {
@@ -48,7 +46,7 @@ public class BuyCommands {
             return event.reply("You are not allowed to purchase this chest!")
                     .withEphemeral(true);
         }
-        int chestsAmount = amountOpt.orElse(1L).intValue();
+        int chestsAmount = (int)(amountOpt == null ? 1L : amountOpt);
         if (chestsAmount < 1 || chestsAmount > 50) {
             return event.reply("Invalid chest amount! Must be between 1 and 50.")
                     .withEphemeral(true);

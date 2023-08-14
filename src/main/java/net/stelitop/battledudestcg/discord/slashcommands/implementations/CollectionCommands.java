@@ -4,11 +4,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParamChoice;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
@@ -18,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CommandComponent
@@ -37,13 +32,13 @@ public class CollectionCommands {
     )
     public Mono<Void> getUserCoins(
             @CommandEvent ChatInputInteractionEvent event,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "user",
                     description = "User to check the coins of. Defaults to self",
-                    type = User.class
-            ) Optional<User> userOpt
+                    required = false
+            ) User userOpt
     ) {
-        User user = userOpt.orElse(event.getInteraction().getUser());
+        User user = userOpt == null ? event.getInteraction().getUser() : userOpt;
         String username = user.getUsername();
         int coins = userProfileService.getProfile(user.getId().asLong()).getUserCollection().getCoins();
         return event.reply(username + " has " + coins + " coins!");
@@ -55,13 +50,13 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionChests(
             @CommandEvent ChatInputInteractionEvent event,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "user",
                     description = "The user you want to inspect, by default yourself.",
-                    type = User.class
-            ) Optional<User> userOpt
+                    required = false
+            ) User userOpt
     ) {
-        User user = userOpt.orElse(event.getInteraction().getUser());
+        User user = userOpt == null ? event.getInteraction().getUser() : userOpt;
         String username = user.getUsername();
         var profile = userProfileService.getProfile(user.getId().asLong());
         List<ChestOwnership> chestOwnerships = profile.getUserCollection().getOwnedChests().stream()
@@ -86,38 +81,33 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionCards(
             @CommandEvent ChatInputInteractionEvent event,
-//            @OptionalCommandParam(
-//                    name = "user",
-//                    description = "The user you want to inspect, by default yourself.",
-//                    type = User.class
-//            ) Optional<User> userOpt,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "cardtype",
                     description = "Limit cards shown only to a single type.",
-                    type = String.class,
+                    required = false,
                     choices = {
                             @CommandParamChoice(name = "Dudes", value = "dude"),
                             @CommandParamChoice(name = "Items", value = "item"),
                             @CommandParamChoice(name = "Warps", value = "warp")
                     }
-            ) Optional<String> cardType,
-            @OptionalCommandParam(
+            ) String cardTypeOpt,
+            @CommandParam(
                     name = "order",
                     description = "How to order the cards in the collection.",
-                    type = String.class,
+                    required = false,
                     choices = {
                             @CommandParamChoice(name = "Name", value = "name"),
                             @CommandParamChoice(name = "Elemental Types", value = "eltypes"),
                             @CommandParamChoice(name = "Rarity", value = "rarity")
                     }
-            ) Optional<String> ordering
+            ) String orderingOpt
     ) {
         MessageCreateSpec message = cardCollectionUI.getCardCollectionMessage(CardCollectionUI
                 .Model.builder()
                 .page(1)
                 .userId(event.getInteraction().getUser().getId().asLong())
-                .cardType(cardType.orElse("all"))
-                .ordering(ordering.orElse("default"))
+                .cardType(cardTypeOpt == null ? "all" : cardTypeOpt)
+                .ordering(orderingOpt == null ? "default" : orderingOpt)
                 .build(), event.getInteraction().getUser());
 
         return event.reply()

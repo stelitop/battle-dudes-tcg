@@ -25,6 +25,8 @@ public class OptionType {
         {
             put(long.class, OptionType.INTEGER);
             put(Long.class, OptionType.INTEGER);
+            put(Integer.class, OptionType.INTEGER);
+            put(int.class, OptionType.INTEGER);
             put(boolean.class, OptionType.BOOLEAN);
             put(Boolean.class, OptionType.BOOLEAN);
             put(String.class, OptionType.STRING);

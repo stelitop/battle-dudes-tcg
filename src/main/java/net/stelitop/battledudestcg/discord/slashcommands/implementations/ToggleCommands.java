@@ -4,16 +4,14 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 @CommandComponent
 public class ToggleCommands {
@@ -29,12 +27,13 @@ public class ToggleCommands {
     )
     public Mono<Void> isToggledCommand(
             @CommandEvent ChatInputInteractionEvent event,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "user",
                     description = "The user you want to check. Yourself by default.",
-                    type = User.class) Optional<User> userOpt
+                    required = false
+            ) User userOpt
     ) {
-        User user = userOpt.orElse(event.getInteraction().getUser());
+        User user = userOpt == null ? event.getInteraction().getUser() : userOpt;
         long userId = user.getId().asLong();
         String username = user.getUsername();
         boolean isParticipating = userProfileService.getProfile(userId).getUserSettings().isParticipating();

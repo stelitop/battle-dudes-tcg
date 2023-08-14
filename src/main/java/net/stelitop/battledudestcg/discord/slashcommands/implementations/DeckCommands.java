@@ -120,10 +120,10 @@ public class DeckCommands {
             @CommandEvent ChatInputInteractionEvent event,
             @CommandParam(name = "name", description = "The name of the card.")
             @Autocompleted(implementation = OwnedCardAutocomplete.class) String cardName,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "copies",
-                    description = "The amount of copies to add to the deck. Default = 1.",
-                    type = Long.class,
+                    description = "The amount of copies to remove from the deck. Default = 1.",
+                    required = false,
                     choices = {
                             @CommandParamChoice(name = "x1", value = "1"),
                             @CommandParamChoice(name = "x2", value = "2"),
@@ -131,7 +131,7 @@ public class DeckCommands {
                             @CommandParamChoice(name = "x4", value = "4"),
                             @CommandParamChoice(name = "x5", value = "5"),
                     }
-            ) Optional<Long> copiesOpt
+            ) Long copiesOpt
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(cardName);
         if (cardOpt.isEmpty()) {
@@ -139,7 +139,7 @@ public class DeckCommands {
                     .withEphemeral(true);
         }
         Card card = cardOpt.get();
-        long copies = copiesOpt.orElse(1L);
+        int copies = (int)(copiesOpt == null ? 1 : copiesOpt);
         long userId = event.getInteraction().getUser().getId().asLong();
         var deckResult = deckService.getSelectedDeck(userId);
         if (deckResult.hasFailed()) {
@@ -184,10 +184,10 @@ public class DeckCommands {
             @CommandEvent ChatInputInteractionEvent event,
             @CommandParam(name = "name", description = "The name of the card.")
             @Autocompleted(implementation = CardInSelectedDeckAutocomplete.class) String cardName,
-            @OptionalCommandParam(
+            @CommandParam(
                     name = "copies",
                     description = "The amount of copies to remove from the deck. Default = 1.",
-                    type = Long.class,
+                    required = false,
                     choices = {
                             @CommandParamChoice(name = "x1", value = "1"),
                             @CommandParamChoice(name = "x2", value = "2"),
@@ -195,14 +195,14 @@ public class DeckCommands {
                             @CommandParamChoice(name = "x4", value = "4"),
                             @CommandParamChoice(name = "x5", value = "5"),
                     }
-            ) Optional<Long> copiesOpt
+            ) Long copiesOpt
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(cardName);
         if (cardOpt.isEmpty()) {
             return event.reply("There is no card with this name!")
                     .withEphemeral(true);
         }
-        int copies = copiesOpt.orElse(1L).intValue();
+        int copies = (int)(copiesOpt == null ? 1 : copiesOpt);
         long userId = event.getInteraction().getUser().getId().asLong();
         var deckResult = deckService.getSelectedDeck(userId);
         if (deckResult.hasFailed()) {

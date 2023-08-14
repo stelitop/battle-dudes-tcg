@@ -6,15 +6,11 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.requirements.CommandRequirement;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.requirements.CommandRequirementExecutor;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +114,7 @@ public class SlashCommandListener implements ApplicationRunner {
             SlashCommandEntry command
     ) {
 
-        ActionResult conditionsResult = verifyCommandConditions(event, command);
+        ActionResult<Void> conditionsResult = verifyCommandConditions(event, command);
         if (conditionsResult.hasFailed()) {
             return event.reply(conditionsResult.errorMessage())
                     .withEphemeral(true);
@@ -152,6 +148,28 @@ public class SlashCommandListener implements ApplicationRunner {
         if (param.isAnnotationPresent(CommandEvent.class)) {
             return event;
         }
+//        if (param.isAnnotationPresent(CommandParam.class)) {
+//            CommandParam annotation = param.getAnnotation(CommandParam.class);
+//            if (!options.containsKey(annotation.name().toLowerCase())) {
+//                return null;
+//            }
+//            ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
+//            return getValueFromOption(option);
+//        }
+//        if (param.isAnnotationPresent(OptionalCommandParam.class)) {
+//            OptionalCommandParam annotation = param.getAnnotation(OptionalCommandParam.class);
+//            if (!options.containsKey(annotation.name().toLowerCase())) {
+//                return Optional.empty();
+//            }
+//            ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
+//            Object value = getValueFromOption(option);
+//            if (value == null) {
+//                return Optional.empty();
+//            } else {
+//                return Optional.of(value);
+//            }
+//        }
+
         if (param.isAnnotationPresent(CommandParam.class)) {
             CommandParam annotation = param.getAnnotation(CommandParam.class);
             if (!options.containsKey(annotation.name().toLowerCase())) {
@@ -159,19 +177,6 @@ public class SlashCommandListener implements ApplicationRunner {
             }
             ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
             return getValueFromOption(option);
-        }
-        if (param.isAnnotationPresent(OptionalCommandParam.class)) {
-            OptionalCommandParam annotation = param.getAnnotation(OptionalCommandParam.class);
-            if (!options.containsKey(annotation.name().toLowerCase())) {
-                return Optional.empty();
-            }
-            ApplicationCommandInteractionOption option = options.get(annotation.name().toLowerCase());
-            Object value = getValueFromOption(option);
-            if (value == null) {
-                return Optional.empty();
-            } else {
-                return Optional.of(value);
-            }
         }
 
         return null;

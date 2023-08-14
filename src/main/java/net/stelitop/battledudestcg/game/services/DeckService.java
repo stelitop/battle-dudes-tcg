@@ -71,13 +71,11 @@ public class DeckService {
         //System.out.println(deckRepository.findCardDecksByUserId(userId));
 
         var userCollection = userCollectionRepository.findByUserId(userId).get();
-        System.out.println(userCollection);
         CardDeck deck = new CardDeck();
         deck.setName(deckName);
         deck.setCards(new ArrayList<>());
         deck.setUserCollection(userCollection);
         userCollection.getDecks().add(deck);
-        System.out.println(deck);
         CardDeck savedDeck = deckRepository.save(deck);
 
         return ActionResult.success(savedDeck);
