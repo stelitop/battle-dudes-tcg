@@ -2,14 +2,14 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
-import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.Autocompleted;
+import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.DeckViewingUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
@@ -61,7 +61,8 @@ public class DeckCommands {
     )
     public Mono<Void> viewDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.") @Autocompleted String deckName
+            @CommandParam(name = "name", description = "The name of the deck.")
+            @Autocompleted(implementation = DeckNameAutocomplete.class) String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());
@@ -83,7 +84,8 @@ public class DeckCommands {
     )
     public Mono<Void> editDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the deck.") @Autocompleted String deckName
+            @CommandParam(name = "name", description = "The name of the deck.")
+            @Autocompleted(implementation = DeckNameAutocomplete.class) String deckName
     ) {
         // TODO: Change the way the deck is selected.
         var decks = deckService.getDecksOfUser(event.getInteraction().getUser().getId().asLong());

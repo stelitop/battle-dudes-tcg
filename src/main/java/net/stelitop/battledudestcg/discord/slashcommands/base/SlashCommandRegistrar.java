@@ -8,12 +8,13 @@ import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
+import net.stelitop.battledudestcg.discord.listeners.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandParamChoice;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.Autocompleted;
+import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.Autocompleted;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
 import org.reflections.Reflections;
@@ -40,6 +41,8 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     private RestClient restClient;
     @Autowired
     private EnvironmentVariables evs;
+    @Autowired
+    private CommandOptionAutocompleteListener commandOptionAutocompleteListener;
 
     /**
      * <p>Registers all properly annotated slash commands into the discord bot.</p>
@@ -57,10 +60,6 @@ public class SlashCommandRegistrar implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        if (!evs.updateCommandsOnStart()) {
-            LOGGER.warn("No slash command signatures were updated due to the environment settings!");
-            return;
-        }
         var reflections = new Reflections(PACKAGE_NAME);
         var slashCommandClasses = reflections.getTypesAnnotatedWith(CommandComponent.class);
         var slashCommandMethods = slashCommandClasses.stream()
@@ -81,6 +80,11 @@ public class SlashCommandRegistrar implements ApplicationRunner {
 
         var applicationService = restClient.getApplicationService();
         long applicationId = restClient.getApplicationId().block();
+
+        if (!evs.updateCommandsOnStart()) {
+            LOGGER.warn("No slash command signatures were updated due to the environment settings!");
+            return;
+        }
 
         LOGGER.info("Started registering global commands...");
         applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, slashCommandRequests)
@@ -195,6 +199,8 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .filter(x -> x.isAnnotationPresent(CommandParam.class) || x.isAnnotationPresent(OptionalCommandParam.class))
                 .toList();
 
+        String commandName = method.getAnnotation(SlashCommand.class).name().toLowerCase();
+
         for (var parameter : parameters) {
             ImmutableApplicationCommandOptionData.Builder acodBuilder = null;
             if (parameter.isAnnotationPresent(CommandParam.class)) {
@@ -206,9 +212,16 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 acodBuilder = parseOptionalCommandParam(paramAnnotation, parameter);
             }
             if (acodBuilder == null) continue;
+
+            // For Autocomplete:
             // TODO: Check that there are no options available for the command
             // TODO: Check that the type of the input is one of String, Number or Integer
-            acodBuilder.autocomplete(parameter.isAnnotationPresent(Autocompleted.class));
+            if (parameter.isAnnotationPresent(Autocompleted.class)) {
+                Autocompleted autocompleted = parameter.getAnnotation(Autocompleted.class);
+                acodBuilder.autocomplete(true);
+                String paramName = acodBuilder.build().name();
+                commandOptionAutocompleteListener.addMapping(commandName, paramName, autocompleted.implementation());
+            }
             ret.add(acodBuilder.build());
         }
         return ret;
