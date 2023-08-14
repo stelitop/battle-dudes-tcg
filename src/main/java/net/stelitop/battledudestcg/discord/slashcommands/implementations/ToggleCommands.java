@@ -2,11 +2,10 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.slf4j.Logger;

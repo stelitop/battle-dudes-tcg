@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base;
+package net.stelitop.battledudestcg.discord.slashcommands.framework;
 
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
@@ -8,15 +8,15 @@ import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
-import net.stelitop.battledudestcg.discord.listeners.CommandOptionAutocompleteListener;
+import net.stelitop.battledudestcg.discord.listeners.general.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandParamChoice;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.Autocompleted;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParamChoice;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,25 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * <p>At the start of the program, this component finds all defined slash commands inside of
+ * {@link CommandComponent} classes. Their signatures are parsed and transformed into
+ * {@link ApplicationCommandRequest} objects to be sent to discord.</p>
+ *
+ * <p>During parsing, all methods annotated with {@link Autocompleted} are registered in the
+ * {@link CommandOptionAutocompleteListener} component. This behaviour might be moved to that
+ * component instead directly.</p>
+ *
+ * <p>You can disable the registering of commands by setting the property "slashcommands.update"
+ * to false in the application.properties file. This can be used because sometimes discord will
+ * "outdate" the commands and require you to wait.</p>
+ */
 @Component
 public class SlashCommandRegistrar implements ApplicationRunner {
 
+    /**
+     * Package name used for searching for {@link CommandComponent} beans.
+     */
     private final static String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -156,8 +172,17 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     @AllArgsConstructor
     @ToString
     private static class CommandTreeNode {
+        /**
+         * The name of the current command part. Only a single word.
+         */
         public String name;
+        /**
+         * The children in the command hierarchy.
+         */
         public List<CommandTreeNode> children;
+        /**
+         * The method that would execute the slash command, if this is a leaf.
+         */
         public Method method;
     }
 
@@ -181,8 +206,35 @@ public class SlashCommandRegistrar implements ApplicationRunner {
             return requestBuilder.build();
         }
         requestBuilder.description("Description for " + tree.name);
-        tree.children.forEach(child -> requestBuilder.addOption(createOptionFromTreeNode(child)));
+        tree.children.forEach(child -> requestBuilder.addOption(createOptionFromTreeChild(child)));
         return requestBuilder.build();
+    }
+
+    /**
+     * Creates a new application command option data from the child node of a tree
+     * node. This means that this either comes from a Subcommand or a SubcommandGroup.
+     *
+     * @param node The command node to transform.
+     * @return The ApplicationCommandOptionData.
+     */
+    private ApplicationCommandOptionData createOptionFromTreeChild(CommandTreeNode node) {
+        // this is a method
+        var acodBuilder = ApplicationCommandOptionData.builder();
+        acodBuilder.name(node.name);
+        if (node.method != null) {
+            var annotation = node.method.getAnnotation(SlashCommand.class);
+            if (annotation == null) {
+                return ApplicationCommandOptionData.builder().build();
+            }
+            acodBuilder.description(annotation.description());
+            acodBuilder.type(OptionType.SUB_COMMAND);
+            acodBuilder.addAllOptions(getOptionsFromMethod(node.method));
+            return acodBuilder.build();
+        }
+        acodBuilder.description("Description for " + node.name);
+        acodBuilder.type(OptionType.SUB_COMMAND_GROUP);
+        node.children.forEach(child -> acodBuilder.addOption(createOptionFromTreeChild(child)));
+        return acodBuilder.build();
     }
 
     /**
@@ -295,25 +347,5 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                         .build())
                 .map(x -> (ApplicationCommandOptionChoiceData)x)
                 .toList());
-    }
-
-    private ApplicationCommandOptionData createOptionFromTreeNode(CommandTreeNode node) {
-        // this is a method
-        var acodBuilder = ApplicationCommandOptionData.builder();
-        acodBuilder.name(node.name);
-        if (node.method != null) {
-            var annotation = node.method.getAnnotation(SlashCommand.class);
-            if (annotation == null) {
-                return ApplicationCommandOptionData.builder().build();
-            }
-            acodBuilder.description(annotation.description());
-            acodBuilder.type(OptionType.SUB_COMMAND);
-            acodBuilder.addAllOptions(getOptionsFromMethod(node.method));
-            return acodBuilder.build();
-        }
-        acodBuilder.description("Description for " + node.name);
-        acodBuilder.type(OptionType.SUB_COMMAND_GROUP);
-        node.children.forEach(child -> acodBuilder.addOption(createOptionFromTreeNode(child)));
-        return acodBuilder.build();
     }
 }

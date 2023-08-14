@@ -1,11 +1,10 @@
-package net.stelitop.battledudestcg.game.database.entities.profile.collection.decks;
+package net.stelitop.battledudestcg.game.database.entities.collection;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 
 import java.util.ArrayList;
 import java.util.List;

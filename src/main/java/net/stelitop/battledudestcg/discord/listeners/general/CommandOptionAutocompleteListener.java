@@ -1,12 +1,12 @@
-package net.stelitop.battledudestcg.discord.listeners;
+package net.stelitop.battledudestcg.discord.listeners.general;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.InputSuggestion;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.AutocompletionExecutor;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.InputSuggestion;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

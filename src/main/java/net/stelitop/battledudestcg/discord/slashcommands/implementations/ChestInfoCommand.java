@@ -2,11 +2,11 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.Autocompleted;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;

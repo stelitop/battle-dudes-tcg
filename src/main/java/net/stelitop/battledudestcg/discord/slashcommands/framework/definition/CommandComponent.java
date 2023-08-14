@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.definition;
+package net.stelitop.battledudestcg.discord.slashcommands.framework.definition;
 
 
 import org.springframework.stereotype.Component;

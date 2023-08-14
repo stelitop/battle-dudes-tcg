@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete;
+package net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

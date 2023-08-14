@@ -2,7 +2,6 @@ package net.stelitop.battledudestcg.discord.ui;
 
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
-import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
@@ -13,7 +12,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.ItemCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.WarpCard;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 

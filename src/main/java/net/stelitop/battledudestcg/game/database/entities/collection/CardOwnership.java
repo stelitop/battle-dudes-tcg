@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.game.database.entities.profile.collection.cards;
+package net.stelitop.battledudestcg.game.database.entities.collection;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
 
 @Entity
 @Data

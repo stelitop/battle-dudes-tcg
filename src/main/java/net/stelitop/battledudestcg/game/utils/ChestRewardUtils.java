@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.game.utils;
 
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,14 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.services.ChestService;
 import net.stelitop.battledudestcg.game.services.CollectionService;

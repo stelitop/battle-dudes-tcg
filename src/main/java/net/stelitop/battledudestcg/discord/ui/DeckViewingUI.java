@@ -1,14 +1,12 @@
 package net.stelitop.battledudestcg.discord.ui;
 
 import com.google.common.collect.Lists;
-import discord4j.core.object.Embed;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import discord4j.discordjson.possible.Possible;
 import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.decks.CardDeck;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

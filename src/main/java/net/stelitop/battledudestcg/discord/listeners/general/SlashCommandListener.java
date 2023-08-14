@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.listeners;
+package net.stelitop.battledudestcg.discord.listeners.general;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -7,14 +7,14 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirement;
-import net.stelitop.battledudestcg.discord.slashcommands.base.requirements.CommandRequirementExecutor;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.requirements.CommandRequirement;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.requirements.CommandRequirementExecutor;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.params.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

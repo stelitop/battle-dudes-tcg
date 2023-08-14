@@ -1,9 +1,16 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete;
+package net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 
 import java.util.List;
 
+/**
+ * <p>An autocomplete executor returns the suggestion of a specific autocomplete event.
+ * This can be connected to a parameter of a slash command by using the
+ * {@link Autocompleted} annotation on the parameter.</p>
+ *
+ * <p>Classes implementing this interface must also be recognised as beans by spring.</p>
+ */
 public interface AutocompletionExecutor {
 
     /**

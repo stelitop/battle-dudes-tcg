@@ -1,6 +1,6 @@
 package net.stelitop.battledudestcg.game.database.repositories;
 
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.decks.CardDeck;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

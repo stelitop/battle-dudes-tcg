@@ -1,10 +1,9 @@
-package net.stelitop.battledudestcg.game.database.entities.profile.collection.decks;
+package net.stelitop.battledudestcg.game.database.entities.collection;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
-import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 
 import java.time.Instant;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.game.services;
 
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
 import net.stelitop.battledudestcg.game.database.repositories.UserProfileRepository;

@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.requirements;
+package net.stelitop.battledudestcg.discord.slashcommands.framework.requirements;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -2,12 +2,13 @@ package net.stelitop.battledudestcg.game.services;
 
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.database.entities.profile.collection.*;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.CardOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.cards.UserCollectionCardKey;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollectionCardKey;
+import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollectionChestKey;
 import net.stelitop.battledudestcg.game.database.repositories.CardOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestOwnershipRepository;
 import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;

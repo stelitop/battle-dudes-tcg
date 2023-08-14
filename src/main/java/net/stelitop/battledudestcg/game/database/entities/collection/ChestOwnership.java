@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.game.database.entities.profile.collection.chests;
+package net.stelitop.battledudestcg.game.database.entities.collection;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
 
 @Entity
 @Data

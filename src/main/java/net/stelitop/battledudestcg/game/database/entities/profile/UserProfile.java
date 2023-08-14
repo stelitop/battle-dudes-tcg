@@ -2,7 +2,7 @@ package net.stelitop.battledudestcg.game.database.entities.profile;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.UserCollection;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 
 import java.util.Date;
 

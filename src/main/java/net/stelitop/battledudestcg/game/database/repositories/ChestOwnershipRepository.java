@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.game.database.repositories;
 
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.ChestOwnership;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.chests.UserCollectionChestKey;
+import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
+import net.stelitop.battledudestcg.game.database.entities.collection.UserCollectionChestKey;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

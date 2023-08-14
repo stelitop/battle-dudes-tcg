@@ -1,6 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.base.definition.params;
-
-import net.stelitop.battledudestcg.discord.slashcommands.base.definition.CommandParamChoice;
+package net.stelitop.battledudestcg.discord.slashcommands.framework.definition;
 
 import java.lang.annotation.*;
 

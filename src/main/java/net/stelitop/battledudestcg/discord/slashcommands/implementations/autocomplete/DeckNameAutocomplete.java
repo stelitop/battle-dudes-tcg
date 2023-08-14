@@ -1,9 +1,9 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.base.autocomplete.InputSuggestion;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.decks.CardDeck;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.AutocompletionExecutor;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.InputSuggestion;
+import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import net.stelitop.battledudestcg.game.services.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
