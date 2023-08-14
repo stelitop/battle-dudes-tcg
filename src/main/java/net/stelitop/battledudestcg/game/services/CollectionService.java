@@ -4,7 +4,6 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
-import net.stelitop.battledudestcg.game.database.entities.profile.collection.*;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollectionCardKey;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
