@@ -3,13 +3,11 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.Autocompleted;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.OptionalCommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.DeckViewingUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
@@ -120,11 +118,19 @@ public class DeckCommands {
     )
     public Mono<Void> addCardToDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the card.") String cardName,
+            @CommandParam(name = "name", description = "The name of the card.")
+            @Autocompleted(implementation = OwnedCardAutocomplete.class) String cardName,
             @OptionalCommandParam(
                     name = "copies",
                     description = "The amount of copies to add to the deck. Default = 1.",
-                    type = Long.class
+                    type = Long.class,
+                    choices = {
+                            @CommandParamChoice(name = "x1", value = "1"),
+                            @CommandParamChoice(name = "x2", value = "2"),
+                            @CommandParamChoice(name = "x3", value = "3"),
+                            @CommandParamChoice(name = "x4", value = "4"),
+                            @CommandParamChoice(name = "x5", value = "5"),
+                    }
             ) Optional<Long> copiesOpt
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(cardName);
@@ -176,11 +182,19 @@ public class DeckCommands {
     )
     public Mono<Void> removeCardToDeck(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the card.") String cardName,
+            @CommandParam(name = "name", description = "The name of the card.")
+            @Autocompleted(implementation = CardInSelectedDeckAutocomplete.class) String cardName,
             @OptionalCommandParam(
                     name = "copies",
                     description = "The amount of copies to remove from the deck. Default = 1.",
-                    type = Long.class
+                    type = Long.class,
+                    choices = {
+                            @CommandParamChoice(name = "x1", value = "1"),
+                            @CommandParamChoice(name = "x2", value = "2"),
+                            @CommandParamChoice(name = "x3", value = "3"),
+                            @CommandParamChoice(name = "x4", value = "4"),
+                            @CommandParamChoice(name = "x5", value = "5"),
+                    }
             ) Optional<Long> copiesOpt
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(cardName);

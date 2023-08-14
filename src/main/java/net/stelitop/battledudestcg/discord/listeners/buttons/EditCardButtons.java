@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.listeners.buttons.cardediting;
+package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
