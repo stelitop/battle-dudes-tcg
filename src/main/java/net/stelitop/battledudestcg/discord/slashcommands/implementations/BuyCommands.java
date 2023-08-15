@@ -5,6 +5,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.Co
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
@@ -30,7 +31,11 @@ public class BuyCommands {
     )
     public Mono<Void> buyChestCommand(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the chest") String name,
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the chest",
+                    autocomplete = ChestNameAutocomplete.class
+            ) String name,
             @CommandParam(
                     name = "amount",
                     description = "Amount of chests to buy. Default is 1. Max is 50.",

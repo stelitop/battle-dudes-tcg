@@ -6,6 +6,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.Co
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedChestAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
 import net.stelitop.battledudestcg.game.services.ChestOwnershipService;
@@ -28,7 +29,11 @@ public class OpenChestCommand {
     )
     public Mono<Void> openChest(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the chest") String name
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the chest",
+                    autocomplete = OwnedChestAutocomplete.class
+            ) String name
     ) {
         Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipService.getChestOwnership(
                 event.getInteraction().getUser().getId().asLong(),

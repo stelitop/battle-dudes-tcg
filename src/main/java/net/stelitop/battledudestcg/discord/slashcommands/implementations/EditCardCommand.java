@@ -5,6 +5,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.Co
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -29,7 +30,11 @@ public class EditCardCommand {
     )
     public Mono<Void> editCardCommand(
             @CommandEvent ChatInputInteractionEvent event,
-            @CommandParam(name = "name", description = "The name of the card") String cardName
+            @CommandParam(
+                    name = "name",
+                    description = "The name of the card",
+                    autocomplete = CardNameAutocomplete.class
+            ) String cardName
     ) {
         Optional<Card> cardOpt = cardRepository.findByNameIgnoreCase(cardName);
         if (cardOpt.isEmpty()) {

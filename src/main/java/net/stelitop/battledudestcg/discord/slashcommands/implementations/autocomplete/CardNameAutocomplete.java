@@ -3,24 +3,23 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.autoco
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.AutocompletionExecutor;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.InputSuggestion;
-import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
+import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ChestNameAutocomplete implements AutocompletionExecutor {
+public class CardNameAutocomplete implements AutocompletionExecutor {
 
     @Autowired
-    private ChestRepository chestRepository;
-
+    private CardRepository cardRepository;
+    @Override
     public List<InputSuggestion> execute(ChatInputAutoCompleteEvent event) {
-
         var focusedOptionValue = event.getFocusedOption().getValue();
         String value = focusedOptionValue.isEmpty() ? "" : focusedOptionValue.get().asString().toLowerCase();
 
-        return chestRepository.getAllChestNames().stream()
+        return cardRepository.getAllCardNames().stream()
                 .filter(x -> x.toLowerCase().contains(value))
                 .map(x -> InputSuggestion.create(x, x))
                 .toList();
