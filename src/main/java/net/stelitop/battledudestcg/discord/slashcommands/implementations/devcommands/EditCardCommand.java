@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
@@ -25,7 +25,7 @@ public class EditCardCommand {
 
     @RequireAdmin
     @SlashCommand(
-            name = "edit card",
+            name = "dev edit card",
             description = "Admin command for editing the information on a card."
     )
     public Mono<Void> editCardCommand(

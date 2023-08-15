@@ -7,6 +7,7 @@ import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.Co
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
+import net.stelitop.battledudestcg.discord.ui.ChestInfoUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
@@ -23,6 +24,8 @@ public class ChestInfoCommand {
     private ChestService chestService;
     @Autowired
     private ColorUtils colorUtils;
+    @Autowired
+    private ChestInfoUI chestInfoUI;
 
     // TODO: Add chest names autofill.
     @SlashCommand(
@@ -43,20 +46,15 @@ public class ChestInfoCommand {
                     .withEphemeral(true);
         }
 
-        String description = "";
-        if (chest instanceof ChannelChest c) {
-            Optional<Long> channelId = chestService.getChannelIdOfChest(c);
-            if (channelId.isPresent()) {
-                description += "Found in <#" + channelId.get() + ">\n\n";
-            }
-        }
-        description += "*" + chest.getDescription() + "*";
+        var msg = chestInfoUI.getChestInfoMessage(ChestInfoUI.Model.builder()
+                .page(1)
+                .chestId(chest.getChestId())
+                .userId(event.getInteraction().getUser().getId().asLong())
+                .build());
+
         return event.reply()
-                .withEmbeds(EmbedCreateSpec.builder()
-                        .title(chest.getName())
-                        .description(description)
-                        .thumbnail(chest.getIconUrl())
-                        .color(colorUtils.getChestEmbedColor())
-                        .build());
+                .withContent(msg.content())
+                .withEmbeds(msg.embeds())
+                .withComponents(msg.components());
     }
 }

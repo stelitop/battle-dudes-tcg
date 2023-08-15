@@ -2,10 +2,12 @@ package net.stelitop.battledudestcg.discord.ui;
 
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import lombok.*;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,22 +63,21 @@ public class CardCollectionUI {
         public static @Nullable CardCollectionUI.Model deserialize(@NotNull String encoded) throws IllegalStateException{
             String[] parts = encoded.split("\\|");
             if (parts.length != 5 || !parts[0].equals(componentId)) return null;
-            try {
-                var model = Model.builder()
-                        .userId(Long.parseLong(parts[1]))
-                        .page(Integer.parseInt(parts[2]))
-                        .cardType(parts[3])
-                        .ordering(parts[4])
-                        .build();
-                model.validateState();
-                return model;
-            } catch (Exception ignore) {
-                return null;
-            }
+
+            var model = Model.builder()
+                    .userId(Long.parseLong(parts[1]))
+                    .page(Integer.parseInt(parts[2]))
+                    .cardType(parts[3])
+                    .ordering(parts[4])
+                    .build();
+            ActionResult<Void> stateResult = model.validateState();
+            return stateResult.isSuccessful() ? model : null;
         }
 
-        public String serialize() throws IllegalStateException{
-            validateState();
+        public String serialize() throws IllegalStateException {
+            if (validateState().hasFailed()) {
+                throw new IllegalStateException(validateState().errorMessage());
+            }
             return componentId + "|" + userId + "|" + page + "|" + cardType + "|" + ordering;
         }
 
@@ -83,15 +85,17 @@ public class CardCollectionUI {
          * Checks whether the values of the model are correct. If they are not an exception
          * is thrown.
          *
-         * @throws IllegalStateException
+         * @return Success result if the state is valid, fail result otherwise
+         *     with an error message.
          */
-        private void validateState() throws IllegalStateException{
+        private ActionResult<Void> validateState() throws IllegalStateException{
             if (!Set.of("all", "dude", "warp", "item").contains(cardType)) {
-                throw new IllegalStateException(cardType + " is not an allowed card type!");
+                return ActionResult.fail(cardType + " is not an allowed card type!");
             }
             if (!Set.of("default", "name", "eltypes", "rarity").contains(ordering)) {
-                throw new IllegalStateException(ordering + " is not an allowed ordering!");
+                return ActionResult.fail(ordering + " is not an allowed ordering!");
             }
+            return ActionResult.success();
         }
 
         @SneakyThrows
@@ -109,110 +113,153 @@ public class CardCollectionUI {
     }
 
     /**
-     * TODO: Move this method somewhere else.
+     * Creates a UI message for a user's collection.
      *
-     * @param model
-     * @return
+     * @param model The model used for creating the collection message.
+     * @param user The user that owns the message.
+     * @return The UI message.
      */
     public MessageCreateSpec getCardCollectionMessage(Model model, User user) {
-        String username = user.getUsername();
         var profile = userProfileService.getProfile(user.getId().asLong());
 
         List<CardOwnership> cardOwnerships = profile.getUserCollection().getOwnedCards().stream()
                 .filter(x -> x.getOwnedCopies() > 0)
                 .toList();
-
-        // filter depending on the requested type
-        cardOwnerships = cardOwnerships.stream()
-                .filter(co -> switch (model.cardType) {
-                    case "dude" -> co.getCard() instanceof DudeCard;
-                    case "item" -> co.getCard() instanceof ItemCard;
-                    case "warp" -> co.getCard() instanceof WarpCard;
-                    default -> true;
-                }).toList();
-
-        // ordering
-        cardOwnerships = new ArrayList<>(cardOwnerships);
-        orderCards(cardOwnerships, model.getOrdering());
-
         int totalCards = cardOwnerships.stream()
                 .mapToInt(CardOwnership::getOwnedCopies)
                 .sum();
-
         int totalPages = 1 + (cardOwnerships.size() - 1)/ CARDS_PER_PAGE;
         model.page = Math.max(1, Math.min(totalPages, model.page));
 
-        cardOwnerships = cardOwnerships.subList(
-                CARDS_PER_PAGE * (model.page - 1),
-                Math.min(CARDS_PER_PAGE * model.page, cardOwnerships.size())
+        cardOwnerships = getRelevantCardOwnerships(cardOwnerships, model);
+        String description = getDescription(cardOwnerships, totalCards, model.page, totalPages);
+
+        List<Button> navigatePagesButtons = List.of(
+                Button.primary(model.previousPage().serialize(), "Previous Page").disabled(model.page == 1),
+                Button.primary(model.nextPage().serialize(), "Next Page").disabled(model.page == totalPages)
         );
 
-        // fill with blank types to align for the ui
-        cardOwnerships.forEach(x -> x.getCard().getTypes().addAll(
-                Collections.nCopies(Math.max(0, 3 - x.getCard().getTypes().size()), ElementalType.None)));
-
-        String description = cardOwnerships.stream()
-                .map(co -> emojiUtils.getEmojiString(co.getOwnedCopies()) + " \u200B | \u200B "
-                        + emojiUtils.getEmojiString(co.getCard().getRarity()) + " \u200B | \u200B "
-                        + co.getCard().getTypes().stream()
-                        .map(emojiUtils::getEmojiString)
-                        .collect(Collectors.joining(" ")) + " \u200B | \u200B "
-                        + co.getCard().getName())
-                .collect(Collectors.joining("\n"));
-
-        description = "Total: " + totalCards + "\n\n"
-                + ":hash: \u200B | \u200B :sparkles: \u200B | \u200B Ele Types \u200B \u200B | \u200B Name\n"
-                + "================================\n"
-                + description
-                + "\n\nPage " + model.page + "/" + totalPages;
-
-        List<Button> navigatePagesButtons = new ArrayList<>();
-        navigatePagesButtons.add(Button.primary(model.previousPage().serialize(), "Previous Page")
-                .disabled(model.page == 1));
-        navigatePagesButtons.add(Button.primary(model.nextPage().serialize(), "Next Page")
-                .disabled(model.page == totalPages));
-
-//        String selectMenuId = "opencardinfopage|" + model.serialize();
-//        SelectMenu selectMenu = SelectMenu.of(selectMenuId, cardOwnerships.stream()
-//                        .map(x -> x.getCard().getName())
-//                        .map(x -> SelectMenu.Option.of(x, x))
-//                        .toList())
-//                .withPlaceholder("Card Info");
+        String selectMenuId = "opencardinfopage|" + model.serialize();
+        SelectMenu selectMenu = SelectMenu.of(selectMenuId, cardOwnerships.stream()
+                        .map(x -> x.getCard().getName())
+                        .map(x -> SelectMenu.Option.of(x, x))
+                        .toList())
+                .withPlaceholder("Card Info");
 
         return MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()
-                        .title(username + "'s Cards")
+                        .title(user.getUsername() + "'s Cards")
                         .description(description)
                         .color(colorUtils.getColor(ElementalType.Neutral))
                         .build())
                 .addComponent(ActionRow.of(navigatePagesButtons))
-                //.addComponent(ActionRow.of(selectMenu))
+                .addComponent(ActionRow.of(selectMenu))
                 .build();
     }
 
-    private List<CardOwnership> getRelevantCardOwnerships(List<CardOwnership> allCardOwnerships) {
-        return allCardOwnerships;
+    /**
+     * Filters the list of all available card ownerships to only those that will be presented
+     * in the card collection on the current page.
+     *
+     * @param allCardOwnerships List of all card ownerships.
+     * @param model The model used for the ui.
+     * @return A list of all card ownerships to be displayed.
+     */
+    private List<CardOwnership> getRelevantCardOwnerships(List<CardOwnership> allCardOwnerships, Model model) {
+
+        return allCardOwnerships.stream()
+                .filter(getTypeFilter(model.getCardType()))
+                .sorted(getComparator(model.getOrdering()))
+                .skip((long) CARDS_PER_PAGE * (model.page - 1))
+                .limit(CARDS_PER_PAGE)
+                .peek(x -> x.getCard().getTypes().addAll(
+                        Collections.nCopies(Math.max(0, 3 - x.getCard().getTypes().size()), ElementalType.None)))
+                .toList();
     }
 
-    private void orderCards(List<CardOwnership> cardOwnerships, String ordering) {
-        switch (ordering) {
-            case "name":
-                cardOwnerships.sort(Comparator.comparing(x -> x.getCard().getName().toLowerCase()));
-                break;
-            case "eltypes":
-                cardOwnerships.sort((o1, o2) -> {
-                    Card c1 = o1.getCard(), c2 = o2.getCard();
-                    for (int i = 0; i < c1.getTypes().size() && i < c2.getTypes().size(); i++) {
-                        if (c1.getTypes().get(i) != c2.getTypes().get(i)) {
-                            return c1.getTypes().get(i).compareTo(c2.getTypes().get(i));
-                        }
+    /**
+     * Gets the description of the collection embed. It contains info about the cards to be
+     * displayed, formatted to look as a table.
+     *
+     * @param cardOwnerships The card ownerships of the cards to be shown.
+     * @param totalCards The total amount of cards in the collection.
+     * @param currentPage The current page the user displays.
+     * @param totalPages The total pages of the collection.
+     * @return The description string to be used.
+     */
+    private String getDescription(
+            List<CardOwnership> cardOwnerships,
+            int totalCards,
+            int currentPage,
+            int totalPages
+    ) {
+        String description = cardOwnerships.stream()
+                .map(this::formatCardOwnershipToString)
+                .collect(Collectors.joining("\n"));
+
+        description = "Total: " + totalCards + "\n\n"
+                + ":1234: \u200B | \u200B :sparkles: \u200B | \u200B Ele Types \u200B \u200B | \u200B Name\n"
+                + "================================\n"
+                + description
+                + "\n\nPage " + currentPage + "/" + totalPages;
+        return description;
+    }
+
+    /**
+     * Formats a card ownership object to be a row in a collection ui table.
+     *
+     * @param co The card ownership to format.
+     * @return The formatted string.
+     */
+    private String formatCardOwnershipToString(CardOwnership co) {
+        return emojiUtils.getEmojiString(co.getOwnedCopies()) + " \u200B | \u200B "
+                + emojiUtils.getEmojiString(co.getCard().getRarity()) + " \u200B | \u200B "
+                + co.getCard().getTypes().stream()
+                .map(emojiUtils::getEmojiString)
+                .collect(Collectors.joining(" ")) + " \u200B | \u200B "
+                + co.getCard().getName();
+    }
+
+    /**
+     * Creates a comparator depending on the type of ordering wanted.
+     *
+     * @param ordering The type of ordering.
+     * @return The comparator for card ownerships.
+     */
+    private Comparator<CardOwnership> getComparator(String ordering) {
+        return switch (ordering) {
+            case "name" -> (CardOwnership co1, CardOwnership co2) ->
+                    co1.getCard().getName().compareToIgnoreCase(co2.getCard().getName());
+
+            case "rarity" -> (CardOwnership co1, CardOwnership co2) ->
+                    -co1.getCard().getRarity().compareTo(co2.getCard().getRarity());
+
+            case "eltypes" -> (CardOwnership co1, CardOwnership co2) -> {
+                Card c1 = co1.getCard(), c2 = co2.getCard();
+                for (int i = 0; i < c1.getTypes().size() && i < c2.getTypes().size(); i++) {
+                    if (c1.getTypes().get(i) != c2.getTypes().get(i)) {
+                        return c1.getTypes().get(i).compareTo(c2.getTypes().get(i));
                     }
-                    return Integer.compare(c1.getTypes().size(), c2.getTypes().size());
-                });
-                break;
-            case "rarity":
-                cardOwnerships.sort(Comparator.comparing(x -> ((CardOwnership)x).getCard().getRarity()).reversed());
-                break;
-        }
+                }
+                return Integer.compare(c1.getTypes().size(), c2.getTypes().size());
+            };
+
+            default -> (CardOwnership co1, CardOwnership co2) -> 0;
+        };
+    }
+
+    /**
+     * Creates a predicate that only accepts cards of a specific type.
+     *
+     * @param cardType The card type to accept.
+     * @return The filter predicate.
+     */
+    private Predicate<CardOwnership> getTypeFilter(String cardType) {
+        return co -> switch (cardType) {
+            case "dude" -> co.getCard() instanceof DudeCard;
+            case "item" -> co.getCard() instanceof ItemCard;
+            case "warp" -> co.getCard() instanceof WarpCard;
+            default -> true;
+        };
     }
 }

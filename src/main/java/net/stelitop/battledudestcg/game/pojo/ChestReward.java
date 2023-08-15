@@ -2,11 +2,8 @@ package net.stelitop.battledudestcg.game.pojo;
 
 import lombok.Getter;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.enums.Rarity;
 import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 @Getter
 public class ChestReward {

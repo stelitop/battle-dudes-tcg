@@ -6,11 +6,11 @@ import discord4j.core.object.component.LayoutComponent;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 public class EditCardUI {
 
     @Autowired
