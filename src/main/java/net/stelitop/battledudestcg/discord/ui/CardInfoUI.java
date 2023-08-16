@@ -113,7 +113,7 @@ public class CardInfoUI {
      * @return The field
      */
     private EmbedCreateFields.Field getCollectionInfoField(Card card, boolean inline) {
-        var locationsMsg = card.getChestSources().isEmpty() ? "None" : card.getChestSources()
+        var locationsMsg = card.getChestSources().isEmpty() ? " None" : "\n" + card.getChestSources()
                 .stream()
                 .distinct()
                 .map(Chest::getName)
@@ -124,7 +124,7 @@ public class CardInfoUI {
 
         return EmbedCreateFields.Field.of(
                 "Collection Info",
-                "Locations:\n" + locationsMsg + "\nRarity: " + card.getRarity(),
+                "Locations:" + locationsMsg + "\nRarity: " + card.getRarity(),
                 inline
         );
     }

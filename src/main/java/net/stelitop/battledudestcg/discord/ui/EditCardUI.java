@@ -22,6 +22,8 @@ public class EditCardUI {
     public static final String ID_ELEMENTAL_TYPES = "types";
     public static final String ID_COST = "cost";
     public static final String ID_STATS = "stats";
+    public static final String ID_ART_URL = "arturl";
+    public static final String ID_RARITY = "rarity";
 
 
     public MessageCreateSpec getEditCardMessage(Card card) {
@@ -35,7 +37,11 @@ public class EditCardUI {
                 ),
                 ActionRow.of(
                         Button.primary(makeId(card, ID_COST), "Edit Cost"),
-                        Button.primary(makeId(card, ID_STATS), "Edit Stats").disabled(!(card instanceof DudeCard))
+                        Button.primary(makeId(card, ID_STATS), "Edit Stats").disabled(!(card instanceof DudeCard)),
+                        Button.primary(makeId(card, ID_RARITY), "Edit Rarity")
+                ),
+                ActionRow.of(
+                        Button.primary(makeId(card, ID_ART_URL), "Edit Card Art")
                 )
         );
 

@@ -8,6 +8,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
+import net.stelitop.battledudestcg.game.enums.Rarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -48,6 +49,8 @@ public class EditCardModals implements ApplicationRunner {
             case EditCardUI.ID_ELEMENTAL_TYPES -> parseElementalTypesModal(event, card);
             case EditCardUI.ID_STATS -> parseStatsModal(event, card);
             case EditCardUI.ID_COST ->  parseCostModal(event, card);
+            case EditCardUI.ID_ART_URL -> parseArtUrlModal(event, card);
+            case EditCardUI.ID_RARITY -> parseRarityModal(event, card);
             default -> ActionResult.fail("Could not parse the interaction type.");
         };
         if (result.hasFailed()) {
@@ -114,5 +117,22 @@ public class EditCardModals implements ApplicationRunner {
         }
         card.setCost(newCost);
         return ActionResult.success();
+    }
+
+    private ActionResult<Void> parseArtUrlModal(ModalSubmitInteractionEvent event, Card card) {
+        String newArtUrl = event.getComponents().get(0).getData().components().get().get(0).value().get();
+        card.setArtUrl(newArtUrl);
+        return ActionResult.success();
+    }
+
+    private ActionResult<Void> parseRarityModal(ModalSubmitInteractionEvent event, Card card) {
+        try {
+            String newRarityStr = event.getComponents().get(0).getData().components().get().get(0).value().get();
+            Rarity newRarity = Rarity.valueOf(newRarityStr);
+            card.setRarity(newRarity);
+            return ActionResult.success();
+        } catch (IllegalArgumentException e) {
+            return ActionResult.fail("There is no such rarity!");
+        }
     }
 }

@@ -57,6 +57,8 @@ public class EditCardButtons implements ApplicationRunner {
             case EditCardUI.ID_ELEMENTAL_TYPES -> editTypes(event, card);
             case EditCardUI.ID_STATS -> (card instanceof DudeCard d) ? editStats(event, d) : Mono.empty();
             case EditCardUI.ID_COST -> editCost(event, card);
+            case EditCardUI.ID_ART_URL -> editArtUrl(event, card);
+            case EditCardUI.ID_RARITY -> editRarity(event, card);
             default -> Mono.empty();
         };
     }
@@ -100,7 +102,7 @@ public class EditCardButtons implements ApplicationRunner {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Types")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_ELEMENTAL_TYPES))
-                .addComponent(ActionRow.of(TextInput.paragraph("cardtypes", "Elemental Type [EWAFNMTD*.]", 1, 3)
+                .addComponent(ActionRow.of(TextInput.paragraph("cardtypes", "Elemental Type [EWAFNMTD*.]", 0, 3)
                         .required(true)
                         .prefilled(card.getTypes().stream().map(x -> String.valueOf(x.toChar())).collect(Collectors.joining()))
                         .placeholder("New Elemental Types\n\nThey must be one of [EWAFNMTD*.]")))
@@ -142,6 +144,36 @@ public class EditCardButtons implements ApplicationRunner {
                         .required(true)
                         .prefilled(card.getCost())
                         .placeholder("New Cost\n\nMust be a string containing only [EWAFNMTD*.]")))
+                .build());
+    }
+
+    /**
+     * Handles the button about editing the art url of the card. The id should
+     * be in the format "editcard|[card id]|{@value EditCardUI#ID_ART_URL}"
+     */
+    private Mono<Void> editArtUrl(ButtonInteractionEvent event, Card card) {
+        return event.presentModal(InteractionPresentModalSpec.builder()
+                .title("Edit " + card.getName() + "'s Artwork")
+                .customId(editCardUI.makeId(card, EditCardUI.ID_ART_URL))
+                .addComponent(ActionRow.of(TextInput.paragraph("cardarturl", "Url to Artwork")
+                        .required(true)
+                        .prefilled(card.getArtUrl())
+                        .placeholder("New Url to the Artwork\n\nWhether the link is working or not is not verified.")))
+                .build());
+    }
+
+    /**
+     * Handles the button about editing the rarity of the card. The id should
+     * be in the format "editcard|[card id]|{@value EditCardUI#ID_RARITY}"
+     */
+    private Mono<Void> editRarity(ButtonInteractionEvent event, Card card) {
+        return event.presentModal(InteractionPresentModalSpec.builder()
+                .title("Edit " + card.getName() + "'s Rarity")
+                .customId(editCardUI.makeId(card, EditCardUI.ID_RARITY))
+                .addComponent(ActionRow.of(TextInput.paragraph("cardrarity", "Rarity")
+                        .required(true)
+                        .prefilled(card.getRarity().toString())
+                        .placeholder("New Rarity\n\nMust be one of Basic, Common, Rare, Epic, Legendary or Mythic.")))
                 .build());
     }
 }

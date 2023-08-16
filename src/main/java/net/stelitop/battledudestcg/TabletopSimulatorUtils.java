@@ -3,7 +3,6 @@ package net.stelitop.battledudestcg;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
-import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -24,8 +23,6 @@ import java.util.stream.StreamSupport;
 @Component
 public class TabletopSimulatorUtils implements ApplicationRunner {
 
-    @Autowired
-    private CardRepository cardRepository;
     @Autowired
     private DeckRepository deckRepository;
     @Override

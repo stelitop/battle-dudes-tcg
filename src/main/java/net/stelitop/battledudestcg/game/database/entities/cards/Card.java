@@ -7,6 +7,7 @@ import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.enums.Rarity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -55,7 +56,7 @@ public class Card {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
     @Singular
-    private List<ElementalType> types;
+    private List<ElementalType> types = new ArrayList<>();
 
     /**
      * The card's rarity.
@@ -75,10 +76,9 @@ public class Card {
     /**
      * List of artists that worked on the artwork.
      */
-    @Column(nullable = true)
     @ElementCollection(fetch = FetchType.EAGER)
     @Singular
-    private List<String> artists;
+    private List<String> artists = new ArrayList<>();
 
     /**
      * The flavor text of the card.
@@ -91,5 +91,6 @@ public class Card {
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Include
-    private List<Chest> chestSources;
+    @Builder.Default
+    private List<Chest> chestSources = new ArrayList<>();
 }
