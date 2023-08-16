@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Component
-public class AdminRoleRequirement implements CommandRequirementExecutor {
+public class AdminUserRequirement implements CommandRequirementExecutor {
 
     @Autowired
     private DiscordBotSettings discordBotSettings;

@@ -3,6 +3,7 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcom
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
@@ -24,6 +25,7 @@ public class CreateCardCommand {
     @Autowired
     private EditCardUI editCardUI;
 
+    @RequireAdmin
     @SlashCommand(
             name = "dev create card",
             description = "Creates a new default card."

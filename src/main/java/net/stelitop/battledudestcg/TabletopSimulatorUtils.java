@@ -27,7 +27,7 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
     private DeckRepository deckRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String deckName = "Frogchamp";
+        String deckName = "Nature Dudes";
 
         saveDeckAsSpreadsheet(StreamSupport.stream(deckRepository.findAll().spliterator(), false)
                 .filter(x -> x.getName().equals(deckName)).findFirst().get());
@@ -41,7 +41,6 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
         for (var card : cards) {
             //if (i >= 1) break;
             if (i >= 69) break;
-            System.out.println("Started: " + card.getName());
             int col = i % 10;
             int row = i / 10;
 

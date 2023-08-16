@@ -8,15 +8,15 @@ import java.util.List;
 public enum ElementalType {
     Neutral,
     Earth,
-    Water,
-    Air,
-    Fire,
     Nature,
-    Decay,
+    Water,
     Magic,
+    Air,
+    Decay,
+    Fire,
     Tech,
-    None,
-    Ultimate;
+    Ultimate,
+    None;
 
     public char toChar() {
         return switch (this) {

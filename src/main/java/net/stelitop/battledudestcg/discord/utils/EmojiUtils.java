@@ -67,7 +67,7 @@ public class EmojiUtils {
      */
     public String getEmojiString(Rarity rarity) {
         return switch (rarity) {
-            case Basic -> ":white_square:";
+            case Basic -> ":white_large_square:";
             case Common -> ":green_square:";
             case Rare -> ":blue_square:";
             case Epic -> ":purple_square:";

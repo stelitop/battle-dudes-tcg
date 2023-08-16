@@ -1,16 +1,14 @@
 package net.stelitop.battledudestcg.game.database.entities.collection;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CardOwnership {
 
     @EmbeddedId

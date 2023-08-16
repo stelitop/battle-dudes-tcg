@@ -16,6 +16,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.ItemCard;
 import net.stelitop.battledudestcg.game.database.entities.cards.WarpCard;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
+import net.stelitop.battledudestcg.game.enums.Rarity;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -126,6 +127,7 @@ public class CardCollectionUI {
                 .filter(x -> x.getOwnedCopies() > 0)
                 .toList();
         int totalCards = cardOwnerships.stream()
+                .filter(x -> x.getCard().getRarity() != Rarity.Basic)
                 .mapToInt(CardOwnership::getOwnedCopies)
                 .sum();
         int totalPages = 1 + (cardOwnerships.size() - 1)/ CARDS_PER_PAGE;
@@ -212,12 +214,16 @@ public class CardCollectionUI {
      * @return The formatted string.
      */
     private String formatCardOwnershipToString(CardOwnership co) {
-        return emojiUtils.getEmojiString(co.getOwnedCopies()) + " \u200B | \u200B "
-                + emojiUtils.getEmojiString(co.getCard().getRarity()) + " \u200B | \u200B "
-                + co.getCard().getTypes().stream()
+        Card card = co.getCard();
+        String cardAmountText = card.getRarity() != Rarity.Basic ?
+                emojiUtils.getEmojiString(co.getOwnedCopies()) : ":hash:";
+
+        return cardAmountText + " \u200B | \u200B "
+                + emojiUtils.getEmojiString(card.getRarity()) + " \u200B | \u200B "
+                + card.getTypes().stream()
                 .map(emojiUtils::getEmojiString)
                 .collect(Collectors.joining(" ")) + " \u200B | \u200B "
-                + co.getCard().getName();
+                + card.getName();
     }
 
     /**
