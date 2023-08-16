@@ -100,11 +100,11 @@ public class ForeignDude implements Comparable<ForeignDude> {
     private int offense;
 
     /**
-     * The defense of the dude.
+     * The defence of the dude.
      */
     @Column(nullable = false)
     @NonNegative
-    private int defense;
+    private int defence;
 
     /**
      * The name of the artist.

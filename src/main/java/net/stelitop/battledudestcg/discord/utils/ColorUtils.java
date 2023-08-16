@@ -27,6 +27,7 @@ public class ColorUtils {
             case Decay -> Color.of(112, 87, 70); // #705746
             case Nature -> Color.of(122, 199, 76); // #7ac74c
             case Neutral -> Color.of(168, 167, 122); // #a8a77a
+            case Ultimate -> Color.of(255, 255, 255); // #ffffff
             default -> Color.BLACK;
         };
     }

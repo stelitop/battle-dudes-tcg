@@ -7,6 +7,7 @@ import discord4j.core.object.component.TextInput;
 import discord4j.core.spec.InteractionPresentModalSpec;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
+import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -54,12 +55,14 @@ public class EditCardButtons implements ApplicationRunner {
             case EditCardUI.ID_NAME -> editName(event, card);
             case EditCardUI.ID_EFFECT -> editEffect(event, card);
             case EditCardUI.ID_ELEMENTAL_TYPES -> editTypes(event, card);
+            case EditCardUI.ID_STATS -> (card instanceof DudeCard d) ? editStats(event, d) : Mono.empty();
+            case EditCardUI.ID_COST -> editCost(event, card);
             default -> Mono.empty();
         };
     }
 
     /**
-     * Handles the button about editing the name of the dude. The id should be in the
+     * Handles the button about editing the name of the card. The id should be in the
      * format "editcard|[card id]|{@value EditCardUI#ID_NAME}"
      */
     private Mono<Void> editName(ButtonInteractionEvent event, Card card) {
@@ -67,7 +70,7 @@ public class EditCardButtons implements ApplicationRunner {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Name")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_NAME))
-                .addComponent(ActionRow.of(TextInput.small("cardname", "New name for the card.", 1, 25)
+                .addComponent(ActionRow.of(TextInput.small("cardname", "Name", 1, 25)
                         .required(true)
                         .prefilled(card.getName())
                         .placeholder("New Name")))
@@ -75,14 +78,14 @@ public class EditCardButtons implements ApplicationRunner {
     }
 
     /**
-     * Handles the button about editing the effect of the dude. The id should be in the
+     * Handles the button about editing the effect of the card. The id should be in the
      * format "editcard|[card id]|{@value EditCardUI#ID_EFFECT}"
      */
     private Mono<Void> editEffect(ButtonInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Effect Text")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_EFFECT))
-                .addComponent(ActionRow.of(TextInput.paragraph("cardeffect", "New effect text for the card.", 0, 255)
+                .addComponent(ActionRow.of(TextInput.paragraph("cardeffect", "Effect Text", 0, 255)
                         .required(true)
                         .prefilled(card.getEffectText())
                         .placeholder("New Effect Text")))
@@ -90,17 +93,55 @@ public class EditCardButtons implements ApplicationRunner {
     }
 
     /**
-     * Handles the button about editing the elemental types of the dude. The id should
+     * Handles the button about editing the elemental types of the card. The id should
      * be in the format "editcard|[card id]|{@value EditCardUI#ID_ELEMENTAL_TYPES}"
      */
     private Mono<Void> editTypes(ButtonInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Types")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_ELEMENTAL_TYPES))
-                .addComponent(ActionRow.of(TextInput.paragraph("cardeffect", "New elemental types for the card.", 1, 3)
+                .addComponent(ActionRow.of(TextInput.paragraph("cardtypes", "Elemental Type [EWAFNMTD*.]", 1, 3)
                         .required(true)
                         .prefilled(card.getTypes().stream().map(x -> String.valueOf(x.toChar())).collect(Collectors.joining()))
                         .placeholder("New Elemental Types\n\nThey must be one of [EWAFNMTD*.]")))
+                .build());
+    }
+
+    /**
+     * Handles the button about editing the stats of the dude. The id should be in the
+     * format "editcard|[card id]|{@value EditCardUI#ID_STATS}"
+     */
+    private Mono<Void> editStats(ButtonInteractionEvent event, DudeCard card) {
+        return event.presentModal(InteractionPresentModalSpec.builder()
+                .title("Edit " + card.getName() + "'s Stats")
+                .customId(editCardUI.makeId(card, EditCardUI.ID_STATS))
+                .addComponent(ActionRow.of(TextInput.small("cardhealth", "Health", 1, 5)
+                        .required(true)
+                        .prefilled(String.valueOf(card.getHealth()))
+                        .placeholder("New Health")))
+                .addComponent(ActionRow.of(TextInput.small("cardoffense", "Offense", 1, 5)
+                        .required(true)
+                        .prefilled(String.valueOf(card.getOffense()))
+                        .placeholder("New Offense")))
+                .addComponent(ActionRow.of(TextInput.small("carddefence", "Defence", 1, 5)
+                        .required(true)
+                        .prefilled(String.valueOf(card.getDefence()))
+                        .placeholder("New Defence")))
+                .build());
+    }
+
+    /**
+     * Handles the button about editing the cost of the card. The id should
+     * be in the format "editcard|[card id]|{@value EditCardUI#ID_COST}"
+     */
+    private Mono<Void> editCost(ButtonInteractionEvent event, Card card) {
+        return event.presentModal(InteractionPresentModalSpec.builder()
+                .title("Edit " + card.getName() + "'s Cost")
+                .customId(editCardUI.makeId(card, EditCardUI.ID_COST))
+                .addComponent(ActionRow.of(TextInput.paragraph("cardcost", "Cost [EWAFNMTD*.]", 0, 12)
+                        .required(true)
+                        .prefilled(card.getCost())
+                        .placeholder("New Cost\n\nMust be a string containing only [EWAFNMTD*.]")))
                 .build());
     }
 }

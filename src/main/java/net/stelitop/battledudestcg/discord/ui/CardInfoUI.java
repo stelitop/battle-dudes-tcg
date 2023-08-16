@@ -9,6 +9,7 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
+import net.stelitop.battledudestcg.game.enums.ElementalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +79,11 @@ public class CardInfoUI {
                                                 .collect(Collectors.joining(" - "))),
                         true)
                 .addField("Statistics",
-                        emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth() +
-                                "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense() +
-                                "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defense: " + dude.getDefense(),
+                        "Cost: " + Objects.requireNonNull(ElementalType.parseString(dude.getCost())).stream()
+                                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""))
+                                + "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
+                                + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
+                                + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence(),
                         true)
                 .addField("Effect", dude.getEffectText().isEmpty() ? "(none)" : dude.getEffectText(), false)
                 .addField("\u200B",

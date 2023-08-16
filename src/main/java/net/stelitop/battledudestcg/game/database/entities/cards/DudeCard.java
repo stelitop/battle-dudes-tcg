@@ -64,11 +64,11 @@ public class DudeCard extends Card implements Comparable<DudeCard> {
     private int offense;
 
     /**
-     * The defense of the dude.
+     * The defence of the dude.
      */
     @Column
     @NonNegative
-    private int defense;
+    private int defence;
 
     /**
      * The name of the dude this can evolve to. Null if there is no

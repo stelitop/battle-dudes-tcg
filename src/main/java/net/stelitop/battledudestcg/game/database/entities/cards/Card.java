@@ -35,11 +35,11 @@ public class Card {
     private String name;
 
     /**
-     * The cost of the card.
+     * The cost of the card. Every letter in the string is an element.
      */
     @Column(name = "cost", nullable = false)
     @Builder.Default
-    private int cost = 0;
+    private String cost = "";
 
     /**
      * The text describing the effect of the card.

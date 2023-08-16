@@ -1,6 +1,5 @@
 package net.stelitop.battledudestcg.game.enums;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -57,11 +56,13 @@ public enum ElementalType {
      * is parsed using {@link ElementalType#fromChar(char)} on every character. If
      * there is an unknown character, null is returned instead.
      *
-     * @param types The string containing the types.
+     * @param types The string containing the types. If null is passed, an empty list
+     *     is returned instead.
      * @return The list of the parsed elemental types, or null if there are any invalid
-     *     ones.
+     *     ones. The list is guaranteed to be mutable.
      */
-    public static @Nullable List<ElementalType> parseString(@NotNull String types) {
+    public static @Nullable List<ElementalType> parseString(@Nullable String types) {
+        if (types == null) return new ArrayList<>();
         List<ElementalType> ret = new ArrayList<>();
         for (int i = 0; i < types.length(); i++) {
             ElementalType type = fromChar(types.charAt(i));

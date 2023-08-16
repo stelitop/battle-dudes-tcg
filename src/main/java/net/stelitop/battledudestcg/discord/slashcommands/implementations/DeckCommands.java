@@ -6,6 +6,7 @@ import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
+import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.DeckViewingUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
@@ -125,7 +126,7 @@ public class DeckCommands {
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",
-                    autocomplete = CardInSelectedDeckAutocomplete.class
+                    autocomplete = OwnedCardAutocomplete.class
             ) String cardName,
             @CommandParam(
                     name = "copies",

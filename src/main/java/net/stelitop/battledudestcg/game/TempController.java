@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,8 +64,8 @@ public class TempController implements ApplicationRunner {
                         .map(this::channelIdToChest)
                         .flatMap(Collection::stream)
                         .toList())
-                .cost(0)
-                .defense(dude.getDefense())
+                .cost("")
+                .defence(dude.getDefence())
                 .dudeId(dude.getId())
                 .effectText("")
                 .flavorText(dude.getFlavorText())
