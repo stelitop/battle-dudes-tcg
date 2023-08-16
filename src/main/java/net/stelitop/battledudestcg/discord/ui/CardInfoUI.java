@@ -1,5 +1,6 @@
 package net.stelitop.battledudestcg.discord.ui;
 
+import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
@@ -42,31 +43,13 @@ public class CardInfoUI {
      * @return The embed.
      */
     private MessageCreateSpec getDudeInfoMessage(DudeCard dude) {
-        var locationsMsg = dude.getChestSources().isEmpty() ? "None" : dude.getChestSources()
-                .stream()
-                .distinct()
-                .map(Chest::getName)
-                .map(x -> discordBotSettings.getChannelChestLocations().get(x))
-                .filter(Objects::nonNull)
-                .map(x -> "> <#" + x + ">")
-                .collect(Collectors.joining("\n"));
 
         var embed = EmbedCreateSpec.builder()
                 .title(dude.getFormattedId() + " - " + dude.getName())
                 .thumbnail(dude.getArtUrl())
                 .color(colorUtils.getColor(dude.getTypes()))
-                .addField("Collection Info",
-                        "Locations:\n" + locationsMsg
-                                + "\nRarity: " + dude.getRarity(),
-                        //+ "\nTotal Collected: " + dude.getUsersThatOwn().size(),
-                        false)
-                .addField("Evolution Info",
-                        "Stage: " + dude.getStage() +
-                                "\nEvolves From: " + (dude.getPreviousEvolutions() != null && !dude.getPreviousEvolutions().isEmpty() ?
-                                String.join(", ", dude.getPreviousEvolutions()) : "N/A") +
-                                "\nEvolves Into: " + (dude.getNextEvolutions() != null && !dude.getNextEvolutions().isEmpty() ?
-                                String.join(", ", dude.getNextEvolutions()) : "N/A"),
-                        false)
+                .addField(getCollectionInfoField(dude, false))
+                .addField(getEvolutionsInfoField(dude, false))
                 .addField("Type Info",
                         dude.getTypes().stream()
                                 .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
@@ -102,24 +85,11 @@ public class CardInfoUI {
      * @return The embed.
      */
     private MessageCreateSpec getGenericCardMessage(Card card) {
-        var locationsMsg = card.getChestSources().isEmpty() ? "None" : card.getChestSources()
-                .stream()
-                .distinct()
-                .map(Chest::getName)
-                .map(x -> discordBotSettings.getChannelChestLocations().get(x))
-                .filter(Objects::nonNull)
-                .map(x -> "> <#" + x + ">")
-                .collect(Collectors.joining("\n"));
-
         var embed = EmbedCreateSpec.builder()
                 .title(card.getName())
                 .thumbnail(card.getArtUrl())
                 .color(colorUtils.getColor(card.getTypes()))
-                .addField("Collection Info",
-                        "Locations:\n" + locationsMsg
-                                + "\nRarity: " + card.getRarity(),
-                        //+ "\nTotal Collected: " + dude.getUsersThatOwn().size(),
-                        false)
+                .addField(getCollectionInfoField(card, false))
                 .addField("Type Info",
                         card.getTypes().stream()
                                 .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
@@ -133,5 +103,47 @@ public class CardInfoUI {
         return MessageCreateSpec.builder()
                 .addEmbed(embed.build())
                 .build();
+    }
+
+    /**
+     * Creates a field with the information about how to collect a card.
+     *
+     * @param card The card to create the field for.
+     * @param inline Whether the field to be inline or not.
+     * @return The field
+     */
+    private EmbedCreateFields.Field getCollectionInfoField(Card card, boolean inline) {
+        var locationsMsg = card.getChestSources().isEmpty() ? "None" : card.getChestSources()
+                .stream()
+                .distinct()
+                .map(Chest::getName)
+                .map(x -> discordBotSettings.getChannelChestLocations().get(x))
+                .filter(Objects::nonNull)
+                .map(x -> "> <#" + x + ">")
+                .collect(Collectors.joining("\n"));
+
+        return EmbedCreateFields.Field.of(
+                "Collection Info",
+                "Locations:\n" + locationsMsg + "\nRarity: " + card.getRarity(),
+                inline
+        );
+    }
+
+    /**
+     * Creates a field about the evolution info of a dude card.
+     *
+     * @param dude The dude for which to create the field.
+     * @param inline Whether the field is inline or not.
+     * @return The field
+     */
+    private EmbedCreateFields.Field getEvolutionsInfoField(DudeCard dude, boolean inline) {
+
+        String description = "Stage: " + dude.getStage() +
+                "\nEvolves From: " + (dude.getPreviousEvolutions() != null && !dude.getPreviousEvolutions().isEmpty() ?
+                String.join(", ", dude.getPreviousEvolutions()) : "N/A") +
+                "\nEvolves Into: " + (dude.getNextEvolutions() != null && !dude.getNextEvolutions().isEmpty() ?
+                String.join(", ", dude.getNextEvolutions()) : "N/A");
+
+        return EmbedCreateFields.Field.of("Evolution Info", description, false);
     }
 }
