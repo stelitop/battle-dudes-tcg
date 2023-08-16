@@ -16,9 +16,9 @@ import reactor.core.publisher.Mono;
 @CommandComponent
 public class CreateCardCommand {
 
-    public final String DUDE_DEFAULT_ART = "https://i.imgur.com/X2ffUWK.png";
-    public final String ITEM_DEFAULT_ART = "https://i.imgur.com/MiV8igJ.png";
-    public final String WARP_DEFAULT_ART = "https://i.imgur.com/EF09Cxd.png";
+    public static final String DUDE_DEFAULT_ART = "https://i.imgur.com/X2ffUWK.png";
+    public static final String ITEM_DEFAULT_ART = "https://i.imgur.com/MiV8igJ.png";
+    public static final String WARP_DEFAULT_ART = "https://i.imgur.com/EF09Cxd.png";
 
     @Autowired
     private CardRepository cardRepository;

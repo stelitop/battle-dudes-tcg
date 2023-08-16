@@ -37,6 +37,8 @@ public class CardCollectionUI {
      */
     public static final int CARDS_PER_PAGE = 20;
 
+    public static final String ID_CHANGE_COLLECTION_ORDERING = "changecollordering";
+
     @Autowired
     private UserProfileService userProfileService;
     @Autowired
@@ -89,7 +91,7 @@ public class CardCollectionUI {
          * @return Success result if the state is valid, fail result otherwise
          *     with an error message.
          */
-        private ActionResult<Void> validateState() throws IllegalStateException{
+        public ActionResult<Void> validateState() throws IllegalStateException{
             if (!Set.of("all", "dude", "warp", "item").contains(cardType)) {
                 return ActionResult.fail(cardType + " is not an allowed card type!");
             }
@@ -141,12 +143,20 @@ public class CardCollectionUI {
                 Button.primary(model.nextPage().serialize(), "Next Page").disabled(model.page == totalPages)
         );
 
-        String selectMenuId = "opencardinfopage|" + model.serialize();
-        SelectMenu selectMenu = SelectMenu.of(selectMenuId, cardOwnerships.stream()
+        String changeOrderingMenuId = ID_CHANGE_COLLECTION_ORDERING + "|" + model.serialize();
+        SelectMenu changeOrderingMenu = SelectMenu.of(changeOrderingMenuId, List.of(
+                SelectMenu.Option.of("Arbitrary", "default"),
+                SelectMenu.Option.of("Name", "name"),
+                SelectMenu.Option.of("Elemental Types", "eltypes"),
+                SelectMenu.Option.of("Rarity", "rarity")
+        )).withPlaceholder("Set Ordering");
+
+        String cardInfoSelectMenuId = "opencardinfopage|" + model.serialize();
+        SelectMenu cardInfoSelectMenu = SelectMenu.of(cardInfoSelectMenuId, cardOwnerships.stream()
                         .map(x -> x.getCard().getName())
                         .map(x -> SelectMenu.Option.of(x, x))
                         .toList())
-                .withPlaceholder("Card Info");
+                .withPlaceholder("Get Card Info");
 
         return MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()
@@ -155,7 +165,8 @@ public class CardCollectionUI {
                         .color(colorUtils.getColor(ElementalType.Neutral))
                         .build())
                 .addComponent(ActionRow.of(navigatePagesButtons))
-                .addComponent(ActionRow.of(selectMenu))
+                .addComponent(ActionRow.of(changeOrderingMenu))
+                .addComponent(ActionRow.of(cardInfoSelectMenu))
                 .build();
     }
 
