@@ -31,6 +31,8 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
 
         saveDeckAsSpreadsheet(StreamSupport.stream(deckRepository.findAll().spliterator(), false)
                 .filter(x -> x.getName().equals(deckName)).findFirst().get());
+
+        System.out.println("Finished exporting \"" + deckName + "\" deck!");
     }
 
     public void saveDeckAsSpreadsheet(CardDeck deck) throws IOException {
@@ -61,8 +63,8 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
         try (InputStream inputStream = connection.getInputStream()) {
             byte[] imageBytes = inputStream.readAllBytes();
             Mat mat = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.IMREAD_COLOR);
-            Imgproc.resize(mat, mat, new Size(700, 700));
-            mat.copyTo(finalMat.submat(new Rect(0, 0, 700, 700)));
+            Imgproc.resize(mat, mat, new Size(600, 600));
+            mat.copyTo(finalMat.submat(new Rect(50, 50, 600, 600)));
 
             // Add text to the image
             //String text = card.getEffectText();
@@ -96,7 +98,7 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
     }
 
     private List<String> splitTextIntoLines(String text) {
-        final int maxLength = 35;
+        final int maxLength = 32;
         List<String> ret = new ArrayList<>();
         StringBuilder sentence = new StringBuilder();
         for (String word : text.split(" ")) {

@@ -1,9 +1,13 @@
 package net.stelitop.battledudestcg.discord.utils;
 
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.enums.Rarity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmojiUtils {
@@ -117,5 +121,44 @@ public class EmojiUtils {
      */
     public String getEnergyEmoji() {
         return ":zap:";
+    }
+
+    public ActionResult<String> formatCardTextWithSpecialStrings(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == ']') {
+                return ActionResult.fail("Found closing bracket ']' without an opening one!");
+            }
+            if (text.charAt(i) != '[') {
+                result.append(text.charAt(i));
+                continue;
+            }
+            StringBuilder specialString = new StringBuilder();
+            i++;
+            while (text.charAt(i) != ']') {
+                if (text.charAt(i)  == '[') {
+                    return ActionResult.fail("You cannot put special strings inside other special strings!");
+                }
+                specialString.append(text.charAt(i));
+                i++;
+                if (i == text.length() - 1) {
+                    return ActionResult.fail("Found opening bracket '[' without a closing one!");
+                }
+            }
+            ActionResult<String> transformStringResult = transformSpecialString(specialString.toString());
+            if (transformStringResult.hasFailed()) return transformStringResult;
+            result.append(transformStringResult.getResponse());
+        }
+        return ActionResult.success(result.toString());
+    }
+
+    private ActionResult<String> transformSpecialString(String text) {
+        List<ElementalType> parsedAsElements = ElementalType.parseString(text);
+        if (parsedAsElements != null) {
+            return ActionResult.success(parsedAsElements.stream()
+                    .map(this::getEmojiString)
+                    .collect(Collectors.joining()));
+        }
+        return ActionResult.fail("Failed to transform the string [" + text + "]!");
     }
 }

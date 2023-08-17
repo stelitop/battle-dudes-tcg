@@ -3,6 +3,7 @@ package net.stelitop.battledudestcg.discord.ui;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
@@ -11,6 +12,8 @@ import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CardInfoUI {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private DiscordBotSettings discordBotSettings;
@@ -68,7 +73,7 @@ public class CardInfoUI {
                                 + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
                                 + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence(),
                         true)
-                .addField("Effect", dude.getEffectText().isEmpty() ? "(none)" : dude.getEffectText(), false)
+                .addField(getEffectInfoField(dude, false))
                 .addField("\u200B",
                         (dude.getFlavorText() == null ? "" : "\n\n*" + dude.getFlavorText() + "*"), false)
                 .footer("Art by " + String.join(", ", dude.getArtists()), null);
@@ -95,9 +100,9 @@ public class CardInfoUI {
                                 .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
                                 .collect(Collectors.joining(" - ")),
                         true)
-                .addField("Effect", card.getEffectText().isEmpty() ? "(none)" : card.getEffectText(), false)
                 .addField("\u200B",
                         (card.getFlavorText() == null ? "" : "\n\n*" + card.getFlavorText() + "*"), false)
+                .addField(getEffectInfoField(card, false))
                 .footer("Art by " + String.join(", ", card.getArtists()), null);
 
         return MessageCreateSpec.builder()
@@ -137,7 +142,6 @@ public class CardInfoUI {
      * @return The field
      */
     private EmbedCreateFields.Field getEvolutionsInfoField(DudeCard dude, boolean inline) {
-
         String description = "Stage: " + dude.getStage() +
                 "\nEvolves From: " + (dude.getPreviousEvolutions() != null && !dude.getPreviousEvolutions().isEmpty() ?
                 String.join(", ", dude.getPreviousEvolutions()) : "N/A") +
@@ -145,5 +149,17 @@ public class CardInfoUI {
                 String.join(", ", dude.getNextEvolutions()) : "N/A");
 
         return EmbedCreateFields.Field.of("Evolution Info", description, false);
+    }
+
+    private EmbedCreateFields.Field getEffectInfoField(Card card, boolean inline) {
+        ActionResult<String> parsedEffectTextResult = emojiUtils.formatCardTextWithSpecialStrings(card.getEffectText());
+        String text = parsedEffectTextResult.isSuccessful() ? parsedEffectTextResult.getResponse() : card.getEffectText();
+
+        if (parsedEffectTextResult.hasFailed()) {
+            LOGGER.error("Could not parse the effect text of card \"" + card.getName() + "\"!"
+                    + "   Error: " + parsedEffectTextResult.errorMessage());
+        }
+
+        return EmbedCreateFields.Field.of("Effect", text.isEmpty() ? "(none)" : text, inline);
     }
 }

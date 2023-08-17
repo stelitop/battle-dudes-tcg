@@ -235,7 +235,6 @@ public class DeckCommands {
         for (int remaining = copies, i = deck.getCards().size() - 1; i >= 0 && remaining > 0; i--) {
             if (deck.getCards().get(i).getName().equalsIgnoreCase(cardName)) {
                 deck.getCards().remove(i);
-                i++;
                 remaining--;
             }
         }

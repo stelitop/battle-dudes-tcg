@@ -3,7 +3,6 @@ package net.stelitop.battledudestcg.discord.listeners.selectmenus;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
-import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class CardCollectionChangeOrderingSelectMenu implements ApplicationRunner
 
     @Autowired
     private GatewayDiscordClient client;
-    @Autowired
-    private CardRepository cardRepository;
     @Autowired
     private CardCollectionUI cardCollectionUI;
     @Override

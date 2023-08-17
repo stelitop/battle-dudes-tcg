@@ -115,7 +115,7 @@ public class EditCardModals implements ApplicationRunner {
         if (ElementalType.parseString(newCost) == null) {
             return ActionResult.fail("Could not parse the input \"" + newCost + "\"!");
         }
-        card.setCost(newCost);
+        card.setCost(newCost.toUpperCase());
         return ActionResult.success();
     }
 
