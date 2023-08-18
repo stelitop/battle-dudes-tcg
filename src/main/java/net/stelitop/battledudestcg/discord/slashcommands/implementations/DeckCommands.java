@@ -248,4 +248,38 @@ public class DeckCommands {
                 .withComponentsOrNull(newUIMessage.components().toOptional().orElse(null)).block();
         return Mono.empty();
     }
+
+//    @SlashCommand(
+//            name = "deck rename",
+//            description = "Renames an existing deck."
+//    )
+//    public Mono<Void> renameDeck(
+//            @CommandEvent ChatInputInteractionEvent event,
+//            @CommandParam(
+//                    name = "oldname",
+//                    description = "The current name of the deck.",
+//                    autocomplete = DeckNameAutocomplete.class
+//            ) String oldName,
+//            @CommandParam(
+//                    name = "newname",
+//                    description = "The new name of the deck."
+//            ) String newName
+//    ) {
+//        long userId = event.getInteraction().getUser().getId().asLong();
+//        var deckOpt = deckService.getDeckOfUser(userId, oldName);
+//        if (deckOpt.isEmpty()) {
+//            return event.reply("No such deck found!")
+//                    .withEphemeral(true);
+//        }
+//        CardDeck deck = deckOpt.get(0);
+//        deck.setName(newName);
+//        var validationResult = deck.validateName();
+//        if (validationResult.hasFailed()) {
+//            return event.reply(validationResult.errorMessage())
+//                    .withEphemeral(true);
+//        }
+//        deckService.saveDeck(deck);
+//        return event.reply("Name updated!")
+//                .withEphemeral(true);
+//    }
 }

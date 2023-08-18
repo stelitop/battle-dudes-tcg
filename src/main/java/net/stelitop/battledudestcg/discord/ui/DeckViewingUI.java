@@ -5,8 +5,11 @@ import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
+import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
+import net.stelitop.battledudestcg.game.enums.ElementalType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DeckViewingUI {
+
+    @Autowired
+    private EmojiUtils emojiUtils;
 
     public MessageCreateSpec getDeckViewingMessage(CardDeck deck) {
         Map<String, Integer> cardNameToCount = new HashMap<>();
@@ -30,11 +36,17 @@ public class DeckViewingUI {
         List<List<String>> cardNamePartitions = Lists.partition(allCardNames, 20);
         List<EmbedCreateFields.Field> embedFields = new ArrayList<>();
         cardNamePartitions.forEach(x -> embedFields.add(createFieldFromNames(x, cardNameToCount, cardNameToCard)));
+        if (embedFields.size() > 0) {
+            embedFields.set(0, EmbedCreateFields.Field.of(
+                    "Cards: " + deck.getCards().size() + "/60",
+                    embedFields.get(0).value(),
+                    true));
+        }
 
         return MessageCreateSpec.builder()
                 .addEmbed(EmbedCreateSpec.builder()
                         .title("Deck: \"" + deck.getName() + "\"")
-                        .description("## Cards")
+                        .description(getDescription(deck))
                         .addAllFields(embedFields)
                         .color(Color.CYAN)
                         .thumbnail("https://static.thenounproject.com/png/219525-200.png")
@@ -54,5 +66,19 @@ public class DeckViewingUI {
         description = description.isBlank() ? "(empty)" : description;
 
         return EmbedCreateFields.Field.of("\u200B", description, true);
+    }
+
+    private String getDescription(CardDeck deck) {
+        List<ElementalType> presentTypes = deck.getCards().stream()
+                .flatMap(x -> x.getTypes().stream())
+                .distinct()
+                .filter(x -> x != ElementalType.Neutral && x != ElementalType.Ultimate)
+                .toList();
+
+        String presentTypesMsg = presentTypes.stream()
+                .map(emojiUtils::getEmojiString)
+                .collect(Collectors.joining());
+
+        return "Elements: " + presentTypesMsg;
     }
 }

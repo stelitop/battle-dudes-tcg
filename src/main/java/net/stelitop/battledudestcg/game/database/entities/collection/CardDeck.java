@@ -3,8 +3,8 @@ package net.stelitop.battledudestcg.game.database.entities.collection;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
-import net.stelitop.battledudestcg.game.database.entities.collection.UserCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,5 +54,12 @@ public class CardDeck {
         return (int)cards.stream()
                 .filter(x -> x.getName().equalsIgnoreCase(name))
                 .count();
+    }
+
+    public ActionResult<Void> validateName() {
+        if (this.name != null && this.name.length() >= 3) {
+            return ActionResult.fail("The deck name must be at least 3 characters long!");
+        }
+        return ActionResult.success();
     }
 }

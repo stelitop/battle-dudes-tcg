@@ -20,4 +20,10 @@ public interface DeckRepository extends CrudRepository<CardDeck, Long> {
             "JOIN CardDeck cd ON cd.userCollection = uc " +
             "WHERE up.discordId = ?1")
     List<String> findNamesOfDecksOfUser(long userId);
+
+    @Query("SELECT cd FROM CardDeck cd " +
+            "JOIN UserCollection uc ON cd.userCollection = uc " +
+            "JOIN UserProfile up ON uc.userProfile = up " +
+            "WHERE up.discordId = ?2 and lower(cd.name) = lower(?1)")
+    List<CardDeck> findCardDeckByUserIdAndName(String deckName, long userId);
 }

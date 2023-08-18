@@ -75,6 +75,8 @@ public class DeckService {
         deck.setName(deckName);
         deck.setCards(new ArrayList<>());
         deck.setUserCollection(userCollection);
+        var validationResult = deck.validateName();
+        if (validationResult.hasFailed()) return ActionResult.fail(validationResult.errorMessage());
         userCollection.getDecks().add(deck);
         CardDeck savedDeck = deckRepository.save(deck);
 
@@ -109,5 +111,9 @@ public class DeckService {
 
     public CardDeck saveDeck(CardDeck deck) {
         return deckRepository.save(deck);
+    }
+
+    public List<CardDeck> getDeckOfUser(long userId, String deckName) {
+        return deckRepository.findCardDeckByUserIdAndName(deckName, userId);
     }
 }

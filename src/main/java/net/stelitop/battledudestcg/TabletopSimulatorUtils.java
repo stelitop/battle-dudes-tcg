@@ -18,7 +18,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 @Component
 public class TabletopSimulatorUtils implements ApplicationRunner {
@@ -27,15 +26,16 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
     private DeckRepository deckRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String deckName = "Nature Dudes";
-
-        saveDeckAsSpreadsheet(StreamSupport.stream(deckRepository.findAll().spliterator(), false)
-                .filter(x -> x.getName().equals(deckName)).findFirst().get());
-
-        System.out.println("Finished exporting \"" + deckName + "\" deck!");
+//        String deckName = "Magic + Decay";
+//        String filename = "MagicDecay.png";
+//
+//        saveDeckAsSpreadsheet(StreamSupport.stream(deckRepository.findAll().spliterator(), false)
+//                .filter(x -> x.getName().equals(deckName)).findFirst().get(), filename);
+//
+//        System.out.println("Finished exporting \"" + deckName + "\" deck!");
     }
 
-    public void saveDeckAsSpreadsheet(CardDeck deck) throws IOException {
+    public Mat createDeckCardSheet(CardDeck deck) throws IOException {
         var cards = deck.getCards();
 
         int i = 0;
@@ -52,7 +52,7 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
             cardMat.copyTo(finalSubmat);
             i++;
         }
-        Imgcodecs.imwrite("cards.png", carddeck);
+        return carddeck;
     }
 
     public Mat createMatOfCard(Card card) throws IOException {
@@ -64,7 +64,7 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
             byte[] imageBytes = inputStream.readAllBytes();
             Mat mat = Imgcodecs.imdecode(new MatOfByte(imageBytes), Imgcodecs.IMREAD_COLOR);
             Imgproc.resize(mat, mat, new Size(600, 600));
-            mat.copyTo(finalMat.submat(new Rect(50, 50, 600, 600)));
+            mat.copyTo(finalMat.submat(new Rect(50, 100, 600, 600)));
 
             // Add text to the image
             //String text = card.getEffectText();
@@ -84,9 +84,10 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
                 Imgproc.putText(finalMat, parts.get(i), linePosition, font, fontScale, color, thickness);
             }
 
+            Imgproc.putText(finalMat, card.getName(), new Point(25, 50), font, fontScale*1.5, color, thickness);
             if (!card.getCost().isBlank()) {
                 String costText = "[" + card.getCost().replace(".", "o") + "]";
-                Imgproc.putText(finalMat, costText, new Point(25, 50), font, fontScale*1.5, color, thickness);
+                Imgproc.putText(finalMat, costText, new Point(25, 100), font, fontScale*1.5, color, thickness);
             }
             if (card instanceof DudeCard dudeCard) {
                 String statsText = dudeCard.getHealth() + "/" + dudeCard.getOffense() + "/" + dudeCard.getDefence();
