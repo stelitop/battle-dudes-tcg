@@ -55,24 +55,7 @@ public class CardInfoUI {
                 .color(colorUtils.getColor(dude.getTypes()))
                 .addField(getCollectionInfoField(dude, false))
                 .addField(getEvolutionsInfoField(dude, false))
-                .addField("Type Info",
-                        dude.getTypes().stream()
-                                .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
-                                .collect(Collectors.joining(" - ")) +
-                                (dude.getResistances().isEmpty() ? "" : "\nResistant to " +
-                                        dude.getResistances().stream().map(x -> emojiUtils.getEmojiString(x) + " " + x.toString().toUpperCase())
-                                                .collect(Collectors.joining(" - "))) +
-                                (dude.getWeaknesses().isEmpty() ? "" : "\nWeak to " +
-                                        dude.getWeaknesses().stream().map(x -> emojiUtils.getEmojiString(x) + " " + x.toString().toUpperCase())
-                                                .collect(Collectors.joining(" - "))),
-                        true)
-                .addField("Statistics",
-                        "Cost: " + Objects.requireNonNull(ElementalType.parseString(dude.getCost())).stream()
-                                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""))
-                                + "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
-                                + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
-                                + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence(),
-                        true)
+                .addField(getStatisticsInfoField(dude, false))
                 .addField(getEffectInfoField(dude, false))
                 .addField("\u200B",
                         (dude.getFlavorText() == null ? "" : "\n\n*" + dude.getFlavorText() + "*"), false)
@@ -95,14 +78,10 @@ public class CardInfoUI {
                 .thumbnail(card.getArtUrl())
                 .color(colorUtils.getColor(card.getTypes()))
                 .addField(getCollectionInfoField(card, false))
-                .addField("Type Info",
-                        card.getTypes().stream()
-                                .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
-                                .collect(Collectors.joining(" - ")),
-                        true)
+                .addField(getStatisticsInfoField(card, false))
+                .addField(getEffectInfoField(card, false))
                 .addField("\u200B",
                         (card.getFlavorText() == null ? "" : "\n\n*" + card.getFlavorText() + "*"), false)
-                .addField(getEffectInfoField(card, false))
                 .footer("Art by " + String.join(", ", card.getArtists()), null);
 
         return MessageCreateSpec.builder()
@@ -161,5 +140,24 @@ public class CardInfoUI {
         }
 
         return EmbedCreateFields.Field.of("Effect", text.isEmpty() ? "(none)" : text, inline);
+    }
+
+    private EmbedCreateFields.Field getStatisticsInfoField(Card card, boolean inline) {
+
+        String description = "";
+        description += "Types: " + card.getTypes().stream()
+                .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
+                .collect(Collectors.joining(" - "));
+
+        description += "\nCost: " + Objects.requireNonNull(ElementalType.parseString(card.getCost())).stream()
+                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""));
+
+        if (card instanceof DudeCard dude) {
+            description +=  "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
+                    + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
+                    + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence();
+        }
+
+        return EmbedCreateFields.Field.of("Statistics", description, inline);
     }
 }

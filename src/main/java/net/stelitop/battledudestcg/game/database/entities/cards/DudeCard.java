@@ -31,7 +31,8 @@ public class DudeCard extends Card implements Comparable<DudeCard> {
      */
     @Column()
     @IntRange(from = 1, to = 3)
-    private int stage;
+    @Builder.Default
+    private int stage = 1;
 
     /**
      * The type this dude is resistant to. Null if none.
@@ -54,21 +55,24 @@ public class DudeCard extends Card implements Comparable<DudeCard> {
      */
     @Column
     @NonNegative
-    private int health;
+    @Builder.Default
+    private int health = 1;
 
     /**
      * The offense of the dude.
      */
     @Column
     @NonNegative
-    private int offense;
+    @Builder.Default
+    private int offense = 1;
 
     /**
      * The defence of the dude.
      */
     @Column
     @NonNegative
-    private int defence;
+    @Builder.Default
+    private int defence = 1;
 
     /**
      * The name of the dude this can evolve to. Null if there is no
