@@ -27,5 +27,6 @@ public class CardOwnership {
     private UserCollection userCollection;
 
     @Column(name = "owned_copies")
+    @Builder.Default
     private int ownedCopies = 0;
 }

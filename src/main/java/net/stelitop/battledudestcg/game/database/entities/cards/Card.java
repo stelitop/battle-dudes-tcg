@@ -56,7 +56,7 @@ public class Card {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
     @Singular
-    private List<ElementalType> types = new ArrayList<>();
+    private List<ElementalType> types;
 
     /**
      * The card's rarity.
@@ -78,7 +78,7 @@ public class Card {
      */
     @ElementCollection(fetch = FetchType.EAGER)
     @Singular
-    private List<String> artists = new ArrayList<>();
+    private List<String> artists;
 
     /**
      * The flavor text of the card.

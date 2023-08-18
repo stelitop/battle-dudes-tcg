@@ -132,10 +132,10 @@ public class CardCollectionUI {
                 .filter(x -> x.getCard().getRarity() != Rarity.Basic)
                 .mapToInt(CardOwnership::getOwnedCopies)
                 .sum();
-        int totalPages = 1 + (cardOwnerships.size() - 1)/ CARDS_PER_PAGE;
-        model.page = Math.max(1, Math.min(totalPages, model.page));
 
         cardOwnerships = getRelevantCardOwnerships(cardOwnerships, model);
+        int totalPages = 1 + (cardOwnerships.size() - 1)/ CARDS_PER_PAGE;
+        model.page = Math.max(1, Math.min(totalPages, model.page));
         String description = getDescription(cardOwnerships, totalCards, model.page, totalPages);
 
         List<Button> navigatePagesButtons = List.of(
@@ -206,6 +206,7 @@ public class CardCollectionUI {
             int currentPage,
             int totalPages
     ) {
+        if (cardOwnerships.isEmpty()) return "(empty)\n\nPage 1/1";
         String description = cardOwnerships.stream()
                 .map(this::formatCardOwnershipToString)
                 .collect(Collectors.joining("\n"));
