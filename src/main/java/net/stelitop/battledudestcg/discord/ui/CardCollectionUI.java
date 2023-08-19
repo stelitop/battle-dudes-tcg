@@ -133,8 +133,9 @@ public class CardCollectionUI {
                 .mapToInt(CardOwnership::getOwnedCopies)
                 .sum();
 
+        int totalEntries = (int)cardOwnerships.stream().filter(getTypeFilter(model.getCardType())).count();
         cardOwnerships = getRelevantCardOwnerships(cardOwnerships, model);
-        int totalPages = 1 + (cardOwnerships.size() - 1)/ CARDS_PER_PAGE;
+        int totalPages = 1 + (totalEntries- 1)/ CARDS_PER_PAGE;
         model.page = Math.max(1, Math.min(totalPages, model.page));
         String description = getDescription(cardOwnerships, totalCards, model.page, totalPages);
 
