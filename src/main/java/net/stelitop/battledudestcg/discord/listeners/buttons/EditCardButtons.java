@@ -32,8 +32,8 @@ public class EditCardButtons {
      * @param event The button event.
      * @return The event reply.
      */
-    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*\\|.*")
-    private Mono<Void> editButtonPressedInteraction(@InteractionEvent ButtonInteractionEvent event) {
+    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*.*")
+    public Mono<Void> editButtonPressedInteraction(@InteractionEvent ButtonInteractionEvent event) {
         String componentId = event.getCustomId();
         String[] parts = componentId.split("\\|");
         long cardId = Long.parseLong(parts[1]);

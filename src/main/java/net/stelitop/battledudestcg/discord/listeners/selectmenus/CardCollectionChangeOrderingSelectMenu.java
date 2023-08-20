@@ -3,6 +3,7 @@ package net.stelitop.battledudestcg.discord.listeners.selectmenus;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class CardCollectionChangeOrderingSelectMenu {
     @ComponentInteraction(
             event = SelectMenuInteractionEvent.class,
             regex = CardCollectionUI.ID_CHANGE_COLLECTION_ORDERING + "\\|" + CardCollectionUI.Model.REGEX
-    ) private Mono<Void> handle(SelectMenuInteractionEvent event) {
+    ) public Mono<Void> handle(@InteractionEvent SelectMenuInteractionEvent event) {
         String eventId = event.getCustomId();
         final String idPrefix = CardCollectionUI.ID_CHANGE_COLLECTION_ORDERING + "|";
         if (event.getValues().size() != 1) return Mono.empty();

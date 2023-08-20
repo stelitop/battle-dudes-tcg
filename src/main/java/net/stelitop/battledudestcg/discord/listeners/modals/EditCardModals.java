@@ -4,6 +4,7 @@ import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
@@ -25,7 +26,7 @@ public class EditCardModals {
 
 
     @ComponentInteraction(event = ModalSubmitInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*")
-    private Mono<Void> cardEditModalSubmit(ModalSubmitInteractionEvent event) {
+    public Mono<Void> cardEditModalSubmit(@InteractionEvent ModalSubmitInteractionEvent event) {
         String modalId = event.getCustomId();
         String[] parts = modalId.split("\\|");
         long cardId = Long.parseLong(parts[1]);
