@@ -51,7 +51,7 @@ public class CardCollectionUI {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Model implements Cloneable {
-        private static final String componentId = "changecollectionpage";
+        public static final String COMPONENT_ID = "changecollectionpage";
         private int page;
         /**
          * Type of the cards to show. Must be one of "all", "dude", "warp", "item"
@@ -65,7 +65,7 @@ public class CardCollectionUI {
 
         public static @Nullable CardCollectionUI.Model deserialize(@NotNull String encoded) throws IllegalStateException{
             String[] parts = encoded.split("\\|");
-            if (parts.length != 5 || !parts[0].equals(componentId)) return null;
+            if (parts.length != 5 || !parts[0].equals(COMPONENT_ID)) return null;
 
             var model = Model.builder()
                     .userId(Long.parseLong(parts[1]))
@@ -81,7 +81,7 @@ public class CardCollectionUI {
             if (validateState().hasFailed()) {
                 throw new IllegalStateException(validateState().errorMessage());
             }
-            return componentId + "|" + userId + "|" + page + "|" + cardType + "|" + ordering;
+            return COMPONENT_ID + "|" + userId + "|" + page + "|" + cardType + "|" + ordering;
         }
 
         /**

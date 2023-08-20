@@ -1,9 +1,9 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
+import net.stelitop.battledudestcg.discord.framework.definition.*;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;
@@ -23,7 +23,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.Optional;
 
-@CommandComponent
+@DEventsComponent
 public class DeckCommands {
 
     @Autowired
@@ -42,7 +42,7 @@ public class DeckCommands {
             description = "Creates a new empty deck."
     )
     public Mono<Void> createDeck(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(name = "name", description = "The name of the deck. Must be unique.") String deckName
     ) {
         long userId = event.getInteraction().getUser().getId().asLong();
@@ -57,7 +57,7 @@ public class DeckCommands {
             description = "Displays a deck in the public chat."
     )
     public Mono<Void> viewDeck(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the deck.",
@@ -83,7 +83,7 @@ public class DeckCommands {
             description = "Opens a deck and allows you to edit it with other commands."
     )
     public Mono<Void> editDeck(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the deck.",
@@ -122,7 +122,7 @@ public class DeckCommands {
             description = "Adds a new card to the currently selected deck."
     )
     public Mono<Void> addCardToDeck(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",
@@ -189,7 +189,7 @@ public class DeckCommands {
             description = "Removes a card from the currently selected deck."
     )
     public Mono<Void> removeCardToDeck(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",

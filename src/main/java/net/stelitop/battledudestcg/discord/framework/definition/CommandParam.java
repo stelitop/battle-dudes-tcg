@@ -1,7 +1,7 @@
-package net.stelitop.battledudestcg.discord.slashcommands.framework.definition;
+package net.stelitop.battledudestcg.discord.framework.definition;
 
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.NullAutocompleteExecutor;
+import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
+import net.stelitop.battledudestcg.discord.framework.autocomplete.NullAutocompleteExecutor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.listeners.general;
+package net.stelitop.battledudestcg.discord.listeners.game;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;

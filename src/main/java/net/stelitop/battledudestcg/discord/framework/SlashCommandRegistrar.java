@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.framework;
+package net.stelitop.battledudestcg.discord.framework;
 
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
@@ -8,10 +8,10 @@ import discord4j.rest.RestClient;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
+import net.stelitop.battledudestcg.discord.framework.autocomplete.NullAutocompleteExecutor;
+import net.stelitop.battledudestcg.discord.framework.definition.*;
 import net.stelitop.battledudestcg.discord.listeners.general.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.NullAutocompleteExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>At the start of the program, this component finds all defined slash commands inside of
- * {@link CommandComponent} classes. Their signatures are parsed and transformed into
+ * {@link DEventsComponent} classes. Their signatures are parsed and transformed into
  * {@link ApplicationCommandRequest} objects to be sent to discord.</p>
  *
  * <p>During parsing, all commands with Autocomplete specified are registered in the
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class SlashCommandRegistrar implements ApplicationRunner {
 
     /**
-     * Package name used for searching for {@link CommandComponent} beans.
+     * Package name used for searching for {@link DEventsComponent} beans.
      */
     private final static String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -74,7 +74,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         var reflections = new Reflections(PACKAGE_NAME);
-        var slashCommandClasses = reflections.getTypesAnnotatedWith(CommandComponent.class);
+        var slashCommandClasses = reflections.getTypesAnnotatedWith(DEventsComponent.class);
         var slashCommandMethods = slashCommandClasses.stream()
                 .map(Class::getMethods)
                 .flatMap(Arrays::stream)
@@ -82,7 +82,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
                 .toList();
 
         String missingCommandEventAnnotation = slashCommandMethods.stream()
-                .filter(x -> Arrays.stream(x.getParameters()).noneMatch(y -> y.isAnnotationPresent(CommandEvent.class)))
+                .filter(x -> Arrays.stream(x.getParameters()).noneMatch(y -> y.isAnnotationPresent(InteractionEvent.class)))
                 .map(Method::getName)
                 .collect(Collectors.joining(", "));
         if (!missingCommandEventAnnotation.isBlank()) {

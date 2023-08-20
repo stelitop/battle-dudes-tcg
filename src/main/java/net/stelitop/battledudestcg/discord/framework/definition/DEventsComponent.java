@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.framework.definition;
+package net.stelitop.battledudestcg.discord.framework.definition;
 
 
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
-public @interface CommandComponent {
+public @interface DEventsComponent {
 
 }

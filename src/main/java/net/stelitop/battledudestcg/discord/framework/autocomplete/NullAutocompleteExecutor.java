@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete;
+package net.stelitop.battledudestcg.discord.framework.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 

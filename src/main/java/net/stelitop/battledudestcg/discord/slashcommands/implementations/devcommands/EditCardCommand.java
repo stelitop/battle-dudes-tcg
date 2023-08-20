@@ -1,10 +1,10 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@CommandComponent
+@DEventsComponent
 public class EditCardCommand {
 
     @Autowired
@@ -29,7 +29,7 @@ public class EditCardCommand {
             description = "Admin command for editing the information on a card."
     )
     public Mono<Void> editCardCommand(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the card",

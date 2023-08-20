@@ -2,10 +2,10 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcom
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.database.entities.collection.UserCollectionCardKey;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.stream.StreamSupport;
 
-@CommandComponent
+@DEventsComponent
 public class GrantCardsCommands {
 
     @Autowired
@@ -33,7 +33,7 @@ public class GrantCardsCommands {
             description = "Gives a user the entire collection of cards with every copy."
     )
     public Mono<Void> giveUserEntireCollection(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "user",
                     description = "The user to grant the collection"

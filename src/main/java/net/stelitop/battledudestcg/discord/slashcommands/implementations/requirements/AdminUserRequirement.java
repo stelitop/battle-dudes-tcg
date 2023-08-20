@@ -2,7 +2,7 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.requir
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.requirements.CommandRequirementExecutor;
+import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirementExecutor;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

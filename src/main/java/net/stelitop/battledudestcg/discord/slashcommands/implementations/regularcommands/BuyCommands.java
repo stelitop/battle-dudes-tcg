@@ -1,10 +1,10 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
@@ -15,7 +15,7 @@ import net.stelitop.battledudestcg.game.services.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@CommandComponent
+@DEventsComponent
 public class BuyCommands {
 
     @Autowired
@@ -30,7 +30,7 @@ public class BuyCommands {
             description = "Buys a specific chest. One chest costs 100 coins."
     )
     public Mono<Void> buyChestCommand(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the chest",

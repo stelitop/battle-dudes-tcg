@@ -1,10 +1,15 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
+import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.TextInput;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.InteractionPresentModalSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
+import net.stelitop.battledudestcg.discord.framework.definition.*;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
@@ -16,7 +21,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CommandComponent
+@DEventsComponent
 public class CollectionCommands {
 
     @Autowired
@@ -31,7 +36,7 @@ public class CollectionCommands {
             description = "Gets the coins a user has. By default it shows your coins."
     )
     public Mono<Void> getUserCoins(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "user",
                     description = "User to check the coins of. Defaults to self",
@@ -49,7 +54,7 @@ public class CollectionCommands {
             description = "A list of all chests that you own."
     )
     public Mono<Void> collectionChests(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "user",
                     description = "The user you want to inspect, by default yourself.",
@@ -80,7 +85,7 @@ public class CollectionCommands {
             description = "A list of all cards that you own."
     )
     public Mono<Void> collectionCards(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "cardtype",
                     description = "Limit cards shown only to a single type.",
@@ -114,5 +119,18 @@ public class CollectionCommands {
                 .withContent(message.content())
                 .withEmbeds(message.embeds())
                 .withComponents(message.components());
+    }
+
+    @ComponentInteraction(
+            event = ButtonInteractionEvent.class,
+            //regex = CardCollectionUI.Model.COMPONENT_ID + "|"
+            regex = "test|test"
+    )
+    public Mono<Void> changeCollectionPage(
+            @InteractionEvent ButtonInteractionEvent event
+    ) {
+        return event.presentModal(InteractionPresentModalSpec.builder()
+                        .customId("amogus")
+                .addComponent(ActionRow.of(TextInput.small("abc", "Frog"))).build());
     }
 }

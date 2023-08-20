@@ -4,10 +4,10 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateFields;
 import net.stelitop.battledudestcg.TabletopSimulatorUtils;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;
@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@CommandComponent
-public class TestCommands {
+@DEventsComponent
+public class ExportDeckCommand {
 
     @Autowired
     private DeckRepository deckRepository;
@@ -36,7 +36,7 @@ public class TestCommands {
             description = "Description."
     )
     public Mono<Void> testImageCommand(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "deckname",
                     description = "The name of the deck",

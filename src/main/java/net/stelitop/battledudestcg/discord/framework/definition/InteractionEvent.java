@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.slashcommands.framework.definition;
+package net.stelitop.battledudestcg.discord.framework.definition;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CommandEvent {
+public @interface InteractionEvent {
 }

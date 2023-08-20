@@ -2,7 +2,7 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcom
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.*;
+import net.stelitop.battledudestcg.discord.framework.definition.*;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -13,7 +13,7 @@ import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@CommandComponent
+@DEventsComponent
 public class CreateCardCommand {
 
     public static final String DUDE_DEFAULT_ART = "https://i.imgur.com/X2ffUWK.png";
@@ -31,7 +31,7 @@ public class CreateCardCommand {
             description = "Creates a new default card."
     )
     public Mono<Void> createCardCommand(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "type",
                     description = "The card type of the card.",

@@ -1,11 +1,11 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@CommandComponent
+@DEventsComponent
 public class ToggleCommands {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -26,7 +26,7 @@ public class ToggleCommands {
             description = "Check whether or not a given user is currently opted in to the game."
     )
     public Mono<Void> isToggledCommand(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "user",
                     description = "The user you want to check. Yourself by default.",
@@ -50,7 +50,7 @@ public class ToggleCommands {
             description = "Toggles whether you're participating in the game. Toggles getting drops and notifications."
     )
     public Mono<Void> togglePlayer(
-            @CommandEvent ChatInputInteractionEvent event
+            @InteractionEvent ChatInputInteractionEvent event
     ) {
         User user = event.getInteraction().getUser();
         long userId = user.getId().asLong();

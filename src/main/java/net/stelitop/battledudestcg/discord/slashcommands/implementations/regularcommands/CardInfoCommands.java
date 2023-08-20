@@ -1,11 +1,11 @@
-package net.stelitop.battledudestcg.discord.slashcommands.implementations;
+package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandComponent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandEvent;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.SlashCommand;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardNameAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.CardInfoUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@CommandComponent
+@DEventsComponent
 public class CardInfoCommands {
 
     @Autowired
@@ -48,7 +48,7 @@ public class CardInfoCommands {
             description = "Displays information about a card."
     )
     public Mono<Void> cardInfo(
-            @CommandEvent ChatInputInteractionEvent event,
+            @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",

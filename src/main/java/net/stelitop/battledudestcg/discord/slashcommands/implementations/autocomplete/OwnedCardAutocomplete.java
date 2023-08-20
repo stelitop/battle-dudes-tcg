@@ -2,8 +2,8 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.autoco
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.slashcommands.framework.autocomplete.InputSuggestion;
+import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
+import net.stelitop.battledudestcg.discord.framework.autocomplete.InputSuggestion;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardOwnership;
 import net.stelitop.battledudestcg.game.services.CollectionService;
