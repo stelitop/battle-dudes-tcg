@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.framework.definition;
+package net.stelitop.battledudestcg.discord.framework.commands;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -3,7 +3,9 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.regula
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.framework.definition.*;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.commands.*;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;

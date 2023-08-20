@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.listeners.general;
+package net.stelitop.battledudestcg.discord.framework.listeners;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
@@ -8,8 +8,8 @@ import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import lombok.Builder;
 import lombok.ToString;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

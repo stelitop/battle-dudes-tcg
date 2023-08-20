@@ -5,9 +5,9 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.requirements.RequireAdmin;
 import reactor.core.publisher.Mono;
 

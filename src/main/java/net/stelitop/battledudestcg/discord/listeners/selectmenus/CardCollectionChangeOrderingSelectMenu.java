@@ -2,8 +2,8 @@ package net.stelitop.battledudestcg.discord.listeners.selectmenus;
 
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

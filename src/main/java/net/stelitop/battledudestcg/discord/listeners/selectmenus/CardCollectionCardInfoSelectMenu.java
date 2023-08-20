@@ -6,7 +6,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.ui.CardInfoUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;

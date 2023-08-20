@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.framework.definition;
+package net.stelitop.battledudestcg.discord.framework.commands;
 
 import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.NullAutocompleteExecutor;

@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.discord.framework.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
-import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 
 import java.util.List;
 

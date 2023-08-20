@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.listeners.general;
+package net.stelitop.battledudestcg.discord.framework.listeners;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -7,10 +7,10 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
-import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirement;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirementExecutor;
