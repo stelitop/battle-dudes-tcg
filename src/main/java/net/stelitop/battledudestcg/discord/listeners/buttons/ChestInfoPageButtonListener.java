@@ -1,34 +1,24 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
-import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.ChestInfoUI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
-public class ChestInfoPageButtonListener implements ApplicationRunner {
+@DiscordEventsComponent
+public class ChestInfoPageButtonListener {
 
-    @Autowired
-    private GatewayDiscordClient client;
     @Autowired
     private ChestInfoUI chestInfoUI;
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        client.on(ButtonInteractionEvent.class, this::handle).subscribe();
-    }
-
-    private Mono<Void> handle(ButtonInteractionEvent event) {
+    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = ChestInfoUI.Model.REGEX)
+    public Mono<Void> updateChestInfoUI(@InteractionEvent ButtonInteractionEvent event) {
         String buttonId = event.getCustomId();
         var model = ChestInfoUI.Model.deserialize(buttonId);
-        if (model == null) {
-            return Mono.empty();
-        }
         if (model.getUserId() != event.getInteraction().getUser().getId().asLong()) {
             return event.reply("This is not your collection message!")
                     .withEphemeral(true);

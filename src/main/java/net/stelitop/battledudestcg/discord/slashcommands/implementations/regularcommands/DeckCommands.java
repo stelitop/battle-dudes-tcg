@@ -23,7 +23,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.Optional;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class DeckCommands {
 
     @Autowired
@@ -154,7 +154,7 @@ public class DeckCommands {
             return event.reply(deckResult.errorMessage())
                     .withEphemeral(true);
         }
-        DeckEditing deckEditing = deckResult.getResponse().getKey();
+        DeckEditing deckEditing = deckResult.getResponse().getLeft();
         CardDeck deck = deckEditing.getEditedDeck();
         Message message = deckResult.getResponse().getValue();
         UserCollection collection = collectionService.getUserCollection(userId);
@@ -220,7 +220,7 @@ public class DeckCommands {
             return event.reply(deckResult.errorMessage())
                     .withEphemeral(true);
         }
-        DeckEditing deckEditing = deckResult.getResponse().getKey();
+        DeckEditing deckEditing = deckResult.getResponse().getLeft();
         CardDeck deck = deckEditing.getEditedDeck();
         Message message = deckResult.getResponse().getValue();
         UserCollection collection = collectionService.getUserCollection(userId);

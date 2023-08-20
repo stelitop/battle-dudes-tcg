@@ -22,7 +22,7 @@ public class CardInSelectedDeckAutocomplete implements AutocompletionExecutor {
         long userId = event.getInteraction().getUser().getId().asLong();
         var selectedDeckAction = deckService.getSelectedDeck(userId);
         if (selectedDeckAction.hasFailed()) return List.of();
-        var deckEditing = selectedDeckAction.getResponse().getKey();
+        var deckEditing = selectedDeckAction.getResponse().getLeft();
         List<Card> cards = deckEditing.getEditedDeck().getCards();
 
         var eventValue = event.getFocusedOption().getValue();

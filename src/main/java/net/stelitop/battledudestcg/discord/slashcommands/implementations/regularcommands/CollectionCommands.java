@@ -1,14 +1,9 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
-import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.TextInput;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionPresentModalSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.definition.*;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
@@ -21,7 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class CollectionCommands {
 
     @Autowired
@@ -119,18 +114,5 @@ public class CollectionCommands {
                 .withContent(message.content())
                 .withEmbeds(message.embeds())
                 .withComponents(message.components());
-    }
-
-    @ComponentInteraction(
-            event = ButtonInteractionEvent.class,
-            //regex = CardCollectionUI.Model.COMPONENT_ID + "|"
-            regex = "test|test"
-    )
-    public Mono<Void> changeCollectionPage(
-            @InteractionEvent ButtonInteractionEvent event
-    ) {
-        return event.presentModal(InteractionPresentModalSpec.builder()
-                        .customId("amogus")
-                .addComponent(ActionRow.of(TextInput.small("abc", "Frog"))).build());
     }
 }

@@ -4,7 +4,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateFields;
 import net.stelitop.battledudestcg.TabletopSimulatorUtils;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class ExportDeckCommand {
 
     @Autowired

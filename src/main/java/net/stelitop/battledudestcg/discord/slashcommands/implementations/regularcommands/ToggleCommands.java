@@ -2,7 +2,7 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.regula
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.User;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class ToggleCommands {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());

@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
 import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class EditCardCommand {
 
     @Autowired

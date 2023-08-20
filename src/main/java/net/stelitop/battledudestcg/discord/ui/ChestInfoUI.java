@@ -52,13 +52,14 @@ public class ChestInfoUI {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Model implements Cloneable {
-        private static final String componentId = "changechestinfopage";
+        public static final String COMPONENT_ID = "changechestinfopage";
+        public static final String REGEX = COMPONENT_ID + "\\|[0-9]*\\|[0-9]*\\|[0-9]*";
         private int page;
         private long userId;
         private long chestId;
         public static @Nullable Model deserialize(@NotNull String encoded) throws IllegalStateException{
             String[] parts = encoded.split("\\|");
-            if (parts.length != 4 || !parts[0].equals(componentId)) return null;
+            if (parts.length != 4 || !parts[0].equals(COMPONENT_ID)) return null;
 
             return Model.builder()
                     .userId(Long.parseLong(parts[1]))
@@ -68,7 +69,7 @@ public class ChestInfoUI {
         }
 
         public String serialize() {
-            return componentId + "|" + userId + "|" + chestId + "|" + page;
+            return COMPONENT_ID + "|" + userId + "|" + chestId + "|" + page;
         }
 
         @SneakyThrows

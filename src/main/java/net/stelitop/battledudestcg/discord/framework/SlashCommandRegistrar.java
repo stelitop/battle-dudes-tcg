@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>At the start of the program, this component finds all defined slash commands inside of
- * {@link DEventsComponent} classes. Their signatures are parsed and transformed into
+ * {@link DiscordEventsComponent} classes. Their signatures are parsed and transformed into
  * {@link ApplicationCommandRequest} objects to be sent to discord.</p>
  *
  * <p>During parsing, all commands with Autocomplete specified are registered in the
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class SlashCommandRegistrar implements ApplicationRunner {
 
     /**
-     * Package name used for searching for {@link DEventsComponent} beans.
+     * Package name used for searching for {@link DiscordEventsComponent} beans.
      */
     private final static String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -74,7 +74,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         var reflections = new Reflections(PACKAGE_NAME);
-        var slashCommandClasses = reflections.getTypesAnnotatedWith(DEventsComponent.class);
+        var slashCommandClasses = reflections.getTypesAnnotatedWith(DiscordEventsComponent.class);
         var slashCommandMethods = slashCommandClasses.stream()
                 .map(Class::getMethods)
                 .flatMap(Arrays::stream)

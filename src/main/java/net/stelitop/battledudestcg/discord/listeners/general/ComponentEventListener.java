@@ -6,8 +6,9 @@ import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import lombok.Builder;
+import lombok.ToString;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,13 @@ public class ComponentEventListener implements ApplicationRunner {
     @Autowired
     private ApplicationContext applicationContext;
 
+    /**
+     * Loaded data for the classes that can contain the implementation.
+     */
     private Map<Class<? extends ComponentInteractionEvent>, List<ImplementationEntry>> methods;
 
     @Builder
+    @ToString
     private static class ImplementationEntry {
         Object bean;
         String regex;
@@ -57,7 +62,7 @@ public class ComponentEventListener implements ApplicationRunner {
         this.methods.put(SelectMenuInteractionEvent.class, new ArrayList<>());
         this.methods.put(ModalSubmitInteractionEvent.class, new ArrayList<>());
 
-        Collection<Object> beans = applicationContext.getBeansWithAnnotation(DEventsComponent.class).values();
+        Collection<Object> beans = applicationContext.getBeansWithAnnotation(DiscordEventsComponent.class).values();
         for (var bean : beans) {
             List<Method> methods = Arrays.stream(bean.getClass().getMethods())
                     .filter(x -> x.isAnnotationPresent(ComponentInteraction.class))

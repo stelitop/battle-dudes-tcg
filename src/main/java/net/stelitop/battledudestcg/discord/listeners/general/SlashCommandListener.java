@@ -7,7 +7,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * <p>When the application loads, all methods annotated with {@link SlashCommand} are loaded
  * into the component. Then, when an event occurs, they are mapped to the corresponding slash
  * command method, the values are mapped to the parameters and the method is invoked from
- * its bean, which must be annotated with {@link DEventsComponent}.</p>
+ * its bean, which must be annotated with {@link DiscordEventsComponent}.</p>
  *
  * <p>The method might be additionally annotated with any {@link CommandRequirement} annotations.
  * These requirements are first checked against and if any of them are unfulfilled, the execution
@@ -76,7 +76,7 @@ public class SlashCommandListener implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
 
-        Collection<Object> commandBeans = applicationContext.getBeansWithAnnotation(DEventsComponent.class).values();
+        Collection<Object> commandBeans = applicationContext.getBeansWithAnnotation(DiscordEventsComponent.class).values();
 
         slashCommands = new ArrayList<>();
         for (var bean : commandBeans) {

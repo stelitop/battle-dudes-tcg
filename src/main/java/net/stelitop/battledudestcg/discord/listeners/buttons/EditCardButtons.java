@@ -1,48 +1,40 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
-import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.TextInput;
 import discord4j.core.spec.InteractionPresentModalSpec;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
-public class EditCardButtons implements ApplicationRunner {
+@DiscordEventsComponent
+public class EditCardButtons {
 
-    @Autowired
-    private GatewayDiscordClient client;
     @Autowired
     private CardRepository cardRepository;
     @Autowired
     private EditCardUI editCardUI;
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        client.on(ButtonInteractionEvent.class, this::handle).subscribe();
-    }
 
     /**
      * Handles all buttons related to editing a card. Their id should be of the format
      * "editcard|[card id]|[element to edit]|..."
      *
      * @param event The button event.
-     * @return The mono.
+     * @return The event reply.
      */
-    private Mono<Void> handle(ButtonInteractionEvent event) {
+    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*\\|.*")
+    private Mono<Void> editButtonPressedInteraction(@InteractionEvent ButtonInteractionEvent event) {
         String componentId = event.getCustomId();
-        if (!componentId.startsWith("editcard|")) return Mono.empty();
         String[] parts = componentId.split("\\|");
         long cardId = Long.parseLong(parts[1]);
         Optional<Card> cardOpt = cardRepository.findById(cardId);

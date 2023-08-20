@@ -1,9 +1,13 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
-import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.commons.utils.RandomUtils;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
@@ -14,12 +18,10 @@ import net.stelitop.battledudestcg.game.pojo.ChestReward;
 import net.stelitop.battledudestcg.game.services.CollectionService;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import net.stelitop.battledudestcg.game.utils.ChestRewardUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -31,13 +33,11 @@ import java.util.stream.Collectors;
  * Handles the user clicking on either the open chest button or the
  * add to collection button.
  */
-@Component
-public class ChestOpenButtonListener implements ApplicationRunner {
+@DiscordEventsComponent
+public class ChestOpenButtonListener {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private GatewayDiscordClient client;
     @Autowired
     private ChestRepository chestRepository;
     @Autowired
@@ -53,42 +53,20 @@ public class ChestOpenButtonListener implements ApplicationRunner {
     @Autowired
     private ChestRewardUtils chestRewardUtils;
 
-    @Override
-    public void run(ApplicationArguments args) {
-        client.on(ButtonInteractionEvent.class, this::handle).subscribe();
-    }
+    /**
+     * Keeps the chest from a chest drop a user received.
+     *
+     * @param event The event.
+     * @return The event reply.
+     */
+    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "keepchest\\|[0-9]*\\|[0-9]*")
+    public Mono<Void> keepChest(@InteractionEvent ButtonInteractionEvent event) {
+        var parseIdActionResult = parseId(event.getInteraction().getUser(), event.getCustomId());
+        if (parseIdActionResult.hasFailed()) {
+            return event.reply(parseIdActionResult.errorMessage()).withEphemeral(true);
+        }
+        Chest chest = parseIdActionResult.getResponse().getRight();
 
-    private Mono<Void> handle(ButtonInteractionEvent event) {
-        String buttonId = event.getCustomId();
-        String[] parts = buttonId.split("\\|");
-        // check for correct button
-        if (parts.length != 3 || (!parts[0].equals("keepchest") && !parts[0].equals("openchest"))) {
-            return Mono.empty();
-        }
-        // check for correct user
-        if (!event.getInteraction().getUser().getId().asString().equals(parts[1])) {
-            return event.reply("This is not your chest!")
-                    .withEphemeral(true);
-        }
-        long userId = event.getInteraction().getUser().getId().asLong();
-        long chestId = Long.parseLong(parts[2]);
-        Optional<Chest> chestOpt = chestRepository.findById(chestId);
-        if (chestOpt.isEmpty()) {
-            LOGGER.error("Chest " + parts[2] + " was not found in the database when user "
-                    + event.getInteraction().getUser().getUsername() + " tried opening one!");
-            return event.reply("There was an error opening this chest. Missing chest.")
-                    .withEphemeral(true);
-        }
-        Chest chest = chestOpt.get();
-
-        if (parts[0].equals("openchest")) {
-            return openChest(event, userId, chest);
-        } else {
-            return keepChest(event, userId, chest);
-        }
-    }
-
-    private Mono<Void> keepChest(ButtonInteractionEvent event, long userId, Chest chest) {
         String username = event.getInteraction().getUser().getUsername();
         return event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .title(username + " found a " + chest.getName() + "!")
@@ -99,7 +77,21 @@ public class ChestOpenButtonListener implements ApplicationRunner {
                 .withComponents(new ArrayList<>());
     }
 
-    private Mono<Void> openChest(ButtonInteractionEvent event, long userId, Chest chest) {
+    /**
+     * Opens the chest from a chest drop a user received.
+     *
+     * @param event The event.
+     * @return The event reply.
+     */
+    @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "openchest\\|[0-9]*\\|[0-9]*")
+    public Mono<Void> openChest(@InteractionEvent ButtonInteractionEvent event) {
+        var parseIdActionResult = parseId(event.getInteraction().getUser(), event.getCustomId());
+        if (parseIdActionResult.hasFailed()) {
+            return event.reply(parseIdActionResult.errorMessage()).withEphemeral(true);
+        }
+        long userId = parseIdActionResult.getResponse().getLeft();
+        Chest chest = parseIdActionResult.getResponse().getRight();
+
         var collection = userProfileService.getProfile(userId).getUserCollection();
         var chestOwnershipKey = new UserCollectionChestKey(collection.getCollectionId(), chest.getChestId());
         Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipRepository.findById(chestOwnershipKey);
@@ -123,11 +115,31 @@ public class ChestOpenButtonListener implements ApplicationRunner {
 
         return event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .title(username + " found a " + chest.getName() + "!")
-                //.addField("Chest Rewards", description, false)
                 .description(description)
                 .color(colorUtils.getChestEmbedColor())
                 .thumbnail(chest.getIconUrl())
                 .build())
                 .withComponents(new ArrayList<>());
+    }
+
+    /**
+     * Parses the id to find if the correct user is opening it and if the id is of a real chest.
+     *
+     * @param user The user.
+     * @param componentId The component id.
+     * @return The action result.
+     */
+    private ActionResult<Pair<Long, Chest>> parseId(User user, String componentId) {
+        long userId = Long.parseLong(componentId.split("\\|")[1]);
+        if (user.getId().asLong() != userId) return ActionResult.fail("This is not your chest!");
+        long chestId = Long.parseLong(componentId.split("\\|")[2]);
+        Optional<Chest> chestOpt = chestRepository.findById(chestId);
+        if (chestOpt.isEmpty()) {
+            LOGGER.error("Chest with id=" + chestId + " was not found in the database when user "
+                    + user.getUsername() + " tried opening one!");
+            return ActionResult.fail("There was an error opening this chest! Missing chest.");
+        }
+        Chest chest = chestOpt.get();
+        return ActionResult.success(Pair.of(userId, chest));
     }
 }

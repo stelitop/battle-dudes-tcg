@@ -52,6 +52,7 @@ public class CardCollectionUI {
     @NoArgsConstructor
     public static class Model implements Cloneable {
         public static final String COMPONENT_ID = "changecollectionpage";
+        public static final String REGEX = COMPONENT_ID + "\\|" + "[0-9]*\\|[0-9]*\\|[a-zA-Z]*\\|[a-zA-Z]*";
         private int page;
         /**
          * Type of the cards to show. Must be one of "all", "dude", "warp", "item"

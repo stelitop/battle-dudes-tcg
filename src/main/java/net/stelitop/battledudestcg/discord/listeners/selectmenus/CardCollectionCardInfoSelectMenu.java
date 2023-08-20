@@ -1,11 +1,12 @@
 package net.stelitop.battledudestcg.discord.listeners.selectmenus;
 
 
-import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.MessageCreateSpec;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.ui.CardInfoUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -13,34 +14,24 @@ import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@Component
-public class CardCollectionCardInfoSelectMenu implements ApplicationRunner {
+@DiscordEventsComponent
+public class CardCollectionCardInfoSelectMenu {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private GatewayDiscordClient client;
     @Autowired
     private CardRepository cardRepository;
     @Autowired
     private CardInfoUI cardInfoUI;
 
-    @Override
-    public void run(ApplicationArguments args) {
-        client.on(SelectMenuInteractionEvent.class, this::handle).subscribe();
-    }
-
-    private Mono<Void> handle(SelectMenuInteractionEvent event) {
+    @ComponentInteraction(event = SelectMenuInteractionEvent.class, regex = "opencardinfopage\\|" + CardCollectionUI.Model.REGEX)
+    public Mono<Void> openCardInfoPage(SelectMenuInteractionEvent event) {
         String eventId = event.getCustomId();
         final String idPrefix = "opencardinfopage|";
-        if (!eventId.startsWith(idPrefix)) return Mono.empty();
         if (event.getValues().size() != 1) return Mono.empty();
         String originalMessageInfoId = eventId.substring(idPrefix.length());
         var originalModel = CardCollectionUI.Model.deserialize(originalMessageInfoId);

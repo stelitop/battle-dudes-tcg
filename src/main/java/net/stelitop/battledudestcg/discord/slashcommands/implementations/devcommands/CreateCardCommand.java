@@ -13,7 +13,7 @@ import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class CreateCardCommand {
 
     public static final String DUDE_DEFAULT_ART = "https://i.imgur.com/X2ffUWK.png";

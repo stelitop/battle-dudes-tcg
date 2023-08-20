@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.definition.DEventsComponent;
+import net.stelitop.battledudestcg.discord.framework.definition.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.definition.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.definition.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.definition.SlashCommand;
@@ -15,7 +15,7 @@ import net.stelitop.battledudestcg.game.services.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-@DEventsComponent
+@DiscordEventsComponent
 public class BuyCommands {
 
     @Autowired
