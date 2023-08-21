@@ -7,6 +7,7 @@ import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.*;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
@@ -52,13 +53,8 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionChests(
             @InteractionEvent ChatInputInteractionEvent event,
-            @CommandParam(
-                    name = "user",
-                    description = "The user you want to inspect, by default yourself.",
-                    required = false
-            ) User userOpt
+            @EventUser User user
     ) {
-        User user = userOpt == null ? event.getInteraction().getUser() : userOpt;
         String username = user.getUsername();
         var profile = userProfileService.getProfile(user.getId().asLong());
         List<ChestOwnership> chestOwnerships = profile.getUserCollection().getOwnedChests().stream()
@@ -83,6 +79,7 @@ public class CollectionCommands {
     )
     public Mono<Void> collectionCards(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUser User user,
             @CommandParam(
                     name = "cardtype",
                     description = "Limit cards shown only to a single type.",
@@ -107,7 +104,7 @@ public class CollectionCommands {
         MessageCreateSpec message = cardCollectionUI.getCardCollectionMessage(CardCollectionUI
                 .Model.builder()
                 .page(1)
-                .userId(event.getInteraction().getUser().getId().asLong())
+                .userId(user.getId().asLong())
                 .cardType(cardTypeOpt == null ? "all" : cardTypeOpt)
                 .ordering(orderingOpt == null ? "default" : orderingOpt)
                 .build(), event.getInteraction().getUser());

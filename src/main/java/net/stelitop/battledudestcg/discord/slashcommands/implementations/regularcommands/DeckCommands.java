@@ -6,6 +6,7 @@ import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.*;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.DeckNameAutocomplete;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedCardAutocomplete;
@@ -86,6 +87,7 @@ public class DeckCommands {
     )
     public Mono<Void> editDeck(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUserId long userId,
             @CommandParam(
                     name = "name",
                     description = "The name of the deck.",
@@ -100,7 +102,6 @@ public class DeckCommands {
                     .withEphemeral(true);
         }
         var deck = deckOpt.get();
-        long userId = event.getInteraction().getUser().getId().asLong();
         var msg = deckViewingUI.getDeckViewingMessage(deck);
 
         event.reply().withContent(msg.content())
@@ -125,6 +126,7 @@ public class DeckCommands {
     )
     public Mono<Void> addCardToDeck(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUserId long userId,
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",
@@ -150,7 +152,6 @@ public class DeckCommands {
         }
         Card card = cardOpt.get();
         int copies = (int)(copiesOpt == null ? 1 : copiesOpt);
-        long userId = event.getInteraction().getUser().getId().asLong();
         var deckResult = deckService.getSelectedDeck(userId);
         if (deckResult.hasFailed()) {
             return event.reply(deckResult.errorMessage())
@@ -192,6 +193,7 @@ public class DeckCommands {
     )
     public Mono<Void> removeCardToDeck(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUserId long userId,
             @CommandParam(
                     name = "name",
                     description = "The name of the card.",
@@ -216,7 +218,6 @@ public class DeckCommands {
                     .withEphemeral(true);
         }
         int copies = (int)(copiesOpt == null ? 1 : copiesOpt);
-        long userId = event.getInteraction().getUser().getId().asLong();
         var deckResult = deckService.getSelectedDeck(userId);
         if (deckResult.hasFailed()) {
             return event.reply(deckResult.errorMessage())

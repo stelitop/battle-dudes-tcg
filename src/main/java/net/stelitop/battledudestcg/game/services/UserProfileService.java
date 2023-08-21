@@ -44,7 +44,7 @@ public class UserProfileService {
         return userProfileRepository.save(newProfile);
     }
 
-    public @NotNull UserProfile getProfile (User user) {
+    public @NotNull UserProfile getProfile(User user) {
         return getProfile(user.getId().asLong());
     }
 

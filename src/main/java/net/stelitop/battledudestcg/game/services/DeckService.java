@@ -68,7 +68,6 @@ public class DeckService {
         if (existingNames.stream().map(String::toLowerCase).anyMatch(lowercaseDeckName::equals)) {
             return ActionResult.fail("There is already an existing deck with this name!");
         }
-        //System.out.println(deckRepository.findCardDecksByUserId(userId));
 
         var userCollection = userCollectionRepository.findByUserId(userId).get();
         CardDeck deck = new CardDeck();

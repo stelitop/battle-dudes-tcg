@@ -11,6 +11,8 @@ import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirement;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirementExecutor;
@@ -179,9 +181,9 @@ public class SlashCommandListener implements ApplicationRunner {
             Map<String, ApplicationCommandInteractionOption> options,
             Parameter param
     ) {
-        if (param.isAnnotationPresent(InteractionEvent.class)) {
-            return event;
-        }
+        if (param.isAnnotationPresent(InteractionEvent.class)) return event;
+        if (param.isAnnotationPresent(EventUser.class)) return event.getInteraction().getUser();
+        if (param.isAnnotationPresent(EventUserId.class)) return event.getInteraction().getUser().getId().asLong();
 
         if (param.isAnnotationPresent(CommandParam.class)) {
             CommandParam annotation = param.getAnnotation(CommandParam.class);

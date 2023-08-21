@@ -5,6 +5,7 @@ import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.ChestNameAutocomplete;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
@@ -31,6 +32,7 @@ public class BuyCommands {
     )
     public Mono<Void> buyChestCommand(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUserId long userId,
             @CommandParam(
                     name = "name",
                     description = "The name of the chest",
@@ -56,7 +58,6 @@ public class BuyCommands {
             return event.reply("Invalid chest amount! Must be between 1 and 50.")
                     .withEphemeral(true);
         }
-        final long userId = event.getInteraction().getUser().getId().asLong();
         UserCollection collection = collectionService.getUserCollection(userId);
         final int chestCost = 100;
         final int totalCost = chestCost * chestsAmount;

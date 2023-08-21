@@ -1,11 +1,13 @@
 package net.stelitop.battledudestcg.discord.slashcommands.implementations.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.entity.User;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
 import net.stelitop.battledudestcg.discord.slashcommands.implementations.autocomplete.OwnedChestAutocomplete;
 import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
@@ -29,6 +31,7 @@ public class OpenChestCommand {
     )
     public Mono<Void> openChest(
             @InteractionEvent ChatInputInteractionEvent event,
+            @EventUser User user,
             @CommandParam(
                     name = "name",
                     description = "The name of the chest",
@@ -49,7 +52,7 @@ public class OpenChestCommand {
                     .withEphemeral(true);
         }
 
-        MessageCreateSpec message = chestOpeningUI.getMessage(chestOwnership.getChest(), event.getInteraction().getUser());
+        MessageCreateSpec message = chestOpeningUI.getMessage(chestOwnership.getChest(), user);
 
         return event.reply()
                 .withContent(message.content())

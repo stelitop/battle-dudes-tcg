@@ -6,6 +6,8 @@ import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
 import org.slf4j.Logger;
@@ -50,10 +52,10 @@ public class ToggleCommands {
             description = "Toggles whether you're participating in the game. Toggles getting drops and notifications."
     )
     public Mono<Void> togglePlayer(
-            @InteractionEvent ChatInputInteractionEvent event
+            @InteractionEvent ChatInputInteractionEvent event,
+            @EventUser User user,
+            @EventUserId long userId
     ) {
-        User user = event.getInteraction().getUser();
-        long userId = user.getId().asLong();
         UserProfile profile = userProfileService.toggleParticipation(userId);
         boolean newToggledState = profile.getUserSettings().isParticipating();
         String message = newToggledState ?

@@ -19,7 +19,7 @@ public class ChestOwnershipService {
     @Autowired
     private ChestRepository chestRepository;
     @Autowired
-    private UserProfileService userProfileService;
+    private CollectionService collectionService;
 
     /**
      * Returns the chest ownership object for a given user and the name of a chest.
@@ -35,7 +35,7 @@ public class ChestOwnershipService {
             return chestOwnershipOpt;
         }
         Optional<Chest> chestOpt = chestRepository.findByName(name);
-        UserCollection collection = userProfileService.getProfile(userId).getUserCollection();
+        UserCollection collection = collectionService.getUserCollection(userId);
         return chestOpt.map(chest -> new ChestOwnership(
                 new UserCollectionChestKey(collection.getCollectionId(), chest.getChestId()),
                 chest,

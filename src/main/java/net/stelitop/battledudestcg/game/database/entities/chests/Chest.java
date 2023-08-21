@@ -2,15 +2,15 @@ package net.stelitop.battledudestcg.game.database.entities.chests;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.enums.Rarity;
 import net.stelitop.battledudestcg.game.pojo.ChestReward;
-import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Entity(name = "Chest")
@@ -18,6 +18,8 @@ import java.util.Objects;
 @DiscriminatorColumn(name="chest_type",
         discriminatorType = DiscriminatorType.STRING)
 @Data
+@SuperBuilder
+@NoArgsConstructor
 @ToString
 public class Chest {
 
@@ -29,6 +31,7 @@ public class Chest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chest_id")
+    @Builder.Default
     private long chestId = 0;
 
     /**
@@ -41,12 +44,14 @@ public class Chest {
      * The description of the chest.
      */
     @Column(name = "description", nullable = false)
-    private String description;
+    @Builder.Default
+    private String description = "(no description)";
 
     /**
      * How many items are found in the chest. The default for a chest is 10.
      */
     @Column(name = "items_count", nullable = false)
+    @Builder.Default
     private int itemsCount = 10;
 
     /**
@@ -54,6 +59,7 @@ public class Chest {
      */
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "chestSources")
     @ToString.Exclude
+    @Singular
     private List<Card> possibleDrops;
 
     /**

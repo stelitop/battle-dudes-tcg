@@ -10,6 +10,8 @@ import lombok.ToString;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
+import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,10 +130,9 @@ public class ComponentEventListener implements ApplicationRunner {
     }
 
     private Object mapParam(ComponentInteractionEvent event, ImplementationEntry imp, Parameter param) {
-        if (param.isAnnotationPresent(InteractionEvent.class)) {
-            return event;
-        } else {
-            return null;
-        }
+        if (param.isAnnotationPresent(InteractionEvent.class)) return event;
+        if (param.isAnnotationPresent(EventUser.class)) return event.getInteraction().getUser();
+        if (param.isAnnotationPresent(EventUserId.class)) return event.getInteraction().getUser().getId().asLong();
+        return null;
     }
 }
