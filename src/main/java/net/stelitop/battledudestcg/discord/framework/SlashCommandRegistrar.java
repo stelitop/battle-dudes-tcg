@@ -9,15 +9,17 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.NullAutocompleteExecutor;
-import net.stelitop.battledudestcg.discord.framework.commands.*;
+import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
+import net.stelitop.battledudestcg.discord.framework.commands.CommandParamChoice;
+import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
 import net.stelitop.battledudestcg.discord.framework.listeners.CommandOptionAutocompleteListener;
 import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -44,10 +46,6 @@ import java.util.stream.Collectors;
 @Component
 public class SlashCommandRegistrar implements ApplicationRunner {
 
-    /**
-     * Package name used for searching for {@link DiscordEventsComponent} beans.
-     */
-    private final static String PACKAGE_NAME = "net.stelitop.battledudestcg.discord.slashcommands";
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -56,6 +54,8 @@ public class SlashCommandRegistrar implements ApplicationRunner {
     private EnvironmentVariables evs;
     @Autowired
     private CommandOptionAutocompleteListener commandOptionAutocompleteListener;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * <p>Registers all properly annotated slash commands into the discord bot.</p>
@@ -73,9 +73,9 @@ public class SlashCommandRegistrar implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        var reflections = new Reflections(PACKAGE_NAME);
-        var slashCommandClasses = reflections.getTypesAnnotatedWith(DiscordEventsComponent.class);
-        var slashCommandMethods = slashCommandClasses.stream()
+
+        var slashCommandMethods = applicationContext.getBeansWithAnnotation(DiscordEventsComponent.class).values().stream()
+                .map(Object::getClass)
                 .map(Class::getMethods)
                 .flatMap(Arrays::stream)
                 .filter(m -> m.isAnnotationPresent(SlashCommand.class))
@@ -92,7 +92,7 @@ public class SlashCommandRegistrar implements ApplicationRunner {
         var slashCommandRequests = createCommandRequestsFromMethods(slashCommandMethods);
 
         var applicationService = restClient.getApplicationService();
-        long applicationId = restClient.getApplicationId().block();
+        Long applicationId = restClient.getApplicationId().block();
 
         if (!evs.updateCommandsOnStart()) {
             LOGGER.warn("No slash command signatures were updated due to the environment settings!");
