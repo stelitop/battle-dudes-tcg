@@ -1,10 +1,11 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.ui.CardCollectionUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
@@ -16,7 +17,7 @@ public class CardCollectionPageButtonListener {
     private CardCollectionUI cardCollectionUI;
 
     @ComponentInteraction(event = ButtonInteractionEvent.class, regex = CardCollectionUI.Model.REGEX)
-    public Mono<Void> updateCollectionUI(@InteractionEvent ButtonInteractionEvent event) {
+    public Mono<Void> updateCollectionUI(@InteractionEvent ComponentInteractionEvent event) {
         String buttonId = event.getCustomId();
         var model = CardCollectionUI.Model.deserialize(buttonId);
         if (model.getUserId() != event.getInteraction().getUser().getId().asLong()) {

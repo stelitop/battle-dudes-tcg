@@ -24,7 +24,6 @@ public class EditCardModals {
     @Autowired
     private EditCardUI editCardUI;
 
-
     @ComponentInteraction(event = ModalSubmitInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*")
     public Mono<Void> cardEditModalSubmit(@InteractionEvent ModalSubmitInteractionEvent event) {
         String modalId = event.getCustomId();

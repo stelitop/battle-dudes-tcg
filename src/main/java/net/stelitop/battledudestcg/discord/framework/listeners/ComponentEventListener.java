@@ -5,13 +5,17 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
+import discord4j.core.object.entity.User;
 import lombok.Builder;
 import lombok.ToString;
+import net.stelitop.battledudestcg.commons.pojos.ActionResult;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
 import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +62,11 @@ public class ComponentEventListener implements ApplicationRunner {
         client.on(ModalSubmitInteractionEvent.class, this::mapEvent).subscribe();
     }
 
+    /**
+     * Loads the beans annotated with {@link DiscordEventsComponent} and precomputes
+     * for all methods annotated with {@link ComponentInteraction} all the necessary
+     * information so that it can be cached for future use.
+     */
     private void loadBeans() {
         this.methods = new HashMap<>();
         this.methods.put(ButtonInteractionEvent.class, new ArrayList<>());
@@ -81,6 +90,14 @@ public class ComponentEventListener implements ApplicationRunner {
         }
     }
 
+    /**
+     * Attempts to map an event to a loaded {@link ComponentInteraction} method.
+     *
+     * @param event The event to be mapped.
+     * @return A reply to the event if it's successfully mapped and successfully
+     *     executed afterward. If unsuccessful, an empty mono is returned and an
+     *     error is logged.
+     */
     private Mono<Void> mapEvent(ComponentInteractionEvent event) {
         List<ImplementationEntry> possibleEntries = methods.getOrDefault(event.getClass(), null);
         if (possibleEntries == null) {
@@ -106,33 +123,84 @@ public class ComponentEventListener implements ApplicationRunner {
         return executeEvent(event, matches.get(0));
     }
 
+    /**
+     * Attempts to execute an event with a specific implementation.
+     *
+     * @param event The event to be executed.
+     * @param imp The implementation data to use for execution.
+     * @return The reply to the event if it's successfully executed. If it's not,
+     *     an empty mono is returned instead and an error is logged.
+     */
     private Mono<Void> executeEvent(ComponentInteractionEvent event, ImplementationEntry imp) {
         Parameter[] parameters = imp.method.getParameters();
         Object[] args = new Object[parameters.length];
+        String errorStart = "Method \"" + imp.method.getName() + "\" in class \"" + imp.bean.getClass().getName() + "\"";
 
         for (int i = 0; i < parameters.length; i++) {
-            args[i] = mapParam(event, imp, parameters[i]);
+            ActionResult<Object> mapParamAR = mapParam(event, parameters[i]);
+            if (mapParamAR.hasFailed()) {
+                LOGGER.error(errorStart + " had a problem injecting parameter at position " + i + ". Message: " + mapParamAR.errorMessage());
+                return Mono.empty();
+            }
+            args[i] = mapParamAR.getResponse();
         }
 
         try {
             Object result = imp.method.invoke(imp.bean, args);
             return (Mono<Void>) result;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            String name = "Method \"" + imp.method.getName() + "\" in class \"" + imp.bean.getClass().getName() + "\"";
-            LOGGER.error(name + " had a problem during invoking!");
+            LOGGER.error(errorStart + " had a problem during invoking!");
             throw new RuntimeException(e);
         } catch (ClassCastException e) {
-            String name = "Method \"" + imp.method.getName() + "\" in class \"" + imp.bean.getClass().getName() + "\"";
-            LOGGER.error(name + "'s result could not be cast to Mono<Void>. Check method signature.");
+            LOGGER.error(errorStart + "'s result could not be cast to Mono<Void>. Check method signature.");
             return event.reply("Could not cast result of slash command.")
                     .withEphemeral(true);
         }
     }
 
-    private Object mapParam(ComponentInteractionEvent event, ImplementationEntry imp, Parameter param) {
-        if (param.isAnnotationPresent(InteractionEvent.class)) return event;
-        if (param.isAnnotationPresent(EventUser.class)) return event.getInteraction().getUser();
-        if (param.isAnnotationPresent(EventUserId.class)) return event.getInteraction().getUser().getId().asLong();
-        return null;
+    /**
+     * Maps a single parameter from the method signature to the wanted value,
+     * depending on its annotations.
+     *
+     * @param event The event for the method.
+     * @param param The parameter data.
+     * @return The value to inject for the parameter. In case it doesn't match
+     *     anything, null is returned.
+     */
+    private @NotNull ActionResult<@Nullable Object> mapParam(@NotNull ComponentInteractionEvent event, @NotNull Parameter param) {
+        if (param.isAnnotationPresent(InteractionEvent.class)) {
+            if (!param.getType().isInstance(event)) {
+                return ActionResult.fail("The @InteractionEvent type is not compatible!");
+            }
+            return ActionResult.success(event);
+        }
+        if (param.isAnnotationPresent(EventUser.class)) {
+            if (param.getType() != User.class) {
+                return ActionResult.fail("The @EventUser type is not a User type!");
+            }
+            return ActionResult.success(event.getInteraction().getUser());
+        }
+        if (param.isAnnotationPresent(EventUserId.class)) {
+            if (param.getType() != Long.class && param.getType() != long.class) {
+                return ActionResult.fail("The @EventUserId type is not a long type!");
+            }
+            return ActionResult.success(event.getInteraction().getUser().getId().asLong());
+        }
+        return ActionResult.success(null);
     }
+
+//    /**
+//     * <p>Redirects an event to use a different custom id, remapping it from the start.</p>
+//     *
+//     * <p>A potential use for this is buttons that redirect to a different menu that can
+//     * be accessed </p>
+//     *
+//     * @param event The event to redirect.
+//     * @param newCustomId The new custom id under which to redirect the event.
+//     * @return
+//     */
+//    public Mono<Void> redirectEvent(ComponentInteractionEvent event, String newCustomId) {
+//        event.getC
+//        return mapEvent(event, newCustomId);
+//    }
 }

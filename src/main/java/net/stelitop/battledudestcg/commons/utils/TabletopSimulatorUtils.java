@@ -1,8 +1,9 @@
-package net.stelitop.battledudestcg;
+package net.stelitop.battledudestcg.commons.utils;
 
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
+import net.stelitop.battledudestcg.game.database.repositories.ChestRepository;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -24,6 +25,8 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
 
     @Autowired
     private DeckRepository deckRepository;
+    @Autowired
+    private ChestRepository chestRepository;
     @Override
     public void run(ApplicationArguments args) throws Exception {
 //        String deckName = "Magic + Decay";

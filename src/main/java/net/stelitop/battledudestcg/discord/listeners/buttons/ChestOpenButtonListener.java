@@ -1,6 +1,7 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import net.stelitop.battledudestcg.commons.pojos.ActionResult;
@@ -60,7 +61,7 @@ public class ChestOpenButtonListener {
      * @return The event reply.
      */
     @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "keepchest\\|[0-9]*\\|[0-9]*")
-    public Mono<Void> keepChest(@InteractionEvent ButtonInteractionEvent event) {
+    public Mono<Void> keepChest(@InteractionEvent ComponentInteractionEvent event) {
         var parseIdActionResult = parseId(event.getInteraction().getUser(), event.getCustomId());
         if (parseIdActionResult.hasFailed()) {
             return event.reply(parseIdActionResult.errorMessage()).withEphemeral(true);
@@ -84,7 +85,7 @@ public class ChestOpenButtonListener {
      * @return The event reply.
      */
     @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "openchest\\|[0-9]*\\|[0-9]*")
-    public Mono<Void> openChest(@InteractionEvent ButtonInteractionEvent event) {
+    public Mono<Void> openChest(@InteractionEvent ComponentInteractionEvent event) {
         var parseIdActionResult = parseId(event.getInteraction().getUser(), event.getCustomId());
         if (parseIdActionResult.hasFailed()) {
             return event.reply(parseIdActionResult.errorMessage()).withEphemeral(true);

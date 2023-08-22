@@ -1,6 +1,7 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.TextInput;
 import discord4j.core.spec.InteractionPresentModalSpec;
@@ -33,7 +34,7 @@ public class EditCardButtons {
      * @return The event reply.
      */
     @ComponentInteraction(event = ButtonInteractionEvent.class, regex = "editcard\\|[0-9]*\\|[a-zA-Z]*.*")
-    public Mono<Void> editButtonPressedInteraction(@InteractionEvent ButtonInteractionEvent event) {
+    public Mono<Void> editButtonPressedInteraction(@InteractionEvent ComponentInteractionEvent event) {
         String componentId = event.getCustomId();
         String[] parts = componentId.split("\\|");
         long cardId = Long.parseLong(parts[1]);
@@ -59,7 +60,7 @@ public class EditCardButtons {
      * Handles the button about editing the name of the card. The id should be in the
      * format "editcard|[card id]|{@value EditCardUI#ID_NAME}"
      */
-    private Mono<Void> editName(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editName(ComponentInteractionEvent event, Card card) {
 
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Name")
@@ -75,7 +76,7 @@ public class EditCardButtons {
      * Handles the button about editing the effect of the card. The id should be in the
      * format "editcard|[card id]|{@value EditCardUI#ID_EFFECT}"
      */
-    private Mono<Void> editEffect(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editEffect(ComponentInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Effect Text")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_EFFECT))
@@ -90,7 +91,7 @@ public class EditCardButtons {
      * Handles the button about editing the elemental types of the card. The id should
      * be in the format "editcard|[card id]|{@value EditCardUI#ID_ELEMENTAL_TYPES}"
      */
-    private Mono<Void> editTypes(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editTypes(ComponentInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Types")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_ELEMENTAL_TYPES))
@@ -105,7 +106,7 @@ public class EditCardButtons {
      * Handles the button about editing the stats of the dude. The id should be in the
      * format "editcard|[card id]|{@value EditCardUI#ID_STATS}"
      */
-    private Mono<Void> editStats(ButtonInteractionEvent event, DudeCard card) {
+    private Mono<Void> editStats(ComponentInteractionEvent event, DudeCard card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Stats")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_STATS))
@@ -128,7 +129,7 @@ public class EditCardButtons {
      * Handles the button about editing the cost of the card. The id should
      * be in the format "editcard|[card id]|{@value EditCardUI#ID_COST}"
      */
-    private Mono<Void> editCost(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editCost(ComponentInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Cost")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_COST))
@@ -143,7 +144,7 @@ public class EditCardButtons {
      * Handles the button about editing the art url of the card. The id should
      * be in the format "editcard|[card id]|{@value EditCardUI#ID_ART_URL}"
      */
-    private Mono<Void> editArtUrl(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editArtUrl(ComponentInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Artwork")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_ART_URL))
@@ -158,7 +159,7 @@ public class EditCardButtons {
      * Handles the button about editing the rarity of the card. The id should
      * be in the format "editcard|[card id]|{@value EditCardUI#ID_RARITY}"
      */
-    private Mono<Void> editRarity(ButtonInteractionEvent event, Card card) {
+    private Mono<Void> editRarity(ComponentInteractionEvent event, Card card) {
         return event.presentModal(InteractionPresentModalSpec.builder()
                 .title("Edit " + card.getName() + "'s Rarity")
                 .customId(editCardUI.makeId(card, EditCardUI.ID_RARITY))

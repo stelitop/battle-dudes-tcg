@@ -3,7 +3,7 @@ package net.stelitop.battledudestcg.discord.slashcommands.implementations.devcom
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateFields;
-import net.stelitop.battledudestcg.TabletopSimulatorUtils;
+import net.stelitop.battledudestcg.commons.utils.TabletopSimulatorUtils;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;

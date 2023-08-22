@@ -1,6 +1,7 @@
 package net.stelitop.battledudestcg.discord.listeners.buttons;
 
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
+import discord4j.core.event.domain.interaction.ComponentInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
@@ -16,7 +17,7 @@ public class ChestInfoPageButtonListener {
     private ChestInfoUI chestInfoUI;
 
     @ComponentInteraction(event = ButtonInteractionEvent.class, regex = ChestInfoUI.Model.REGEX)
-    public Mono<Void> updateChestInfoUI(@InteractionEvent ButtonInteractionEvent event) {
+    public Mono<Void> updateChestInfoUI(@InteractionEvent ComponentInteractionEvent event) {
         String buttonId = event.getCustomId();
         var model = ChestInfoUI.Model.deserialize(buttonId);
         if (model.getUserId() != event.getInteraction().getUser().getId().asLong()) {
