@@ -4,7 +4,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
-import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
+import net.stelitop.battledudestcg.discord.interactions.OptionType;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.InputSuggestion;
 import org.apache.commons.lang3.tuple.Pair;

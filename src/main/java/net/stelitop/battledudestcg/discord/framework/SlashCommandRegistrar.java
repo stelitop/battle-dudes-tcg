@@ -13,7 +13,7 @@ import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
 import net.stelitop.battledudestcg.discord.framework.commands.CommandParamChoice;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
 import net.stelitop.battledudestcg.discord.framework.listeners.CommandOptionAutocompleteListener;
-import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
+import net.stelitop.battledudestcg.discord.interactions.OptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

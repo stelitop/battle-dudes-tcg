@@ -13,7 +13,7 @@ import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
 import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
 import net.stelitop.battledudestcg.discord.framework.convenience.EventUser;
 import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
-import net.stelitop.battledudestcg.discord.slashcommands.OptionType;
+import net.stelitop.battledudestcg.discord.interactions.OptionType;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirement;
 import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirementExecutor;
 import org.slf4j.Logger;
