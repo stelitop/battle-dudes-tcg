@@ -27,7 +27,7 @@ public class BuyCommands {
     private UserCollectionRepository userCollectionRepository;
 
     @SlashCommand(
-            name = "buy chest",
+            name = "chest buy",
             description = "Buys a specific chest. One chest costs 100 coins."
     )
     public Mono<Void> buyChestCommand(
@@ -62,13 +62,16 @@ public class BuyCommands {
         final int chestCost = 100;
         final int totalCost = chestCost * chestsAmount;
         if (collection.getCoins() < totalCost) {
-            return event.reply("You do not have enough coins for this purchase! Required: " + totalCost)
+            return event.reply("You do not have enough coins to make this purchase.\n" +
+                            "Your Coins: " + collection.getCoins() + "\n" +
+                            "Price of Chests: " + totalCost)
                     .withEphemeral(true);
         }
         collection.setCoins(collection.getCoins() - totalCost);
         userCollectionRepository.save(collection);
         collectionService.giveUserChests(userId, chest, chestsAmount);
-        return event.reply("Successfully bought " + chestsAmount + " " + chest.getName() + "!")
+        return event.reply("You spent " + totalCost + " coins.\n" +
+                        chestsAmount + " " + chest.getName() + (chestsAmount == 1  ? " has" : "s have") + " been added to your collection.")
                 .withEphemeral(true);
     }
 }

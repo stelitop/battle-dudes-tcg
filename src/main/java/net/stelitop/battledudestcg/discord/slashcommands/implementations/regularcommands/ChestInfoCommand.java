@@ -25,7 +25,7 @@ public class ChestInfoCommand {
 
     // TODO: Add chest names autofill.
     @SlashCommand(
-        name = "info chest",
+        name = "chest info",
         description = "Displays info about a chest."
     )
     public Mono<Void> chestInfoCommand(

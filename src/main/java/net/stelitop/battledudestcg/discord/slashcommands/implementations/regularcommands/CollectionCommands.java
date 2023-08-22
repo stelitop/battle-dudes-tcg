@@ -44,11 +44,11 @@ public class CollectionCommands {
         User user = userOpt == null ? event.getInteraction().getUser() : userOpt;
         String username = user.getUsername();
         int coins = userProfileService.getProfile(user.getId().asLong()).getUserCollection().getCoins();
-        return event.reply(username + " has " + coins + " coins!");
+        return event.reply(username + " has " + coins + " coins.");
     }
 
     @SlashCommand(
-            name = "collection chests",
+            name = "chest collection",
             description = "A list of all chests that you own."
     )
     public Mono<Void> collectionChests(
@@ -61,7 +61,9 @@ public class CollectionCommands {
                 .filter(x -> x.getCount() > 0)
                 .toList();
 
-        String description = chestOwnerships.stream()
+        int totalChests = chestOwnerships.stream().mapToInt(ChestOwnership::getCount).sum();
+        String description = "Total Chests: " + totalChests;
+        description += "\n\n" + chestOwnerships.stream()
                 .map(co -> co.getChest().getName() + " x" + co.getCount())
                 .collect(Collectors.joining("\n"));
 
@@ -74,7 +76,7 @@ public class CollectionCommands {
     }
 
     @SlashCommand(
-            name = "collection cards",
+            name = "card collection",
             description = "A list of all cards that you own."
     )
     public Mono<Void> collectionCards(

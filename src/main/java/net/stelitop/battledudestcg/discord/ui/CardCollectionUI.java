@@ -213,8 +213,10 @@ public class CardCollectionUI {
                 .map(this::formatCardOwnershipToString)
                 .collect(Collectors.joining("\n"));
 
+        String eleTypesHeader = emojiUtils.getEmojiString(ElementalType.None);
+        eleTypesHeader = eleTypesHeader + " " + eleTypesHeader + " " + eleTypesHeader;
         description = "Total: " + totalCards + "\n\n"
-                + ":1234: \u200B | \u200B :sparkles: \u200B | \u200B Ele Types \u200B \u200B | \u200B Name\n"
+                + ":1234: \u200B | \u200B :sparkles: \u200B | \u200B " + eleTypesHeader + " \u200B | \u200B Name\n"
                 + "================================\n"
                 + description
                 + "\n\nPage " + currentPage + "/" + totalPages;

@@ -2,22 +2,16 @@ package net.stelitop.battledudestcg.discord.listeners.game;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Member;
-import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import discord4j.rest.util.Color;
 import net.stelitop.battledudestcg.commons.configs.EnvironmentVariables;
-import net.stelitop.battledudestcg.discord.listeners.buttons.ChestOpenButtonListener;
+import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import net.stelitop.battledudestcg.discord.ui.ChestOpeningUI;
-import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.profile.UserProfile;
 import net.stelitop.battledudestcg.game.services.ChestService;
 import net.stelitop.battledudestcg.game.services.CollectionService;
 import net.stelitop.battledudestcg.game.services.UserProfileService;
-import net.stelitop.battledudestcg.commons.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +22,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class ChannelChestDropMessageListener implements ApplicationRunner {
@@ -42,6 +35,7 @@ public class ChannelChestDropMessageListener implements ApplicationRunner {
     /**
      * The probability for a chest to drop, measured as a number between 0 and 1.
      */
+    //public static final double CHEST_DROP_PROBABILITY = 0.01;
     public static final double CHEST_DROP_PROBABILITY = 1;
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());

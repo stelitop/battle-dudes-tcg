@@ -7,7 +7,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.listeners.buttons.ChestOpenButtonListener;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class ChestOpeningUI {
     private MessageCreateSpec getMessage(Chest chest, String username, long userId) {
         var embed = EmbedCreateSpec.builder()
                 .title(username + " found a " + chest.getName() + "!")
-                .description("Do you want to open the chest?\n\nNot picking a choice adds it to your collection.")
+                .description("This chest has been added to your collection.")
                 .thumbnail(chest.getIconUrl())
                 .color(colorUtils.getChestEmbedColor())
                 .build();

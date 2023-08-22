@@ -98,7 +98,7 @@ public class ChestInfoUI {
         if (chest instanceof ChannelChest c) {
             Optional<Long> channelId = chestService.getChannelIdOfChest(c);
             if (channelId.isPresent()) {
-                description += "Found in <#" + channelId.get() + ">\n\n";
+                description += "Channel: <#" + channelId.get() + ">\n\n";
             }
         }
 
@@ -107,7 +107,6 @@ public class ChestInfoUI {
         model.page = Math.max(1, Math.min(totalPages, model.page));
 
         description += getPossibleCardDropsTable(chest.getPossibleDrops(), model.page, totalPages);
-
         description += "\n\n" + "*" + chest.getDescription() + "*";
 
         return MessageCreateSpec.builder()
@@ -148,8 +147,10 @@ public class ChestInfoUI {
                 .map(this::formatCardToString)
                 .collect(Collectors.joining("\n"));
 
+        String eleTypesHeader = emojiUtils.getEmojiString(ElementalType.None);
+        eleTypesHeader = eleTypesHeader + " " + eleTypesHeader + " " + eleTypesHeader;
         return "Possible Drops: " + totalCards + "\n\n"
-                + ":sparkles: \u200B | \u200B Ele Types \u200B \u200B | \u200B Name\n"
+                + ":sparkles: \u200B | \u200B " + eleTypesHeader + " \u200B | \u200B Name\n"
                 + "=========================\n"
                 + formattedCards
                 + "\n\nPage " + currentPage + "/" + totalPages;

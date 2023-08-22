@@ -39,18 +39,12 @@ public class OpenChestCommand {
             ) String name
     ) {
         Optional<ChestOwnership> chestOwnershipOpt = chestOwnershipService.getChestOwnership(
-                event.getInteraction().getUser().getId().asLong(),
-                name
-        );
-        if (chestOwnershipOpt.isEmpty()) {
-            return event.reply("There is no chest with this name!")
+                event.getInteraction().getUser().getId().asLong(), name);
+        if (chestOwnershipOpt.isEmpty() || chestOwnershipOpt.get().getCount() == 0) {
+            return event.reply("You don't have a chest in your collection with this name.")
                     .withEphemeral(true);
         }
         ChestOwnership chestOwnership = chestOwnershipOpt.get();
-        if (chestOwnership.getCount() == 0) {
-            return event.reply("You don't have any more of these chests!")
-                    .withEphemeral(true);
-        }
 
         MessageCreateSpec message = chestOpeningUI.getMessage(chestOwnership.getChest(), user);
 

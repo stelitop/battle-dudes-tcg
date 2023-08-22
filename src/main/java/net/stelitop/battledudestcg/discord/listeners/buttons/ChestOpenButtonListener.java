@@ -70,7 +70,7 @@ public class ChestOpenButtonListener {
         String username = event.getInteraction().getUser().getUsername();
         return event.edit().withEmbeds(EmbedCreateSpec.builder()
                 .title(username + " found a " + chest.getName() + "!")
-                .description("The chest has been added to your collection!")
+                .description("This chest remains in your collection.")
                 .color(colorUtils.getChestEmbedColor())
                 .thumbnail(chest.getIconUrl())
                 .build())
@@ -109,7 +109,7 @@ public class ChestOpenButtonListener {
         rewards = chestRewardUtils.transformExtraRewards(rewards, userId);
         collectionService.awardRewards(userId, rewards);
 
-        String description = "## Chest Rewards\n\n" + rewards.stream()
+        String description = "## Chest Contents\n\n" + rewards.stream()
                 .map(x -> "> " + x.toString())
                 .collect(Collectors.joining("\n> \u200B\n"));
 

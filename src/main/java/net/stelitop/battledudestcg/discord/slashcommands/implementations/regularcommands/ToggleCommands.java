@@ -41,9 +41,9 @@ public class ToggleCommands {
         boolean isParticipating = userProfileService.getProfile(userId).getUserSettings().isParticipating();
 
         if (isParticipating) {
-            return event.reply(username + " is currently opted in to the game. They will randomly collect chests when sending messages in this server.");
+            return event.reply(username + " is currently opted in to Battle Dudes. They will randomly collect chests when sending messages in this server.");
         } else {
-            return event.reply(username + " is currently opted out of the game. They will not collect chests when sending messages in this server.");
+            return event.reply(username + " is currently opted out of Battle Dudes. They will not randomly collect chests when sending messages in this server.");
         }
     }
 
@@ -59,8 +59,10 @@ public class ToggleCommands {
         UserProfile profile = userProfileService.toggleParticipation(userId);
         boolean newToggledState = profile.getUserSettings().isParticipating();
         String message = newToggledState ?
-                "You are now participating in the game! You will now randomly collect Dudes when sending messages in the server. If you want to stop participating, use this command again." :
-                "You are no longer participating in the game! You will no longer collect Dudes when sending messages in the server. If you want to participate, use this command again.";
+                "You are now participating in Battle Dudes! You will now randomly collect Dudes when sending " +
+                        "messages in this server. If you want to stop participating, use this command again." :
+                "You are no longer participating in Battle Dudes! You will no longer randomly collect Dudes when " +
+                        "sending messages in this server. If you want to participate, use this command again.";
         LOGGER.debug(user.getUsername() + " has set their participation to: " + newToggledState);
 
         return event.reply(message)

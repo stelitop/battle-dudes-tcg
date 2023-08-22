@@ -10,7 +10,6 @@ import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
-import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class CardInfoUI {
                 .addField(getStatisticsInfoField(dude, false))
                 .addField(getEffectInfoField(dude, false))
                 .addField("\u200B",
-                        (dude.getFlavorText() == null ? "" : "\n\n*" + dude.getFlavorText() + "*"), false)
+                        (dude.getFlavorText() == null ? "" : "\n*" + dude.getFlavorText() + "*"), false)
                 .footer("Art by " + String.join(", ", dude.getArtists()), null);
 
         return MessageCreateSpec.builder()
@@ -81,7 +80,7 @@ public class CardInfoUI {
                 .addField(getStatisticsInfoField(card, false))
                 .addField(getEffectInfoField(card, false))
                 .addField("\u200B",
-                        (card.getFlavorText() == null ? "" : "\n\n*" + card.getFlavorText() + "*"), false)
+                        (card.getFlavorText() == null ? "" : "\n*" + card.getFlavorText() + "*"), false)
                 .footer("Art by " + String.join(", ", card.getArtists()), null);
 
         return MessageCreateSpec.builder()
@@ -97,20 +96,31 @@ public class CardInfoUI {
      * @return The field
      */
     private EmbedCreateFields.Field getCollectionInfoField(Card card, boolean inline) {
-        var locationsMsg = card.getChestSources().isEmpty() ? " None" : "\n" + card.getChestSources()
-                .stream()
-                .distinct()
-                .map(Chest::getName)
-                .map(x -> discordBotSettings.getChannelChestLocations().get(x))
-                .filter(Objects::nonNull)
-                .map(x -> "> <#" + x + ">")
-                .collect(Collectors.joining("\n"));
+//        var locationsMsg = card.getChestSources().isEmpty() ? " None" : "\n" + card.getChestSources()
+//                .stream()
+//                .distinct()
+//                .map(Chest::getName)
+//                .map(x -> discordBotSettings.getChannelChestLocations().get(x))
+//                .filter(Objects::nonNull)
+//                .map(x -> "> <#" + x + ">")
+//                .collect(Collectors.joining("\n"));
+//
+//        String description = "Locations:" + locationsMsg
+//                + "\nRarity: " + emojiUtils.getEmojiString(card.getRarity()) + " " + card.getRarity();
+//
+//        return EmbedCreateFields.Field.of("Collection Info", description, inline);
 
-        return EmbedCreateFields.Field.of(
-                "Collection Info",
-                "Locations:" + locationsMsg + "\nRarity: " + card.getRarity(),
-                inline
-        );
+        String chestsMsg = card.getChestSources().isEmpty() ? " None" : card.getChestSources().stream()
+                .map(Chest::getName)
+                .distinct()
+                .collect(Collectors.joining(", "));
+
+        chestsMsg = chestsMsg.isBlank() ? "Chests: None" : "Chests: " + chestsMsg;
+
+        String description = chestsMsg
+                + "\nRarity: " + emojiUtils.getEmojiString(card.getRarity()) + " " + card.getRarity();
+
+        return EmbedCreateFields.Field.of("Collection Info", description, inline);
     }
 
     /**
@@ -121,13 +131,15 @@ public class CardInfoUI {
      * @return The field
      */
     private EmbedCreateFields.Field getEvolutionsInfoField(DudeCard dude, boolean inline) {
-        String description = "Stage: " + dude.getStage() +
-                "\nEvolves From: " + (dude.getPreviousEvolutions() != null && !dude.getPreviousEvolutions().isEmpty() ?
-                String.join(", ", dude.getPreviousEvolutions()) : "N/A") +
-                "\nEvolves Into: " + (dude.getNextEvolutions() != null && !dude.getNextEvolutions().isEmpty() ?
-                String.join(", ", dude.getNextEvolutions()) : "N/A");
+        String description = "Stage " + dude.getStage();
+        if (dude.getPreviousEvolutions() != null && !dude.getPreviousEvolutions().isEmpty()) {
+            description += "\nEvolves From: " + String.join(", ", dude.getPreviousEvolutions());
+        }
+        if (dude.getNextEvolutions() != null && !dude.getNextEvolutions().isEmpty()) {
+            description += "\nEvolves Into: " + String.join(", ", dude.getNextEvolutions());
+        }
 
-        return EmbedCreateFields.Field.of("Evolution Info", description, false);
+        return EmbedCreateFields.Field.of("Evolution Info", description, inline);
     }
 
     private EmbedCreateFields.Field getEffectInfoField(Card card, boolean inline) {
@@ -136,26 +148,29 @@ public class CardInfoUI {
 
         if (parsedEffectTextResult.hasFailed()) {
             LOGGER.error("Could not parse the effect text of card \"" + card.getName() + "\"!"
-                    + "   Error: " + parsedEffectTextResult.errorMessage());
+                    + " Error: " + parsedEffectTextResult.errorMessage());
         }
 
-        return EmbedCreateFields.Field.of("Effect", text.isEmpty() ? "(none)" : text, inline);
+        return EmbedCreateFields.Field.of("Text", text.isEmpty() ? "(none)" : text, inline);
     }
 
     private EmbedCreateFields.Field getStatisticsInfoField(Card card, boolean inline) {
 
         String description = "";
         description += "Types: " + card.getTypes().stream()
-                .map(type -> emojiUtils.getEmojiString(type) + " " + type.toString().toUpperCase())
-                .collect(Collectors.joining(" - "));
+                .map(Enum::toString)
+                .collect(Collectors.joining(", "));
 
         description += "\nCost: " + Objects.requireNonNull(ElementalType.parseString(card.getCost())).stream()
-                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""));
+                .map(emojiUtils::getEmojiString).collect(Collectors.joining(" "));
 
         if (card instanceof DudeCard dude) {
-            description +=  "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
-                    + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
-                    + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence();
+//            description +=  "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
+//                    + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
+//                    + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence();
+            description +=  "\n Health: " + dude.getHealth()
+                    + "\n Offense: " + dude.getOffense()
+                    + "\n Defence: " + dude.getDefence();
         }
 
         return EmbedCreateFields.Field.of("Statistics", description, inline);
