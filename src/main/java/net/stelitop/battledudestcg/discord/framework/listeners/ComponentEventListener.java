@@ -8,7 +8,7 @@ import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.entity.User;
 import lombok.Builder;
 import lombok.ToString;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;

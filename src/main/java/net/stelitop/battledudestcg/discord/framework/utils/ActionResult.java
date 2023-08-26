@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.commons.pojos;
+package net.stelitop.battledudestcg.discord.framework.utils;
 
 /**
  * Represents the result from a generic action.

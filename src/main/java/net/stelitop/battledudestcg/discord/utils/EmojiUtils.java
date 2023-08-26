@@ -1,6 +1,6 @@
 package net.stelitop.battledudestcg.discord.utils;
 
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.enums.Rarity;
@@ -124,13 +124,13 @@ public class EmojiUtils {
     }
 
     public ActionResult<String> formatCardTextWithSpecialStrings(String text) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder resultSB = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == ']') {
                 return ActionResult.fail("Found closing bracket ']' without an opening one!");
             }
             if (text.charAt(i) != '[') {
-                result.append(text.charAt(i));
+                resultSB.append(text.charAt(i));
                 continue;
             }
             StringBuilder specialString = new StringBuilder();
@@ -147,12 +147,31 @@ public class EmojiUtils {
             }
             ActionResult<String> transformStringResult = transformSpecialString(specialString.toString());
             if (transformStringResult.hasFailed()) return transformStringResult;
-            result.append(transformStringResult.getResponse());
+            resultSB.append(transformStringResult.getResponse());
         }
-        return ActionResult.success(result.toString());
+        String result = resultSB.toString();
+
+        final List<String> keywords = List.of("Choose", "Play", "Bury", "Buried", "Surfer", "Fly", "Flying", "Prime",
+                "Forward", "Backward", "Ethereal", "Bank", "Float", "Restless");
+        final List<String> postfixes = List.of("", ".", ":", ",");
+        for (String kw : keywords) {
+            for (String pf: postfixes) {
+                result = result.replace(kw + pf, "**" + kw + pf + "**");
+            }
+        }
+
+        return ActionResult.success(result);
     }
 
     private ActionResult<String> transformSpecialString(String text) {
+        ActionResult<String> exactMatchResult = switch (text) {
+            case "HP" -> ActionResult.success(getEmojiString(DudeStat.Health));
+            case "OFF" -> ActionResult.success(getEmojiString(DudeStat.Offense));
+            case "DEF" -> ActionResult.success(getEmojiString(DudeStat.Defence));
+            default -> null;
+        };
+        if (exactMatchResult != null) return exactMatchResult;
+
         List<ElementalType> parsedAsElements = ElementalType.parseString(text);
         if (parsedAsElements != null) {
             return ActionResult.success(parsedAsElements.stream()

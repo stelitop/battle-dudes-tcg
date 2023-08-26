@@ -1,4 +1,4 @@
-package net.stelitop.battledudestcg.discord.interactions;
+package net.stelitop.battledudestcg.discord.framework.utils;
 
 import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.object.entity.Role;

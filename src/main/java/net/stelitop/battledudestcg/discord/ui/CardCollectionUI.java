@@ -7,7 +7,7 @@ import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import lombok.*;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;

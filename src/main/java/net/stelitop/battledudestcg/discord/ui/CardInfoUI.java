@@ -3,13 +3,14 @@ package net.stelitop.battledudestcg.discord.ui;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
+import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +119,7 @@ public class CardInfoUI {
         chestsMsg = chestsMsg.isBlank() ? "Chests: None" : "Chests: " + chestsMsg;
 
         String description = chestsMsg
-                + "\nRarity: " + emojiUtils.getEmojiString(card.getRarity()) + " " + card.getRarity();
+                + "\nRarity: " + card.getRarity() + " " + emojiUtils.getEmojiString(card.getRarity());
 
         return EmbedCreateFields.Field.of("Collection Info", description, inline);
     }
@@ -162,15 +163,12 @@ public class CardInfoUI {
                 .collect(Collectors.joining(", "));
 
         description += "\nCost: " + Objects.requireNonNull(ElementalType.parseString(card.getCost())).stream()
-                .map(emojiUtils::getEmojiString).collect(Collectors.joining(" "));
+                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""));
 
         if (card instanceof DudeCard dude) {
-//            description +=  "\n" + emojiUtils.getEmojiString(DudeStat.Health) + " Health: " + dude.getHealth()
-//                    + "\n" + emojiUtils.getEmojiString(DudeStat.Offense) + " Offense: " + dude.getOffense()
-//                    + "\n" + emojiUtils.getEmojiString(DudeStat.Defence) + " Defence: " + dude.getDefence();
-            description +=  "\n Health: " + dude.getHealth()
-                    + "\n Offense: " + dude.getOffense()
-                    + "\n Defence: " + dude.getDefence();
+            description +=  "\n Health: " + dude.getHealth() + " " + emojiUtils.getEmojiString(DudeStat.Health)
+                    + "\n Offense: " + dude.getOffense() + " " + emojiUtils.getEmojiString(DudeStat.Offense)
+                    + "\n Defence: " + dude.getDefence() + " " + emojiUtils.getEmojiString(DudeStat.Defence);
         }
 
         return EmbedCreateFields.Field.of("Statistics", description, inline);

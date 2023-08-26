@@ -3,7 +3,7 @@ package net.stelitop.battledudestcg.game.services;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Message;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import net.stelitop.battledudestcg.game.database.entities.collection.DeckEditing;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;

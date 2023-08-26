@@ -1,7 +1,7 @@
 package net.stelitop.battledudestcg.discord.interactions.modals;
 
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
 import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
 import net.stelitop.battledudestcg.discord.framework.InteractionEvent;

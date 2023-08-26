@@ -3,7 +3,7 @@ package net.stelitop.battledudestcg.game.database.entities.collection;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-import net.stelitop.battledudestcg.commons.pojos.ActionResult;
+import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 
 import java.util.ArrayList;
