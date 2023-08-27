@@ -1,7 +1,6 @@
 package net.stelitop.battledudestcg.discord.interactions.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
 import net.stelitop.battledudestcg.discord.framework.autocomplete.InputSuggestion;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
@@ -16,6 +15,8 @@ public class CardInSelectedDeckAutocomplete implements AutocompletionExecutor {
 
     @Autowired
     private DeckService deckService;
+    @Autowired
+    private CardNameFilterer cardNameFilterer;
 
     @Override
     public List<InputSuggestion> execute(ChatInputAutoCompleteEvent event) {
@@ -23,15 +24,16 @@ public class CardInSelectedDeckAutocomplete implements AutocompletionExecutor {
         var selectedDeckAction = deckService.getSelectedDeck(userId);
         if (selectedDeckAction.hasFailed()) return List.of();
         var deckEditing = selectedDeckAction.getResponse().getLeft();
-        List<Card> cards = deckEditing.getEditedDeck().getCards();
+        List<Card> cardsInDeck = deckEditing.getEditedDeck().getCards();
 
-        var eventValue = event.getFocusedOption().getValue();
-        String input = eventValue.map(ApplicationCommandInteractionOptionValue::asString).orElse("");
+        var focusedOptionValue = event.getFocusedOption().getValue();
+        String filter = focusedOptionValue.isEmpty() ? "" : focusedOptionValue.get().asString().toLowerCase();
+
+        List<Card> cards = cardNameFilterer.applySpecialFilter(filter, cardsInDeck);
 
         return cards.stream()
                 .map(Card::getName)
                 .distinct()
-                .filter(x -> x.toLowerCase().contains(input.toLowerCase()))
                 .map(x -> InputSuggestion.create(x, x))
                 .toList();
     }

@@ -196,7 +196,7 @@ public class DeckCommands {
             @EventUserId long userId,
             @CommandParam(
                     name = "name",
-                    description = "The name of the card.",
+                    description = "The name of the card. Allows for name queries.",
                     autocomplete = CardInSelectedDeckAutocomplete.class
             ) String cardName,
             @CommandParam(

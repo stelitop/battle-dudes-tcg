@@ -32,7 +32,7 @@ public class EditCardCommand {
             @InteractionEvent ChatInputInteractionEvent event,
             @CommandParam(
                     name = "name",
-                    description = "The name of the card",
+                    description = "The name of the card. Allows for name queries.",
                     autocomplete = CardNameAutocomplete.class
             ) String cardName
     ) {
