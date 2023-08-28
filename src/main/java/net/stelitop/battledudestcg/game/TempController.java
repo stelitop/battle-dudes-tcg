@@ -89,6 +89,8 @@ public class TempController implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        System.out.println("Max id:");
+        System.out.println(cardRepository.findMaxDudeIdSafe());
 //        System.out.println("All cards:");
 //        var cards = cardRepository.findAll();
 //        for (var card : cards) {

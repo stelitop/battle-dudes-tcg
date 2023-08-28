@@ -54,7 +54,7 @@ public class CreateCardCommand {
         }
 
         Card newCard = switch (cardType) {
-            case "dude" -> DudeCard.builder().name(cardName).artUrl(DUDE_DEFAULT_ART).build();
+            case "dude" -> DudeCard.builder().name(cardName).cardId(cardRepository.findMaxDudeIdSafe()+1).artUrl(DUDE_DEFAULT_ART).build();
             case "item" -> ItemCard.builder().name(cardName).artUrl(ITEM_DEFAULT_ART).build();
             case "warp" -> WarpCard.builder().name(cardName).artUrl(WARP_DEFAULT_ART).build();
             default -> null;
