@@ -2,9 +2,9 @@ package net.stelitop.battledudestcg.discord.interactions.devcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.commands.*;
+import net.stelitop.mad4j.DiscordEventsComponent;
+import net.stelitop.mad4j.InteractionEvent;
+import net.stelitop.mad4j.commands.*;
 import net.stelitop.battledudestcg.discord.interactions.requirements.RequireAdmin;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;

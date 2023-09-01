@@ -1,8 +1,8 @@
 package net.stelitop.battledudestcg.discord.interactions.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
-import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.framework.autocomplete.InputSuggestion;
+import net.stelitop.mad4j.autocomplete.AutocompletionExecutor;
+import net.stelitop.mad4j.autocomplete.InputSuggestion;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

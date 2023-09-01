@@ -3,7 +3,7 @@ package net.stelitop.battledudestcg.discord.ui;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
+import net.stelitop.mad4j.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;

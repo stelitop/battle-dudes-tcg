@@ -2,8 +2,8 @@ package net.stelitop.battledudestcg.discord.interactions.requirements;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
-import net.stelitop.battledudestcg.discord.framework.requirements.CommandRequirementExecutor;
-import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
+import net.stelitop.mad4j.requirements.CommandRequirementExecutor;
+import net.stelitop.mad4j.utils.ActionResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

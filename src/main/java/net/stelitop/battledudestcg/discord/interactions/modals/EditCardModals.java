@@ -1,10 +1,10 @@
 package net.stelitop.battledudestcg.discord.interactions.modals;
 
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
-import net.stelitop.battledudestcg.discord.framework.components.ComponentInteraction;
-import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
+import net.stelitop.mad4j.utils.ActionResult;
+import net.stelitop.mad4j.components.ComponentInteraction;
+import net.stelitop.mad4j.DiscordEventsComponent;
+import net.stelitop.mad4j.InteractionEvent;
 import net.stelitop.battledudestcg.discord.ui.EditCardUI;
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
