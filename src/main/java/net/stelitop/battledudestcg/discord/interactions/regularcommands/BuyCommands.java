@@ -1,11 +1,11 @@
 package net.stelitop.battledudestcg.discord.interactions.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.commands.CommandParam;
-import net.stelitop.battledudestcg.discord.framework.commands.SlashCommand;
-import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
+import net.stelitop.mad4j.DiscordEventsComponent;
+import net.stelitop.mad4j.InteractionEvent;
+import net.stelitop.mad4j.commands.CommandParam;
+import net.stelitop.mad4j.commands.SlashCommand;
+import net.stelitop.mad4j.convenience.EventUserId;
 import net.stelitop.battledudestcg.discord.interactions.autocomplete.ChestNameAutocomplete;
 import net.stelitop.battledudestcg.game.database.entities.chests.ChannelChest;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;

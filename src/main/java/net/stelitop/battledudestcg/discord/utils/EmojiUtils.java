@@ -1,6 +1,6 @@
 package net.stelitop.battledudestcg.discord.utils;
 
-import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
+import net.stelitop.mad4j.utils.ActionResult;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
 import net.stelitop.battledudestcg.game.enums.ElementalType;
 import net.stelitop.battledudestcg.game.enums.Rarity;

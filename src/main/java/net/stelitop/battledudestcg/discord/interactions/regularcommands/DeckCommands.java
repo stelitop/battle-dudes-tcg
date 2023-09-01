@@ -2,11 +2,11 @@ package net.stelitop.battledudestcg.discord.interactions.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
-import net.stelitop.battledudestcg.discord.framework.utils.ActionResult;
-import net.stelitop.battledudestcg.discord.framework.DiscordEventsComponent;
-import net.stelitop.battledudestcg.discord.framework.InteractionEvent;
-import net.stelitop.battledudestcg.discord.framework.commands.*;
-import net.stelitop.battledudestcg.discord.framework.convenience.EventUserId;
+import net.stelitop.mad4j.utils.ActionResult;
+import net.stelitop.mad4j.DiscordEventsComponent;
+import net.stelitop.mad4j.InteractionEvent;
+import net.stelitop.mad4j.commands.*;
+import net.stelitop.mad4j.convenience.EventUserId;
 import net.stelitop.battledudestcg.discord.interactions.autocomplete.CardInSelectedDeckAutocomplete;
 import net.stelitop.battledudestcg.discord.interactions.autocomplete.OwnedCardAutocomplete;
 import net.stelitop.battledudestcg.discord.interactions.autocomplete.DeckNameAutocomplete;

@@ -2,8 +2,8 @@ package net.stelitop.battledudestcg.discord.interactions.autocomplete;
 
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
-import net.stelitop.battledudestcg.discord.framework.autocomplete.AutocompletionExecutor;
-import net.stelitop.battledudestcg.discord.framework.autocomplete.InputSuggestion;
+import net.stelitop.mad4j.autocomplete.AutocompletionExecutor;
+import net.stelitop.mad4j.autocomplete.InputSuggestion;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.database.entities.collection.ChestOwnership;
 import net.stelitop.battledudestcg.game.services.CollectionService;
