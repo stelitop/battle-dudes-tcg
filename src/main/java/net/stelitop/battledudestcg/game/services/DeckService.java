@@ -3,11 +3,10 @@ package net.stelitop.battledudestcg.game.services;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.Message;
-import net.stelitop.mad4j.utils.ActionResult;
 import net.stelitop.battledudestcg.game.database.entities.collection.CardDeck;
 import net.stelitop.battledudestcg.game.database.entities.collection.DeckEditing;
 import net.stelitop.battledudestcg.game.database.repositories.DeckRepository;
-import net.stelitop.battledudestcg.game.database.repositories.UserCollectionRepository;
+import net.stelitop.mad4j.utils.ActionResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class DeckService {
 
     @Autowired
     private DeckRepository deckRepository;
-    @Autowired
-    private UserCollectionRepository userCollectionRepository;
     @Autowired
     private CollectionService collectionService;
     @Autowired
@@ -69,7 +66,7 @@ public class DeckService {
             return ActionResult.fail("There is already an existing deck with this name!");
         }
 
-        var userCollection = userCollectionRepository.findByUserId(userId).get();
+        var userCollection = collectionService.getUserCollection(userId);
         CardDeck deck = new CardDeck();
         deck.setName(deckName);
         deck.setCards(new ArrayList<>());

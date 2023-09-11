@@ -20,6 +20,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://jitpack.io"
+	}
 }
 
 dependencies {
@@ -35,8 +38,7 @@ dependencies {
 	implementation 'com.google.guava:guava:30.0-android'
 
 	// mad4j framework
-	//implementation 'net.stelitop:mad4j:0.0.1-alpha-4'
-	implementation files('libraries/mad4j-0.0.2.jar')
+	implementation files('libraries/mad4j-0.0.3.jar')
 
 
 	implementation 'org.openpnp:opencv:4.5.5-1'
