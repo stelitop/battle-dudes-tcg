@@ -58,21 +58,29 @@ public class DudeCard extends Card implements Comparable<DudeCard> {
     @Builder.Default
     private int health = 1;
 
-    /**
-     * The offense of the dude.
-     */
-    @Column
-    @NonNegative
-    @Builder.Default
-    private int offense = 1;
+//    /**
+//     * The offense of the dude.
+//     */
+//    @Column
+//    @NonNegative
+//    @Builder.Default
+//    private int offense = 1;
+//
+//    /**
+//     * The defence of the dude.
+//     */
+//    @Column
+//    @NonNegative
+//    @Builder.Default
+//    private int defence = 1;
 
     /**
-     * The defence of the dude.
+     * The attack of the dude.
      */
     @Column
     @NonNegative
     @Builder.Default
-    private int defence = 1;
+    private int attack = 1;
 
     /**
      * The name of the dude this can evolve to. Null if there is no

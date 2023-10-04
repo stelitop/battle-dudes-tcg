@@ -58,8 +58,9 @@ public class EmojiUtils {
         return switch (stat) {
             case Health -> ":heart:";
             case Speed -> ":clock3:";
-            case Offense -> ":crossed_swords:";
+            case Offense, Attack -> ":crossed_swords:";
             case Defence -> ":shield:";
+            case Cost -> ":gem:";
         };
     }
 

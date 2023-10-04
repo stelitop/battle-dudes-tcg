@@ -40,7 +40,7 @@ public class Card {
      */
     @Column(name = "cost", nullable = false)
     @Builder.Default
-    private String cost = "";
+    private int cost = 0;
 
     /**
      * The text describing the effect of the card.

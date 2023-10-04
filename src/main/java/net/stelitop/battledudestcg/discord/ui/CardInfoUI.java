@@ -3,7 +3,6 @@ package net.stelitop.battledudestcg.discord.ui;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
-import net.stelitop.mad4j.utils.ActionResult;
 import net.stelitop.battledudestcg.discord.DiscordBotSettings;
 import net.stelitop.battledudestcg.discord.utils.ColorUtils;
 import net.stelitop.battledudestcg.discord.utils.EmojiUtils;
@@ -11,13 +10,12 @@ import net.stelitop.battledudestcg.game.database.entities.cards.Card;
 import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import net.stelitop.battledudestcg.game.database.entities.chests.Chest;
 import net.stelitop.battledudestcg.game.enums.DudeStat;
-import net.stelitop.battledudestcg.game.enums.ElementalType;
+import net.stelitop.mad4j.utils.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -162,13 +160,11 @@ public class CardInfoUI {
                 .map(Enum::toString)
                 .collect(Collectors.joining(", "));
 
-        description += "\nCost: " + Objects.requireNonNull(ElementalType.parseString(card.getCost())).stream()
-                .map(emojiUtils::getEmojiString).collect(Collectors.joining(""));
+        description += "\nCost: " + card.getCost() + " " + emojiUtils.getEmojiString(DudeStat.Cost);
 
         if (card instanceof DudeCard dude) {
-            description +=  "\n Health: " + dude.getHealth() + " " + emojiUtils.getEmojiString(DudeStat.Health)
-                    + "\n Offense: " + dude.getOffense() + " " + emojiUtils.getEmojiString(DudeStat.Offense)
-                    + "\n Defence: " + dude.getDefence() + " " + emojiUtils.getEmojiString(DudeStat.Defence);
+            description += "\nAttack: " + dude.getAttack() + " " + emojiUtils.getEmojiString(DudeStat.Attack)
+                    + "\nHealth: " + dude.getHealth() + " " + emojiUtils.getEmojiString(DudeStat.Health);
         }
 
         return EmbedCreateFields.Field.of("Statistics", description, inline);

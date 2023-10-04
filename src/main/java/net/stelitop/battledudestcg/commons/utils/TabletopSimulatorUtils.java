@@ -88,12 +88,10 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
             }
 
             Imgproc.putText(finalMat, card.getName(), new Point(25, 50), font, fontScale*1.5, color, thickness);
-            if (!card.getCost().isBlank()) {
-                String costText = "[" + card.getCost().replace(".", "o") + "]";
-                Imgproc.putText(finalMat, costText, new Point(25, 100), font, fontScale*1.5, color, thickness);
-            }
+            String costText = String.valueOf(card.getCost());
+            Imgproc.putText(finalMat, costText, new Point(25, 100), font, fontScale*1.5, color, thickness);
             if (card instanceof DudeCard dudeCard) {
-                String statsText = dudeCard.getHealth() + "/" + dudeCard.getOffense() + "/" + dudeCard.getDefence();
+                String statsText = dudeCard.getAttack() + "/" + dudeCard.getHealth();
                 Imgproc.putText(finalMat, statsText, new Point(25, 975), font, fontScale*1.5, color, thickness);
             }
 

@@ -32,8 +32,9 @@ public class CardNameFilterer {
                 case "rarity" -> c -> c.getRarity().name().equalsIgnoreCase(value);
                 case "types" -> getTypesFilter(value);
                 case "health", "hp" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getHealth()).test(d);
-                case "offence", "offense", "off" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getOffense()).test(d);
-                case "defence", "defense", "def" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getDefence()).test(d);
+                //case "offence", "offense", "off" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getOffense()).test(d);
+                //case "defence", "defense", "def" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getDefence()).test(d);
+                case "attack", "atk" -> c -> c instanceof DudeCard d && getNumberFilter(value, c2 -> ((DudeCard) c2).getAttack()).test(d);
                 default -> null;
             };
             if (newPred != null) conditions.add(newPred);

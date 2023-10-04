@@ -7,5 +7,7 @@ public enum DudeStat {
     Health,
     Speed,
     Offense,
-    Defence
+    Defence,
+    Attack,
+    Cost
 }

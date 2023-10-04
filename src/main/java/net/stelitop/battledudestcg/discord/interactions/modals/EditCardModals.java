@@ -83,19 +83,23 @@ public class EditCardModals {
 
     private ActionResult<Void> parseStatsModal(ModalSubmitInteractionEvent event, Card card) {
         if (!(card instanceof DudeCard d)) return ActionResult.fail("The card was not a dude!");
-        String healthStr = event.getComponents().get(0).getData().components().get().get(0).value().get();
-        String offenseStr = event.getComponents().get(1).getData().components().get().get(0).value().get();
-        String defenceStr = event.getComponents().get(2).getData().components().get().get(0).value().get();
+        String attackStr = event.getComponents().get(0).getData().components().get().get(0).value().get();
+        String healthStr = event.getComponents().get(1).getData().components().get().get(0).value().get();
+//        String offenseStr = event.getComponents().get(1).getData().components().get().get(0).value().get();
+//        String defenceStr = event.getComponents().get(2).getData().components().get().get(0).value().get();
         try {
+            int attack = Integer.parseInt(attackStr);
             int health = Integer.parseInt(healthStr);
-            int offense = Integer.parseInt(offenseStr);
-            int defence = Integer.parseInt(defenceStr);
-            if (health < 0 || offense < 0 || defence < 0) {
+//            int offense = Integer.parseInt(offenseStr);
+//            int defence = Integer.parseInt(defenceStr);
+            //if (health < 0 || offense < 0 || defence < 0) {
+            if (attack < 0 || health < 0) {
                 return ActionResult.fail("The stats of the dude must be positive!");
             }
+            d.setAttack(attack);
             d.setHealth(health);
-            d.setOffense(offense);
-            d.setDefence(defence);
+//            d.setOffense(offense);
+//            d.setDefence(defence);
             return ActionResult.success();
         } catch (NumberFormatException e) {
             return ActionResult.fail("The input was not a number!");
@@ -103,12 +107,18 @@ public class EditCardModals {
     }
 
     private ActionResult<Void> parseCostModal(ModalSubmitInteractionEvent event, Card card) {
-        String newCost = event.getComponents().get(0).getData().components().get().get(0).value().get();
-        if (ElementalType.parseString(newCost) == null) {
-            return ActionResult.fail("Could not parse the input \"" + newCost + "\"!");
+        String newCostStr = event.getComponents().get(0).getData().components().get().get(0).value().get();
+
+        try {
+            int cost = Integer.parseInt(newCostStr);
+            if (cost < 0) {
+                return ActionResult.fail("The stats of the dude must be positive!");
+            }
+            card.setCost(cost);
+            return ActionResult.success();
+        } catch (NumberFormatException e) {
+            return ActionResult.fail("The input was not a number!");
         }
-        card.setCost(newCost.toUpperCase());
-        return ActionResult.success();
     }
 
     private ActionResult<Void> parseArtUrlModal(ModalSubmitInteractionEvent event, Card card) {
