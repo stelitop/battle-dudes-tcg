@@ -152,8 +152,11 @@ public class EmojiUtils {
         }
         String result = resultSB.toString();
 
-        final List<String> keywords = List.of("Choose", "Play", "Bury", "Buried", "Surfer", "Fly", "Flying", "Prime",
-                "Forward", "Backward", "Ethereal", "Bank", "Float", "Restless");
+//        final List<String> keywords = List.of("Choose", "Play", "Bury", "Buried", "Surfer", "Fly", "Flying", "Prime",
+//                "Forward", "Backward", "Ethereal", "Bank", "Float", "Restless");
+        final List<String> keywords = List.of("Dawn", "Dusk", "Call", "Ethereal", "Choose", "Float",
+                "Bank", "Fate", "Elusive", "Flying", "Buried", "Swift", "Turbo", "Siphon", "Sketch", "Shield",
+                "Surfer", "Freeze", "Venom", "Bleach", "Prologue", "Epilogue", "Frostbite", "Secret", "Counter");
         final List<String> postfixes = List.of("", ".", ":", ",");
         for (String kw : keywords) {
             for (String pf: postfixes) {

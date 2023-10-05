@@ -2,6 +2,7 @@ package net.stelitop.battledudestcg.discord.interactions.regularcommands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.entity.Message;
+import net.stelitop.battledudestcg.discord.interactions.requirements.RequireSelectedDeck;
 import net.stelitop.mad4j.utils.ActionResult;
 import net.stelitop.mad4j.DiscordEventsComponent;
 import net.stelitop.mad4j.InteractionEvent;
@@ -120,6 +121,7 @@ public class DeckCommands {
         return Mono.empty();
     }
 
+    @RequireSelectedDeck
     @SlashCommand(
             name = "deck addcard",
             description = "Adds a new card to the currently selected deck."
@@ -187,6 +189,7 @@ public class DeckCommands {
         return Mono.empty();
     }
 
+    @RequireSelectedDeck
     @SlashCommand(
             name = "deck removecard",
             description = "Removes a card from the currently selected deck."
