@@ -9,8 +9,6 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,22 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TabletopSimulatorUtils implements ApplicationRunner {
+public class TabletopSimulatorUtils {
 
     @Autowired
     private DeckRepository deckRepository;
     @Autowired
     private ChestRepository chestRepository;
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-//        String deckName = "Magic + Decay";
-//        String filename = "MagicDecay.png";
-//
-//        saveDeckAsSpreadsheet(StreamSupport.stream(deckRepository.findAll().spliterator(), false)
-//                .filter(x -> x.getName().equals(deckName)).findFirst().get(), filename);
-//
-//        System.out.println("Finished exporting \"" + deckName + "\" deck!");
-    }
 
     public Mat createDeckCardSheet(CardDeck deck) throws IOException {
         var cards = deck.getCards();
@@ -87,9 +75,17 @@ public class TabletopSimulatorUtils implements ApplicationRunner {
                 Imgproc.putText(finalMat, parts.get(i), linePosition, font, fontScale, color, thickness);
             }
 
+            // put the name on the card
             Imgproc.putText(finalMat, card.getName(), new Point(25, 50), font, fontScale*1.5, color, thickness);
+            // put the types on the card
+            for (int i = 0; i < card.getTypes().size(); i++) {
+                Imgproc.putText(finalMat, card.getTypes().get(i).name(),
+                        new Point(500, 50 + i*lineHeight), font, fontScale*1.5, color, thickness);
+            }
+            // put the cost on the card under the name
             String costText = String.valueOf(card.getCost());
             Imgproc.putText(finalMat, costText, new Point(25, 100), font, fontScale*1.5, color, thickness);
+            // if it's a dude, put the stats on the card
             if (card instanceof DudeCard dudeCard) {
                 String statsText = dudeCard.getAttack() + "/" + dudeCard.getHealth();
                 Imgproc.putText(finalMat, statsText, new Point(25, 975), font, fontScale*1.5, color, thickness);

@@ -1,6 +1,7 @@
 package net.stelitop.battledudestcg.game.database.repositories;
 
 import net.stelitop.battledudestcg.game.database.entities.cards.Card;
+import net.stelitop.battledudestcg.game.database.entities.cards.DudeCard;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,6 +19,10 @@ public interface CardRepository extends CrudRepository<Card, Long> {
 
     @Query("SELECT MAX(d.cardId) FROM DudeCard d")
     @Nullable Integer findMaxDudeId();
+
+
+    @Query("SELECT x FROM DudeCard x WHERE x.dudeId = ?1")
+    Optional<DudeCard> findDudeByDudeId(long dudeId);
 
     default int findMaxDudeIdSafe() {
         Integer x = findMaxDudeId();

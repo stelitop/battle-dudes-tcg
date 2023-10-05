@@ -40,6 +40,13 @@ dependencies {
 	// mad4j framework
 	implementation files('libraries/mad4j-0.0.3.jar')
 
+	// reading excel files
+	// https://www.baeldung.com/java-microsoft-excel
+	implementation 'org.apache.poi:poi:5.2.0'
+	implementation 'org.apache.poi:poi-ooxml:5.2.0'
+	implementation 'org.jxls:jxls-jexcel:1.0.9'
+	implementation 'org.dhatim:fastexcel-reader:0.15.3'
+	implementation 'org.dhatim:fastexcel:0.15.3'
 
 	implementation 'org.openpnp:opencv:4.5.5-1'
 
